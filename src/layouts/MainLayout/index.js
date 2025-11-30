@@ -1,13 +1,14 @@
-import { Header, MainFooter, SecondFooter } from '../../components';
+import classNames from 'classnames/bind';
+import styles from './style.module.scss';
+import { Header, Footer } from '../../components';
+const st = classNames.bind(styles);
+
 function MainLayout({ children }) {
   return (
-    <div className="wrapper">
+    <div className={st('wrapper')}>
       <Header />
-
-      <div className="content">{children}</div>
-
-      <MainFooter />
-      <SecondFooter />
+      <div className={st('content-container', 'mx-5')}>{children}</div>
+      <Footer />
     </div>
   );
 }
