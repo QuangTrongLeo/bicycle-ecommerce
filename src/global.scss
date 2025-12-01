@@ -12,6 +12,9 @@
     --gradient-orange-start-color: #d4734a;
     --gradient-orange-end-color: #ea6b2e;
 
+    --gradient-purple-color: #8e5edb;
+    --gradient-pink-color: #ed406b;
+
     --light-gray-color: #f0f0f0;
     --default-gray-color: #999999;
     --dark-gray-color: #6e6e73;
@@ -52,8 +55,7 @@ button {
 
 html,
 body {
-    overflow-x: hidden;
-    width: 100%;
+    background-color: var(--bg-light-color);
     min-height: 100vh;
     width: 100%;
     margin: 0;
