@@ -1,9 +1,5 @@
-import classNames from 'classnames/bind';
-import styles from './style.module.scss';
-const st = classNames.bind(styles);
-
-function Card() {
-  return <h1>Card</h1>;
-}
-
-export default Card;
+export { default as LargeRectangleCard } from './LargeRectangleCard';
+export { default as LargeSquareCard } from './LargeSquareCard';
+export { default as MediumRectangleCard } from './MediumRectangleCard';
+export { default as SmallRectangleCard } from './SmallRectangleCard';
+export { default as SmallSquareCard } from './SmallSquareCard';
