@@ -13,7 +13,7 @@ function MainLayout({ children }) {
 
     return (
         <div className={st('wrapper')}>
-            ds ds ds
+            d ds ds ds
             <br />
             ds ds ds
             <br />
