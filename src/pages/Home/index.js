@@ -81,6 +81,11 @@ const apiCategory = [
 function Home() {
     return (
         <div className={st('wrapper')}>
+            <div class={st('header')}>
+                <div class={st('header-title')}>Cửa Hàng</div>
+                <div class={st('header-subtitle')}>Trao những điều đặc biệt.</div>
+            </div>
+
             <MainHorizontalScroll>
                 {apiCategory.map((category) => (
                     <SmallSquareCard key={category.id} {...category} />

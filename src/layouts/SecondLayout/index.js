@@ -7,7 +7,6 @@ function SecondLayout({ children }) {
     return (
         <div className={st('wrapper')}>
             <Navigation />
-            <Header />
             <div className={st('row', 'mx-5')}>
                 <div className={st('col-3')}>
                     <SideBar />
