@@ -3,7 +3,7 @@ import styles from './style.module.scss';
 import { LargeSquareCard, MainHorizontalScroll, SmallSquareCard } from '../../components';
 const st = classNames.bind(styles);
 
-const apiNewProduct = [
+const products = [
     {
         id: 1,
         to: 'https://xedapthegioi.vn/product/xe-dap-the-thao-galaxy-c100/',
@@ -51,7 +51,7 @@ const apiNewProduct = [
     },
 ];
 
-const apiCategory = [
+const categories = [
     {
         id: 1,
         to: 'https://www.apple.com/vn/shop/buy-iphone',
@@ -87,14 +87,14 @@ function Home() {
             </div>
 
             <MainHorizontalScroll>
-                {apiCategory.map((category) => (
+                {categories.map((category) => (
                     <SmallSquareCard key={category.id} {...category} />
                 ))}
             </MainHorizontalScroll>
             <div className={st('new-product-group')}>
                 <h2>Những sản phẩm mới nhất</h2>
                 <MainHorizontalScroll>
-                    {apiNewProduct.map((product) => (
+                    {products.map((product) => (
                         <LargeSquareCard key={product.id} {...product} />
                     ))}
                 </MainHorizontalScroll>
