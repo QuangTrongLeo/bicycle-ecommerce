@@ -1,0 +1,182 @@
+.profile-header {
+    background-color: #f5f5f7;
+    padding: 40px;
+    border-radius: 10px;
+
+    h3 {
+        font-size: 2.25rem;
+        font-weight: 700;
+    }
+
+    .rank-current {
+        height: 38px;
+    }
+
+    .rank-next {
+        height: 26px;
+        margin-left: 5px;
+    }
+
+    .profile-spending {
+        display: flex;
+        font-weight: 700;
+
+        span {
+            color: #2f5acf;
+        }
+    }
+
+    .spend-line {
+        width: 80%;
+        height: 5px;
+        background-color: #d9d9d9;
+        position: relative;
+
+        .spend-progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20%;
+            height: 100%;
+            background-color: #2f5acf;
+        }
+
+        .spend-point {
+            position: absolute;
+            top: 10px;
+
+            img {
+                width: 60px;
+            }
+
+            &::before {
+                content: '';
+                width: 10px;
+                height: 10px;
+                position: absolute;
+                top: -13px;
+                left: -5px;
+                background-color: #2f5acf;
+                border-radius: 50%;
+                z-index: 1;
+            }
+        }
+    }
+
+    .profile-summary {
+        display: flex;
+        align-items: flex-end;
+        flex-direction: column;
+        justify-content: flex-end;
+
+        .coolcash-box {
+            p {
+                font-size: 1.25rem;
+                color: #666;
+                margin: 0;
+            }
+
+            .coolcash {
+                display: flex;
+                align-items: center;
+                font-weight: 700;
+
+                img {
+                    width: 24px;
+                    margin-right: 5px;
+                }
+
+                p {
+                    color: #000;
+                }
+            }
+        }
+
+        .reward {
+            margin-top: 30px;
+            width: 100%;
+
+            .btn {
+                background-color: #000;
+                color: #fff;
+                padding: 10px 30px;
+                font-size: 20px;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                .text {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+
+                i {
+                    font-size: 50px;
+                }
+            }
+        }
+    }
+}
+
+.user-menu {
+    .menu-item {
+        padding: 10px;
+        background-color: #f5f5f7;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        transition: 0.2s;
+
+        &:hover {
+            background-color: #000;
+            color: #fff;
+            cursor: pointer;
+        }
+    }
+
+    .menu-item-logout {
+        padding: 10px;
+        background-color: red;
+        color: #fff;
+        text-align: center;
+        border-radius: 5px;
+        margin-bottom: 10px;
+
+        &:hover {
+            background-color: #fff;
+            color: red;
+            border: 1px solid red;
+        }
+    }
+}
+
+.profile-content {
+    padding: 20px 20px 20px 40px;
+    background-color: #f5f5f7;
+    border-radius: 8px;
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .btn-edit {
+        background-color: #000;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: 1px solid black;
+        margin-top: 10px;
+
+        &:hover {
+            background-color: #fff;
+            color: #000;
+        }
+    }
+}

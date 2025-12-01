@@ -2,8 +2,9 @@
     --primary-color: #333333;
     --white-color: #fff;
     --black-color: #000000;
-    --blue-color: #3449dc;
+    --blue-color: #0071e3;
     --bg-light-color: #e5e5e5;
+    --gray-color: #494949;
 
     --gradient-blue-start-color: #337ae5;
     --gradient-blue-end-color: #408fe5;
@@ -44,6 +45,9 @@ a {
     &:hover {
         text-decoration: none;
     }
+}
+button {
+    border: none;
 }
 
 html,
