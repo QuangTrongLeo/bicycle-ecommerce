@@ -4,3 +4,5 @@ export { default as Register } from './Register';
 export { default as Profile } from './Profile';
 export { default as Detail } from './Detail';
 export { default as Searched } from './Searched';
+export { default as Category } from './Category';
+export { default as SubCategory } from './SubCategory';

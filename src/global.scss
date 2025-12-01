@@ -2,6 +2,7 @@
   --primary-color: #333333;
   --white-color: #fff;
   --black-color: #000000;
+  --blue-color: #3449dc;
   --bg-light-color: #e5e5e5;
 
   --gradient-blue-start-color: #337ae5;
@@ -25,6 +26,14 @@ body {
   width: 100%;
   margin: 0;
   padding: 0;
+}
+
+html {
+  font-size: 70.5%;
+}
+
+body {
+  font-size: 2.6rem;
 }
 
 #root {
