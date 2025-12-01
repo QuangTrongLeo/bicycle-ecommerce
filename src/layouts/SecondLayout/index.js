@@ -12,9 +12,7 @@ function SecondLayout({ children }) {
                 <div className={st('col-3')}>
                     <SideBar />
                 </div>
-                <div className={st('col-9')}>
-                    <div className={st('content')}>{children}</div>
-                </div>
+                <div className={st('col-9')}>{children}</div>
             </div>
             <Footer />
         </div>
