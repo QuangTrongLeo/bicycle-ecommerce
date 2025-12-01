@@ -1,0 +1,40 @@
+.link-wrapper {
+    text-decoration: none;
+    display: block;
+    width: 14rem;
+}
+
+.card-product {
+    width: 14rem;
+    height: 14rem;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 6px var(--default-gray-color);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 12px var(--default-gray-color);
+    }
+}
+
+.card-img {
+    width: 100%;
+    height: 80%;
+    object-fit: cover;
+}
+
+.card-name {
+    text-align: center;
+    padding-top: 4px;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
