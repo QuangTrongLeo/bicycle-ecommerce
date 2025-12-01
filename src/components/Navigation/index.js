@@ -150,7 +150,7 @@ function Navigation() {
                                                     {item.path ? (
                                                         <Link to={item.path}>{item.label}</Link>
                                                     ) : (
-                                                        <span>{item.label}</span>
+                                                        <Link to={item.label}>{item.label}</Link>
                                                     )}
                                                 </span>
                                             ))}
