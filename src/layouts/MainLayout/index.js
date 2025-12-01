@@ -7,8 +7,7 @@ function MainLayout({ children }) {
     return (
         <div className={st('wrapper')}>
             <Navigation />
-            <Header />
-            <div className={st('mx-5')}>{children}</div>
+            <div className={st('content')}>{children}</div>
             <Footer />
         </div>
     );

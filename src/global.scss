@@ -2,8 +2,9 @@
     --primary-color: #333333;
     --white-color: #fff;
     --black-color: #000000;
-    --blue-color: #3449dc;
+    --blue-color: #0071e3;
     --bg-light-color: #e5e5e5;
+    --gray-color: #494949;
 
     --gradient-blue-start-color: #337ae5;
     --gradient-blue-end-color: #408fe5;
@@ -21,10 +22,39 @@
     --shadow-dark-color: rgba(0, 0, 0, 0.15);
     --shadow-light-color: rgba(255, 255, 255, 0.5);
 }
+#root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+* {
+    font-family:
+        SF Pro Text,
+        SF Pro Icons,
+        Helvetica Neue,
+        Helvetica,
+        Arial,
+        sans-serif;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 400;
+    display: block;
+
+    &:hover {
+        text-decoration: none;
+    }
+}
+button {
+    border: none;
+}
 
 html,
 body {
-    background-color: var(--bg-light-color);
     min-height: 100vh;
     width: 100%;
     margin: 0;
