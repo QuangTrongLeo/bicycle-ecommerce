@@ -1,7 +1,7 @@
 import { SET_USER, LOGOUT_USER } from '../action/userAction';
 
 const INITIAL_STATE = {
-    user: null, // Lưu thông tin user
+    currentUser: null, // Lưu thông tin user
     isAuthenticated: false, // Đã đăng nhập hay chưa
 };
 
@@ -10,14 +10,14 @@ const userReducer = (state = INITIAL_STATE, action) => {
         case SET_USER:
             return {
                 ...state,
-                user: action.payload,
+                currentUser: action.payload,
                 isAuthenticated: true,
             };
 
         case LOGOUT_USER:
             return {
                 ...state,
-                user: null,
+                currentUser: null,
                 isAuthenticated: false,
             };
 

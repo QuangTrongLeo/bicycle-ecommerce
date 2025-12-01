@@ -1,13 +1,26 @@
 import { Fragment } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { publishRoutes } from './router';
+import { publishRoutes, userRoutes, adminRoutes } from './router';
 import { MainLayout } from './layouts';
+import { useSelector } from 'react-redux';
 
 function App() {
+    const { user, isAuthenticated } = useSelector((state) => state.user);
+
+    let routes = [...publishRoutes];
+
+    if (isAuthenticated && user) {
+        routes = [...routes, ...userRoutes];
+
+        if (user.role === 'admin') {
+            routes = [...routes, ...adminRoutes];
+        }
+    }
+
     return (
         <Router>
             <Routes>
-                {publishRoutes.map((route, idx) => {
+                {routes.map((route, idx) => {
                     const Page = route.page;
                     const Layout = route.layout !== undefined ? route.layout || Fragment : MainLayout;
 

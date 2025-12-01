@@ -20,6 +20,6 @@ const userRoutes = [
     { path: configs.routes.sub_category, page: SubCategory, layout: SecondLayout },
 ];
 
-const adminRoutes = [...userRoutes];
+const adminRoutes = [];
 
 export { publishRoutes, userRoutes, adminRoutes };

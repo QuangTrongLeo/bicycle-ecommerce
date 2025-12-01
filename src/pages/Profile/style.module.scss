@@ -1,6 +1,6 @@
 .profile-header {
     background-color: #f5f5f7;
-    padding: 40px;
+    padding: 40px 40px 60px 40px;
     border-radius: 10px;
 
     h3 {
@@ -91,32 +91,6 @@
                 }
             }
         }
-
-        .reward {
-            margin-top: 30px;
-            width: 100%;
-
-            .btn {
-                background-color: #000;
-                color: #fff;
-                padding: 10px 30px;
-                font-size: 20px;
-                width: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-
-                .text {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: flex-start;
-                }
-
-                i {
-                    font-size: 50px;
-                }
-            }
-        }
     }
 }
 
@@ -130,6 +104,7 @@
         border-radius: 5px;
         margin-bottom: 10px;
         transition: 0.2s;
+        font-size: 16px;
 
         &:hover {
             background-color: #000;
@@ -158,6 +133,7 @@
     padding: 20px 20px 20px 40px;
     background-color: #f5f5f7;
     border-radius: 8px;
+    font-size: 16px;
 
     .info-row {
         display: flex;

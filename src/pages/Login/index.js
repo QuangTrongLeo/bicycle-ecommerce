@@ -3,17 +3,21 @@ import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleRight } from '@fortawesome/free-regular-svg-icons';
 import { checkUserLogin } from '../../dummydb';
+
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
 import { setUser } from '../../redux/action/userAction';
+
 import styles from './style.module.scss';
 const st = classNames.bind(styles);
 
 function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [errorText, setErrorText] = useState('');
-    const [isFocused, setIsFocused] = useState(false);
+
+    // mỗi input có state focus riêng
+    const [focusUser, setFocusUser] = useState(false);
+    const [focusPass, setFocusPass] = useState(false);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -26,13 +30,15 @@ function Login() {
         const username = e.target.nameLogin.value.trim();
         const password = e.target.password?.value.trim();
 
-        // Bước đầu chỉ mở password
+        // mở password khi mới nhập username
         if (!showPassword) {
             if (username) {
                 setShowPassword(true);
             }
             return;
         }
+
+        // kiểm tra rỗng
         if (!username || !password) {
             setErrorText('Vui lòng nhập đầy đủ thông tin.');
             return;
@@ -46,7 +52,6 @@ function Login() {
         }
 
         dispatch(setUser(result.user));
-
         navigate('/');
     };
 
@@ -72,7 +77,7 @@ function Login() {
                                 <div
                                     className={st('input-box')}
                                     style={{
-                                        border: isFocused ? '1px solid #007bff' : '1px solid #ced4da',
+                                        border: focusUser ? '1px solid #007bff' : '1px solid #ced4da',
                                     }}>
                                     <input
                                         type="text"
@@ -82,8 +87,8 @@ function Login() {
                                         className={st('input')}
                                         placeholder=" "
                                         required
-                                        onFocus={() => setIsFocused(true)}
-                                        onBlur={() => setIsFocused(false)}
+                                        onFocus={() => setFocusUser(true)}
+                                        onBlur={() => setFocusUser(false)}
                                     />
 
                                     <label htmlFor="nameLogin" className={st('label')}>
@@ -101,7 +106,11 @@ function Login() {
 
                                 {/* PASSWORD */}
                                 {showPassword && (
-                                    <div className={st('input-box')}>
+                                    <div
+                                        className={st('input-box')}
+                                        style={{
+                                            border: focusPass ? '1px solid #007bff' : '1px solid #ced4da',
+                                        }}>
                                         <input
                                             type="password"
                                             id="password"
@@ -109,6 +118,8 @@ function Login() {
                                             className={st('input')}
                                             placeholder=" "
                                             required
+                                            onFocus={() => setFocusPass(true)}
+                                            onBlur={() => setFocusPass(false)}
                                         />
 
                                         <label htmlFor="password" className={st('label')}>
@@ -119,7 +130,7 @@ function Login() {
 
                                 {/* LOGIN BUTTON */}
                                 {showPassword && (
-                                    <button key={showPassword} type="submit" className={st('login-btn')}>
+                                    <button type="submit" className={st('login-btn')}>
                                         Đăng nhập
                                     </button>
                                 )}

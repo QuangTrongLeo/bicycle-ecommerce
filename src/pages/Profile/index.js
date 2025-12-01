@@ -1,3 +1,6 @@
+import { useSelector } from 'react-redux';
+import { getUserProfile, getUserWallet, getUserRank } from '../../dummydb';
+
 import classNames from 'classnames/bind';
 import styles from './style.module.scss';
 import { Link } from 'react-router-dom';
@@ -11,28 +14,40 @@ import cashIcon from '../../assets/img/user/mceclip6_39.png';
 const st = classNames.bind(styles);
 
 function Profile() {
+    const user = useSelector((state) => state.user.currentUser);
+
+    if (!user) return <h2>Vui lòng đăng nhập!</h2>;
+
+    const profile = getUserProfile(user.id);
+    const wallet = getUserWallet(user.id);
+    const rank = getUserRank(user.id);
+
+    const rankImages = {
+        none: rankNone,
+        silver: rankSilver,
+        gold: rankGold,
+        platinum: rankPlatinum,
+    };
+
     return (
         <div className="container">
-            d
             <div className="row">
-                {/* HEADER USER */}
                 <div className="col-md-12">
                     <div className={st('profile-header')}>
                         <div className="row">
-                            {/* LEFT */}
                             <div className="col-md-9">
-                                <h3>Hi, Nguyễn Huy Vũ</h3>
+                                <h3>Hi, {profile.fullName}</h3>
 
-                                <img className={st('rank-current')} src={rankNone} alt="" />
+                                <img className={st('rank-current')} src={rankImages[rank.rank]} alt="" />
 
                                 <div className={st('profile-spending')}>
                                     <p>
-                                        Chi tiêu thêm <span>252.000đ</span> để lên hạng
+                                        Chi tiêu thêm <span>{rank.spendingToNextRank.toLocaleString()}đ</span> để lên
+                                        hạng
                                     </p>
                                     <img className={st('rank-next')} src={rankSilver} alt="" />
                                 </div>
 
-                                {/* LINE SPEND */}
                                 <div className={st('spend-line')}>
                                     <div className={st('spend-progress')}></div>
 
@@ -54,7 +69,6 @@ function Profile() {
                                 </div>
                             </div>
 
-                            {/* RIGHT */}
                             <div className="col-md-3">
                                 <div className={st('profile-summary')}>
                                     <div className={st('coolcash-box')}>
@@ -62,19 +76,7 @@ function Profile() {
 
                                         <div className={st('coolcash')}>
                                             <img src={cashIcon} alt="" />
-                                            <p>3.000 CoolCash</p>
-                                        </div>
-                                    </div>
-
-                                    <div className={st('reward')}>
-                                        <div className="btn">
-                                            <div className="text">
-                                                <div>SirkRoad</div>
-                                                <div>Rewards Hub</div>
-                                            </div>
-                                            <div className="icon">
-                                                <i className="fa-solid fa-right-long"></i>
-                                            </div>
+                                            <p>{wallet.coolcash.toLocaleString()} CoolCash</p>
                                         </div>
                                     </div>
                                 </div>
@@ -83,10 +85,10 @@ function Profile() {
                     </div>
                 </div>
             </div>
-            {/* MAIN CONTENT */}
+
+            {/* MAIN */}
             <div className="row" style={{ marginTop: 20 }}>
-                {/* LEFT MENU */}
-                <div className="col-md-3" style={{ padding: 0 }}>
+                <div className="col-md-3">
                     <div className={st('user-menu')}>
                         <div className={st('menu-item')}>
                             <span>Lịch sử đơn hàng</span>
@@ -104,45 +106,42 @@ function Profile() {
                     </div>
                 </div>
 
-                {/* RIGHT CONTENT */}
                 <div className="col-md-9" style={{ paddingRight: 0 }}>
                     <div className={st('profile-content')}>
-                        {/* PERSONAL INFO */}
                         <h2>Thông tin tài khoản</h2>
 
                         <div className={st('info-row')}>
                             <p>Họ và tên</p>
-                            <p>Nguyễn Huy Vũ</p>
+                            <p>{profile.fullName}</p>
                         </div>
 
                         <div className={st('info-row')}>
                             <p>Số điện thoại</p>
-                            <p>0987654321</p>
+                            <p>{profile.phone}</p>
                         </div>
 
                         <div className={st('info-row')}>
                             <p>Giới tính</p>
-                            <p>Nam</p>
+                            <p>{profile.gender}</p>
                         </div>
 
                         <div className={st('info-row')}>
-                            <p>Ngày tháng năm sinh</p>
-                            <p>10/01/2003</p>
+                            <p>Ngày sinh</p>
+                            <p>{profile.birthday}</p>
                         </div>
 
                         <div className={st('info-row')}>
                             <p>Địa chỉ</p>
-                            <p>123, Đường 123, Quận 1, TP.HCM</p>
+                            <p>{profile.address}</p>
                         </div>
 
                         <button className={st('btn-edit')}>Chỉnh sửa thông tin cá nhân</button>
 
-                        {/* LOGIN INFO */}
                         <h2 style={{ marginTop: 20 }}>Thông tin đăng nhập</h2>
 
                         <div className={st('info-row')}>
                             <p>Email</p>
-                            <p>huyvu10012003@gmai.com</p>
+                            <p>{profile.email}</p>
                         </div>
 
                         <div className={st('info-row')}>
