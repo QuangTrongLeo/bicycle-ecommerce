@@ -6,7 +6,7 @@ const routes = {
     profile: '/profile',
     searched: '/searched',
     category: '/category',
-    sub_category: 'sub-category',
+    sub_category: '/sub-category',
 };
 
 export default routes;
