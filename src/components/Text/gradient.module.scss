@@ -1,0 +1,22 @@
+.wrapper {
+    font-weight: bold;
+}
+
+.gradient {
+    background-image: linear-gradient(
+                    to right,
+                    var(--gradient-blue-start-color) 0%,
+                    var(--gradient-blue-end-color) 15%,
+                    var(--gradient-purple-color) 35%,
+                    var(--gradient-pink-color) 65%,
+                    var(--gradient-orange-start-color) 80%,
+                    var(--gradient-orange-end-color) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.gray {
+    color: #7a7a7a;
+}

@@ -5,15 +5,14 @@
 
 .card-product {
     position: relative;
-    width: 38.5rem !important;
-    height: 38.5rem !important;
+    width: 36.5rem !important;
+    height: 36.5rem !important;
     overflow: hidden;
-    border-radius: 12px;
+    border-radius: 24px;
     transition: box-shadow 0.25s ease;
-    box-shadow: 0 4px 12px var(--default-gray-color);
 
     &:hover {
-        box-shadow: 0 12px 24px var(--default-gray-color);
+        box-shadow: 0 6px 12px var(--default-gray-color);
 
         .card-img {
             transform: scale(1.06);
@@ -56,26 +55,11 @@
     padding: 15px;
     color: var(--white-color);
     box-sizing: border-box;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), var(--shadow-dark-color));
 
     .card-name {
-        margin-bottom: 5px;
-        font-weight: bold;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        background-image: linear-gradient(
-            to right,
-            var(--gradient-blue-start-color) 0%,
-            var(--gradient-blue-end-color) 15%,
-            var(--gradient-purple-color) 35%,
-            var(--gradient-pink-color) 65%,
-            var(--gradient-orange-start-color) 80%,
-            var(--gradient-orange-end-color) 100%
-        );
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent !important;
+        color: var(--black-color);
+        font-weight: 700;
+        font-size: 24px;
     }
 
     .card-desc {
@@ -89,13 +73,15 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    color: var(--gray-color);
 
     .price {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
         font-weight: bold;
     }
+
     .origin-price {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
         text-decoration: line-through;
         opacity: 0.7;
     }

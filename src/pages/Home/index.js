@@ -1,111 +1,80 @@
 import classNames from 'classnames/bind';
-import styles from './style.module.scss';
 import configs from '../../config';
 import { LargeSquareCard, MainHorizontalScroll, SmallSquareCard } from '../../components';
+import styles from './style.module.scss';
+import GradientText from '../../components/Text';
+import { getAllCategories, getNewestProducts, accessoryProducts } from '../../dummydb';
+
 const st = classNames.bind(styles);
 
-const products = [
-    {
-        id: 1,
-        img: 'https://xedapthegioi.vn/wp-content/uploads/2018/03/galaxy-c100-7-768x576.jpg',
-        name: 'Xe đạp thể thao Galaxy C100',
-        desc: 'Xe đạp Galaxy',
-        price: 3690000,
-        discount: 13,
-    },
-    {
-        id: 2,
-        img: 'https://xedapthegioi.vn/wp-content/uploads/2018/03/galaxy-c100-7-768x576.jpg',
-        name: 'Xe đạp thể thao Galaxy C100',
-        desc: 'Xe đạp Galaxy',
-        price: 3690000,
-        discount: 0,
-    },
-    {
-        id: 3,
-        img: 'https://xedapthegioi.vn/wp-content/uploads/2018/03/galaxy-c100-7-768x576.jpg',
-        name: 'Xe đạp thể thao Galaxy C100',
-        desc: 'Xe đạp Galaxy',
-        price: 3690000,
-        discount: 10,
-    },
-    {
-        id: 4,
-        img: 'https://xedapthegioi.vn/wp-content/uploads/2018/03/galaxy-c100-7-768x576.jpg',
-        name: 'Xe đạp thể thao Galaxy C100',
-        desc: 'Xe đạp Galaxy',
-        price: 3690000,
-        discount: 0,
-    },
-    {
-        id: 5,
-        img: 'https://xedapthegioi.vn/wp-content/uploads/2018/03/galaxy-c100-7-768x576.jpg',
-        name: 'Xe đạp thể thao Galaxy C100',
-        desc: 'Xe đạp Galaxy',
-        price: 3690000,
-        discount: 0,
-    },
-];
-
-const categories = [
-    {
-        id: 1,
-        img: 'https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-13-iphone-nav-202509?wid=1200&hei=780&fmt=png-alpha&.v=dW5XbHI1eDVpd01qWUU4bFRtWGZXM1doT212VzJoWjBSKzRpbmNETHN1QnRHU3BERzdnOWdiQkwvWTZGajY2b1M0TjRWdzF2UjRGVEY0c3dBQVZ6VFN0TmdKaCs3NTJMbFVuOGp2LzI5RGc',
-        name: 'Xe đạp thể thao kabk kabakg abka agkgag',
-    },
-    {
-        id: 2,
-        img: 'https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-13-ipad-nav-202405?wid=400&hei=260&fmt=png-alpha&.v=dW5XbHI1eDVpd01qWUU4bFRtWGZXNGFLQTJVNnlNQmQrVmRBYnZYei9jckUzelNmMnRxajE0NHhmMWtLazl6eG53M0FRZHBXNTh1U1lFVEtSR2YzTm5qbE56RWRpRFNIRXZvbkd2S0l5dTg',
-        name: 'Xe đạp nhập khẩu',
-    },
-    {
-        id: 3,
-        img: 'https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-13-watch-nav-202509_GEO_VN?wid=400&hei=260&fmt=png-alpha&.v=S0tSVzBtSkRkSFFhMm1zS1NmeWtkK0gvNGFhODF5SWpidW9tVnFmL2Irb1R1VkJuQ29uUmRMelVabnRBV0VHSGM5THdmR1U4Nmp4b2NFbEg2N21UQzYzZVFZZGtHNUI4c1NvME1xTTYxSzRMSUNabG1aSTZUOVg1S2E0WTkzNG0',
-        name: 'Xe đạp trẻ em',
-    },
-    {
-        id: 4,
-        img: 'https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-13-accessories-nav-202509?wid=400&hei=260&fmt=png-alpha&.v=QnhsNk96S0o4R1dkN2FveStNM1hwNzZGMHVrNGw2NTM5Vmk2bHZzMXQ3aWRqT2drRk00QWZTdStjaG1MbFN0Z1BrcjVFNVdueFRVbVY3TGtiL2RjUWZiYi92WkVCUEt5TCtGS2UwaWpxS3I3V3pZTFFiS3ZLYmI4VE9UR00xblE',
-        name: 'Phụ kiện',
-    },
-];
-
 function Home() {
+    const categories = getAllCategories();
+    const newProducts = getNewestProducts(5);
+
+    const accessories = accessoryProducts(5);
+    console.log(accessories);
+
     return (
-        <div className={st('wrapper')}>
-            <div class={st('header')}>
-                <div class={st('header-title')}>Cửa Hàng</div>
-                <div class={st('header-subtitle')}>Trao những điều đặc biệt.</div>
-            </div>
-
-            <div className={st('product-group')}>
-                <MainHorizontalScroll>
-                    {categories.map((category) => (
-                        <SmallSquareCard
-                            key={category.id}
-                            to={`${configs.routes.category}/${category.name}`}
-                            name={category.name}
-                            img={category.img}
+        <div className={st('container')}>
+            <div className="row">
+                <div className="col l-12 m-12 c-12">
+                    <div className={st('header')}>
+                        <GradientText
+                            text={'Cửa hàng. Cách tốt nhất để bạn mua sản phẩm bạn thích'}
+                            colorWord={2}
+                            wordsPerLine={6}
                         />
-                    ))}
-                </MainHorizontalScroll>
-            </div>
-
-            <div className={st('product-group')}>
-                <h2>Những sản phẩm mới nhất</h2>
-                <MainHorizontalScroll>
-                    {products.map((product) => (
-                        <LargeSquareCard
-                            key={product.id}
-                            to={`${configs.routes.detail}/${product.name}`}
-                            name={product.name}
-                            desc={product.desc}
-                            img={product.img}
-                            price={product.price}
-                            discount={product.discount}
+                    </div>
+                    <div className={st('product-group')}>
+                        <MainHorizontalScroll>
+                            {categories.map((category) => (
+                                <SmallSquareCard
+                                    key={category.id}
+                                    to={`${configs.routes.category}/${category.id}`}
+                                    name={category.name}
+                                    img={category.img}
+                                />
+                            ))}
+                        </MainHorizontalScroll>
+                    </div>
+                    <div className={st('product-group')}>
+                        <GradientText
+                            text={'Những sản phẩm mới nhất. Quà này ai cũng mê.'}
+                            colorWord={5}
+                            fontSize={30}
                         />
-                    ))}
-                </MainHorizontalScroll>
+                        <MainHorizontalScroll>
+                            {newProducts.map((product) => (
+                                <LargeSquareCard
+                                    key={product.id}
+                                    to={`${configs.routes.detail}/${product.id}`}
+                                    name={product.name}
+                                    desc={product.desc}
+                                    img={product.img}
+                                    price={product.price}
+                                    discount={product.discount}
+                                />
+                            ))}
+                        </MainHorizontalScroll>
+                    </div>
+
+                    <div className={st('product-group')}>
+                        <GradientText text={'Cá nhân hóa. Món quà có một không hai.'} colorWord={3} fontSize={30} />
+                        <MainHorizontalScroll>
+                            {accessories.map((product) => (
+                                <LargeSquareCard
+                                    key={product.id}
+                                    to={`${configs.routes.detail}/${product.id}`}
+                                    name={product.name}
+                                    desc={product.desc}
+                                    img={product.img}
+                                    price={product.price}
+                                    discount={product.discount}
+                                />
+                            ))}
+                        </MainHorizontalScroll>
+                    </div>
+                </div>
             </div>
         </div>
     );
