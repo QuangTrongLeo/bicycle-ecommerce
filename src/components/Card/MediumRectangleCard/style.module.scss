@@ -11,8 +11,6 @@
     transition: box-shadow 0.25s ease;
 
     &:hover {
-        box-shadow: 0 8px 20px var(--default-gray-color);
-
         .card-img-top {
             transform: scale(1.03);
         }
@@ -33,6 +31,11 @@
         flex-direction: column;
         justify-content: space-between;
 
+        .card-color {
+            display: flex;
+            gap: 6%;
+        }
+
         .card-name {
             color: var(--primary-color);
             display: -webkit-box;
@@ -40,6 +43,10 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
+
+            &:hover {
+                color: var(--blue-color);
+            }
         }
 
         .card-price {
