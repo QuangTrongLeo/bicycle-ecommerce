@@ -7,7 +7,7 @@ const st = classNames.bind(styles);
 function SmallSquareCard({ to = '#', img, name }) {
     return (
         <Link to={to} className={st('link-wrapper')}>
-            <div className={st('card', 'card-product')}>
+            <div className={st('card-product')}>
                 <img src={img} className={st('card-img')} alt={name} />
                 <span className={st('card-name')}>{name}</span>
             </div>

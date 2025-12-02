@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { getUserProfile, getUserWallet, getUserRank } from '../../dummydb';
+import { getUserInfo } from '../../dummydb';
 
 import classNames from 'classnames/bind';
 import styles from './style.module.scss';
@@ -18,9 +18,7 @@ function Profile() {
 
     if (!user) return <h2>Vui lòng đăng nhập!</h2>;
 
-    const profile = getUserProfile(user.id);
-    const wallet = getUserWallet(user.id);
-    const rank = getUserRank(user.id);
+    const { profile, wallet, rank } = getUserInfo(user.id);
 
     const rankImages = {
         none: rankNone,
