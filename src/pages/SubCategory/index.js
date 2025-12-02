@@ -95,17 +95,21 @@ function SubCategory() {
     return (
         <div>
             <h1 className={st('content')}>SubCategory Page</h1>
-            {products.map((product) => (
-                <MediumRectangleCard
-                    key={product.id}
-                    to={`${configs.routes.detail}/${product.name}`}
-                    name={product.name}
-                    desc={product.desc}
-                    img={product.img}
-                    price={product.price}
-                    discount={product.discount}
-                />
-            ))}
+
+            <div className="row g-4">
+                {products.map((product) => (
+                    <div key={product.id} className="col-6 col-md-4 col-lg-3">
+                        <MediumRectangleCard
+                            to={`${configs.routes.detail}/${product.name}`}
+                            name={product.name}
+                            desc={product.desc}
+                            img={product.img}
+                            price={product.price}
+                            discount={product.discount}
+                        />
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }
