@@ -1,5 +1,5 @@
-import product1 from '../../assets/img/product/product1.png';
-import product2 from '../../assets/img/product/product2.png';
+import product1 from '../../../assets/img/product/product1.png';
+import product2 from '../../../assets/img/product/product2.png';
 
 export const productImages = [
     { id: 1, colorId: 1, imageUrl: product1 },
@@ -11,4 +11,5 @@ export const productImages = [
     { id: 7, colorId: 7, imageUrl: product1 },
     { id: 8, colorId: 8, imageUrl: product1 },
     { id: 9, colorId: 9, imageUrl: product2 },
+    { id: 10, colorId: 10, imageUrl: product2 },
 ];
