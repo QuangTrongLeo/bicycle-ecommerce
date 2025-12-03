@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -80,6 +80,7 @@ function Navigation() {
     const [isClosingDropdown, setIsClosingDropdown] = useState(false);
     const { isAuthenticated } = useSelector((state) => state.user);
     const navigate = useNavigate();
+    const location = useLocation();
 
     const currentMenuData = activeDropdown ? menuData[activeDropdown] : null;
 
@@ -96,9 +97,14 @@ function Navigation() {
         }, 300);
     };
 
+    useEffect(() => {
+        setActiveDropdown(null);
+        setIsClosingDropdown(false);
+    }, [location.pathname]);
+
     return (
         <div className={st('navigation-wrapper')}>
-            <div className={st('header-decoration')}>
+            <div key={location.pathname} className={st('header-decoration')}>
                 <div className={st('decoration-shape', 'decoration-yellow')}></div>
                 <div className={st('decoration-shape', 'decoration-pink-primary')}></div>
                 <div className={st('decoration-shape', 'decoration-pink-secondary')}></div>
@@ -116,7 +122,7 @@ function Navigation() {
                             </span>
 
                             <span onMouseEnter={() => openDropdown('store')}>
-                                <Link to="/">Cửa hàng</Link>
+                                <Link to="/collection">Cửa hàng</Link>
                             </span>
 
                             <span onMouseEnter={() => openDropdown('shoes')}>
