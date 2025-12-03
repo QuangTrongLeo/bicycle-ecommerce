@@ -6,3 +6,4 @@ export { default as Detail } from './Detail';
 export { default as Searched } from './Searched';
 export { default as Category } from './Category';
 export { default as SubCategory } from './SubCategory';
+export { default as Collection } from './Collection';
