@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9af4d39d-8031-48b2-bfce-ad01bda15495" name="Changes" comment="design db">
+      <change afterPath="$PROJECT_DIR$/src/dummydb/api/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/dummydb/api/orderApi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/dummydb/table/order/order.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/dummydb/table/order/orderItems.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/dummydb/table/order/orderStatusHistory.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/dummydb/table/product/productSizes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dummydb/api/productApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dummydb/api/productApi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dummydb/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dummydb/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dummydb/table/categories.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dummydb/table/product/categories.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dummydb/table/productColors.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dummydb/table/product/productColors.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dummydb/table/productImages.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dummydb/table/product/productImages.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dummydb/table/productSizes.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dummydb/table/products.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dummydb/table/product/products.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Collection/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Collection/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Collection/style.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Collection/style.module.scss" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="36HxlQsCDB7XlPHi0WNZHUew9MY" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "designDB",
+    "last_opened_file_path": "E:/LearnUniversity/bicycle-ecommerce/src/components/Navigation",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "E:\\LearnUniversity\\bicycle-ecommerce\\node_modules\\prettier",
+    "settings.editor.selected.configurable": "actions.on.save",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2025.2.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\LearnUniversity\bicycle-ecommerce\src\components\Navigation" />
+      <recent name="E:\LearnUniversity\bicycle-ecommerce\src\assets\img\product" />
+      <recent name="E:\LearnUniversity\bicycle-ecommerce\src\assets\img\category" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\LearnUniversity\bicycle-ecommerce\src\dummydb\table\product" />
+      <recent name="E:\LearnUniversity\bicycle-ecommerce" />
+      <recent name="E:\LearnUniversity\bicycle-ecommerce\src\dummydb\api" />
+      <recent name="E:\LearnUniversity\bicycle-ecommerce\src\dummydb\table" />
+      <recent name="E:\LearnUniversity\bicycle-ecommerce\src\assets\img\category" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-WS-252.26830.93" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9af4d39d-8031-48b2-bfce-ad01bda15495" name="Changes" comment="" />
+      <created>1764677454497</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1764677454497</updated>
+      <workItem from="1764677457928" duration="141000" />
+      <workItem from="1764677631327" duration="11365000" />
+      <workItem from="1764744019311" duration="13000" />
+      <workItem from="1764750224249" duration="16651000" />
+    </task>
+    <task id="LOCAL-00001" summary="design home">
+      <option name="closed" value="true" />
+      <created>1764688817250</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1764688817250</updated>
+    </task>
+    <task id="LOCAL-00002" summary="design db">
+      <option name="closed" value="true" />
+      <created>1764756215268</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1764756215268</updated>
+    </task>
+    <task id="LOCAL-00003" summary="design db">
+      <option name="closed" value="true" />
+      <created>1764768732289</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1764768732289</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="design home" />
+    <MESSAGE value="design db" />
+    <option name="LAST_COMMIT_MESSAGE" value="design db" />
+  </component>
+</project>

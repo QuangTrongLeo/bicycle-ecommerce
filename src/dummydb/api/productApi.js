@@ -1,8 +1,12 @@
-import { products } from '../table/products';
-import { categories } from '../table/categories';
-import { productColors } from '../table/productColors';
-import { productImages } from '../table/productImages';
-import { productSizes } from '../table/productSizes';
+import {
+    products,
+    categories,
+    productColors,
+    productImages,
+    productSizes,
+    orderItems,
+    orderStatusHistory,
+} from '~/dummydb';
 
 export const getFullProduct = (productId) => {
     const p = products.find((x) => x.id === productId);
@@ -44,4 +48,81 @@ export const getNewestProductsFull = (limit = 10) => {
     const sorted = [...products].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, limit);
 
     return sorted.map((p) => getFullProduct(p.id));
+};
+
+export const getAllProductsFullPaginate = (page = 1, limit = 10) => {
+    const fullList = products.map((p) => getFullProduct(p.id));
+
+    const total = fullList.length;
+    const totalPages = Math.ceil(total / limit);
+
+    const start = (page - 1) * limit;
+    const end = start + limit;
+
+    return {
+        data: fullList.slice(start, end),
+        page,
+        limit,
+        total,
+        totalPages,
+    };
+};
+
+export const getTopCategoriesBySold = (limit = 3) => {
+    // 1. Lấy các order đã completed từ lịch sử trạng thái
+    const completedOrderIds = orderStatusHistory.filter((s) => s.status === 'completed').map((s) => s.orderId);
+
+    // 2. Đếm số lượng bán theo category
+    const categoryCount = {};
+
+    orderItems.forEach((item) => {
+        // chỉ tính các item thuộc order đã hoàn thành
+        if (!completedOrderIds.includes(item.orderId)) return;
+
+        const product = products.find((p) => p.id === item.productId);
+        if (!product) return;
+
+        const cateId = product.categoryId;
+
+        categoryCount[cateId] = (categoryCount[cateId] || 0) + item.quantity;
+    });
+
+    // 3. Convert thành mảng & sort
+    const sorted = Object.keys(categoryCount)
+        .map((cateId) => ({
+            ...categories.find((c) => c.id === Number(cateId)),
+            sold: categoryCount[cateId],
+        }))
+        .sort((a, b) => b.sold - a.sold);
+
+    return sorted.slice(0, limit);
+};
+
+export const getProductsByCategoryPaginate = (categoryId, page = 1, limit = 8) => {
+    let list = products.filter((p) => p.categoryId === Number(categoryId));
+    const full = list.map((p) => getFullProduct(p.id));
+
+    const total = full.length;
+    const totalPages = Math.ceil(total / limit);
+
+    const start = (page - 1) * limit;
+
+    return {
+        data: full.slice(start, start + limit),
+        total,
+        totalPages,
+        page,
+    };
+};
+
+export const getAllColors = (limit = 8) => {
+    const unique = productColors
+        .map((c) => ({
+            id: c.id,
+            code: c.colorHex,
+            name: c.colorName,
+        }))
+        .filter((item, index, arr) => arr.findIndex((x) => x.code === item.code) === index);
+
+    return unique.slice(0, limit);
 };

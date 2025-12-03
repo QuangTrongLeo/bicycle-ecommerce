@@ -1,127 +1,256 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
+import { useSearchParams } from 'react-router-dom';
 
 import styles from './style.module.scss';
 import { SearchBox } from '~/components/Input';
 
+import {
+    getAllProductsFullPaginate,
+    getTopCategoriesBySold,
+    getProductsByCategoryPaginate,
+    getAllColors,
+} from '~/dummydb/api/productApi';
+
 const st = classNames.bind(styles);
 
 function Collection() {
-    const [selectedGroup, setSelectedGroup] = useState('');
-    const [selectedSize, setSelectedSize] = useState('');
-    const [selectedColor, setSelectedColor] = useState('');
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    const sizes = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL'];
+    const [page, setPage] = useState(Number(searchParams.get('page')) || 1);
+    const [query, setQuery] = useState(searchParams.get('search') || '');
+    const [category, setCategory] = useState(searchParams.get('category') || '');
+    const [color, setColor] = useState(searchParams.get('color') || '');
 
-    const colors = [
-        { c: 'red', n: 'Đỏ' },
-        { c: 'blue', n: 'Xanh' },
-        { c: 'yellow', n: 'Vàng' },
-        { c: 'green', n: 'Xanh lá' },
-        { c: 'black', n: 'Đen' },
-        { c: 'white', n: 'Trắng' },
-        { c: 'pink', n: 'Hồng' },
-    ];
+    const [categories, setCategories] = useState([]);
+    const [availableColors, setAvailableColors] = useState([]);
+    const [data, setData] = useState([]);
+    const [totalPages, setTotalPages] = useState(1);
 
-    const products = Array.from({ length: 8 });
+    // ⭐ TRẠNG THÁI: màu đang chọn của từng sản phẩm
+    const [selectedColorByProduct, setSelectedColorByProduct] = useState({});
+
+    // =============================
+    // LẤY DANH SÁCH MÀU
+    // =============================
+    useEffect(() => {
+        setAvailableColors(getAllColors());
+    }, []);
+
+    // =============================
+    // LẤY TOP CATEGORY
+    // =============================
+    useEffect(() => {
+        const top = getTopCategoriesBySold(3);
+        setCategories(top);
+    }, []);
+
+    // =============================
+    // LOAD PRODUCTS
+    // =============================
+    useEffect(() => {
+        let res;
+
+        if (category) {
+            res = getProductsByCategoryPaginate(category, page, 8);
+        } else {
+            res = getAllProductsFullPaginate(page, 8);
+        }
+
+        let list = res.data;
+
+        // SEARCH
+        if (query.trim() !== '') {
+            list = list.filter((p) => p.name.toLowerCase().includes(query.toLowerCase()));
+        }
+
+        // FILTER COLOR
+        if (color.trim() !== '') {
+            list = list.filter((p) => p.colors?.some((c) => String(c.colorHex).toLowerCase() === color.toLowerCase()));
+        }
+
+        setData(list);
+        setTotalPages(res.totalPages);
+    }, [page, query, category, color]);
+
+    // =============================
+    // TÌM KIẾM
+    // =============================
+    const onSearch = (value) => {
+        setQuery(value);
+        setPage(1);
+
+        setSearchParams({
+            search: value,
+            page: 1,
+            ...(category && { category }),
+            ...(color && { color }),
+        });
+    };
+
+    // =============================
+    // CHỌN CATEGORY
+    // =============================
+    const onSelectCategory = (id) => {
+        setCategory(id);
+        setPage(1);
+
+        setSearchParams({
+            ...(id && { category: id }),
+            page: 1,
+            ...(query && { search: query }),
+            ...(color && { color }),
+        });
+    };
+
+    // =============================
+    // CHỌN MÀU TRONG SIDEBAR
+    // =============================
+    const onSelectColor = (hex) => {
+        const newValue = hex === color ? '' : hex;
+
+        setColor(newValue);
+        setPage(1);
+
+        setSearchParams({
+            ...(category && { category }),
+            ...(query && { search: query }),
+            ...(newValue && { color: newValue }),
+            page: 1,
+        });
+    };
 
     return (
-        <div className={st('page')}>
+        <div className={st('collection')}>
             <div className="container">
                 <div className="row">
-                    {/* ----------------- SIDEBAR ----------------- */}
+                    {/* ================== SIDEBAR ================== */}
                     <div className="col-md-2">
                         <div className={st('filter')}>
-                            {/* Nhóm sản phẩm */}
                             <p className={st('filter-title')}>Nhóm sản phẩm</p>
+
                             <div className={st('filter-group')}>
-                                {['Giày Nam', 'Giày Nữ', 'Giày Trẻ Em'].map((g) => (
-                                    <label key={g}>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="cate"
+                                        checked={String(category) === ''}
+                                        onChange={() => onSelectCategory('')}
+                                    />
+                                    Tất cả sản phẩm
+                                </label>
+
+                                {categories.map((cate) => (
+                                    <label key={cate.id}>
                                         <input
                                             type="radio"
-                                            name="g"
-                                            checked={selectedGroup === g}
-                                            onChange={() => setSelectedGroup(g)}
+                                            name="cate"
+                                            checked={String(category) === String(cate.id)}
+                                            onChange={() => onSelectCategory(cate.id)}
                                         />
-                                        {g}
+                                        {cate.name}
                                     </label>
                                 ))}
                             </div>
 
-                            {/* Kích cỡ */}
-                            <p className={st('filter-title')}>Kích cỡ</p>
-                            <div className={st('filter-size')}>
-                                {sizes.map((s) => (
-                                    <button
-                                        key={s}
-                                        className={selectedSize === s ? st('active') : ''}
-                                        onClick={() => setSelectedSize(s)}>
-                                        {s}
-                                    </button>
-                                ))}
-                            </div>
-
-                            {/* Màu sắc */}
+                            {/* COLOR FILTER */}
                             <p className={st('filter-title')}>Màu sắc</p>
+
                             <div className={st('filter-color')}>
-                                {colors.map((item) => (
-                                    <div className={st('color-item')} key={item.c}>
+                                {availableColors.map((item) => (
+                                    <div className={st('color-item')} key={item.id}>
                                         <button
-                                            style={{ backgroundColor: item.c }}
-                                            className={selectedColor === item.c ? st('active-color') : ''}
-                                            onClick={() => setSelectedColor(item.c)}></button>
-                                        <p>{item.n}</p>
+                                            style={{ backgroundColor: item.code }}
+                                            className={color === item.code ? st('active-color') : ''}
+                                            onClick={() => onSelectColor(item.code)}></button>
+                                        <p>{item.name}</p>
                                     </div>
                                 ))}
                             </div>
                         </div>
                     </div>
 
-                    {/* ----------------- PRODUCT LIST ----------------- */}
+                    {/* ================= PRODUCT LIST ================= */}
                     <div className="col-md-10">
                         <div className={st('product-list')}>
-                            {/* SEARCH BAR */}
-                            <SearchBox />
+                            <SearchBox value={query} onSearch={onSearch} placeholder="Tìm kiếm sản phẩm..." />
 
-                            {/* PRODUCT GRID */}
                             <div className="row">
-                                {products.map((_, i) => (
-                                    <div className="col-md-3" key={i}>
-                                        <div className={st('card')}>
-                                            <div className={st('card-img')}>
-                                                <img src="/assets/homeImages/10.jpg" alt="" />
+                                {data.map((p) => {
+                                    // lấy màu được chọn hoặc mặc định màu đầu tiên
+                                    const selectedId = selectedColorByProduct[p.id];
+                                    const selectedColor = p.colors.find((c) => c.id === selectedId) || p.colors[0];
 
-                                                <div className={st('card-size')}>
-                                                    {['S', 'M', 'L', 'XL', '2XL'].map((s) => (
-                                                        <button key={s}>{s}</button>
+                                    return (
+                                        <div className="col-md-3" key={p.id}>
+                                            <div className={st('card')}>
+                                                <div className={st('card-img')}>
+                                                    <img src={selectedColor.images?.[0]} alt={p.name} />
+
+                                                    <div className={st('card-size')}>
+                                                        {selectedColor.sizes?.map((s) => (
+                                                            <button key={s.id}>{s.size}</button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                {/* COLOR BUTTONS */}
+                                                <div className={st('card-color')}>
+                                                    {p.colors?.map((c) => (
+                                                        <button
+                                                            key={c.id}
+                                                            style={{ background: c.colorHex }}
+                                                            onClick={() =>
+                                                                setSelectedColorByProduct((prev) => ({
+                                                                    ...prev,
+                                                                    [p.id]: c.id,
+                                                                }))
+                                                            }></button>
                                                     ))}
                                                 </div>
-                                            </div>
 
-                                            <div className={st('card-color')}>
-                                                {['#e4e4e4', '#292929', '#27262b'].map((c) => (
-                                                    <button key={c} style={{ background: c }}></button>
-                                                ))}
-                                            </div>
+                                                <p className={st('card-name')}>{p.name}</p>
 
-                                            <p className={st('card-name')}>Iphone 13 Pro Max lorem ipsum</p>
+                                                <div className={st('card-price')}>
+                                                    <span className={st('price')}>{p.price.toLocaleString()}đ</span>
 
-                                            <div className={st('card-price')}>
-                                                <span className={st('price')}>30.000đ</span>
-                                                <span className={st('discount')}>10%</span>
-                                                <span className={st('old')}>20.000đ</span>
+                                                    {p.discount > 0 && (
+                                                        <>
+                                                            <span className={st('discount')}>{p.discount}%</span>
+
+                                                            <span className={st('old')}>
+                                                                {(p.price * (1 + p.discount / 100)).toLocaleString()}đ
+                                                            </span>
+                                                        </>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
 
                             {/* PAGINATION */}
-                            <div className={st('pagination')}>
-                                {[1, 2, 3, 4, 5].map((n) => (
-                                    <button key={n}>{n}</button>
-                                ))}
-                            </div>
+                            {data.length > 0 && totalPages > 1 && (
+                                <div className={st('pagination')}>
+                                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+                                        <button
+                                            key={n}
+                                            className={page === n ? st('active') : ''}
+                                            onClick={() => {
+                                                setPage(n);
+                                                setSearchParams({
+                                                    page: n,
+                                                    ...(query && { search: query }),
+                                                    ...(category && { category }),
+                                                    ...(color && { color }),
+                                                });
+                                            }}>
+                                            {n}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
