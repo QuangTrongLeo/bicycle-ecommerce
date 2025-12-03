@@ -1,5 +1,9 @@
 // EXPORT TỪ userDB
-export * from './userDB';
+export * from './table/user';
 
-// EXPORT TỪ shopDB
-export * from './shopDB';
+export * from './table/categories';
+export * from './table/products';
+export * from './table/productColors';
+export * from './table/productImages';
+export * from './table/productSizes';
+export * from './api/productApi';

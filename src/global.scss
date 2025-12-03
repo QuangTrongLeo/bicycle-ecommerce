@@ -5,70 +5,65 @@
     --blue-color: #0071e3;
     --bg-light-color: #e5e5e5;
     --gray-color: #494949;
-
     --gradient-blue-start-color: #337ae5;
     --gradient-blue-end-color: #408fe5;
-
     --gradient-orange-start-color: #d4734a;
     --gradient-orange-end-color: #ea6b2e;
-
     --gradient-purple-color: #8e5edb;
     --gradient-pink-color: #ed406b;
-
     --light-gray-color: #f0f0f0;
     --default-gray-color: #999999;
     --dark-gray-color: #6e6e73;
-
     --shadow-dark-color: rgba(0, 0, 0, 0.15);
     --shadow-light-color: rgba(255, 255, 255, 0.5);
 }
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: SF Pro Text, SF Pro Icons, Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+
+/* LUÔN LUÔN CÓ SCROLLBAR CHÍNH */
+html {
+    width: 100%;
+    min-height: 100vh;
+    overflow-y: scroll; /* dòng quan trọng */
+    overflow-x: hidden;
+    font-size: 70%;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+    font-size: 2.6rem;
+}
+
+/* KHÔNG container nào được phép tạo scrollbar phụ */
+#root,
+main,
+.wrapper,
+.container {
+    overflow: visible !important;
+    height: auto !important;
+}
+
 #root {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
-* {
-    font-family:
-        SF Pro Text,
-        SF Pro Icons,
-        Helvetica Neue,
-        Helvetica,
-        Arial,
-        sans-serif;
-}
-
 a {
-    color: black;
+    color: var(--black-color);
     text-decoration: none;
     font-size: 12px;
     font-weight: 400;
-    display: block;
-
-    &:hover {
-        text-decoration: none;
-    }
 }
+
 button {
     border: none;
-}
-
-html,
-body {
-    min-height: 100vh;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-}
-
-html {
-    font-size: 70%;
-}
-
-body {
-    font-size: 2.6rem;
-}
-
-#root {
-    min-height: 100vh;
+    outline: none;
+    cursor: pointer;
 }

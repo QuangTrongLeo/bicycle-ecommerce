@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faTruck, faCartShopping } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
 
 import Logo from '../../assets/img/logo/logo.png';
 import styles from './style.module.scss';
@@ -79,8 +78,9 @@ const menuData = {
 function Navigation() {
     const [activeDropdown, setActiveDropdown] = useState(null);
     const [isClosingDropdown, setIsClosingDropdown] = useState(false);
-    const { user, isAuthenticated } = useSelector((state) => state.user);
+    const { isAuthenticated } = useSelector((state) => state.user);
     const navigate = useNavigate();
+
     const currentMenuData = activeDropdown ? menuData[activeDropdown] : null;
 
     const openDropdown = (menuKey) => {
@@ -90,7 +90,6 @@ function Navigation() {
 
     const closeDropdown = () => {
         setIsClosingDropdown(true);
-
         setTimeout(() => {
             setActiveDropdown(null);
             setIsClosingDropdown(false);
@@ -98,7 +97,7 @@ function Navigation() {
     };
 
     return (
-        <>
+        <div className={st('navigation-wrapper')}>
             <div className={st('header-decoration')}>
                 <div className={st('decoration-shape', 'decoration-yellow')}></div>
                 <div className={st('decoration-shape', 'decoration-pink-primary')}></div>
@@ -110,9 +109,11 @@ function Navigation() {
                 <div className="container">
                     <nav className={st('nav-container')}>
                         <div className={st('nav-left')}>
-                            <Link to="/">
-                                <img src={Logo} alt="logo" width={20} />
-                            </Link>
+                            <span>
+                                <Link to="/">
+                                    <img src={Logo} alt="logo" width={20} />
+                                </Link>
+                            </span>
 
                             <span onMouseEnter={() => openDropdown('store')}>
                                 <Link to="/">Cửa hàng</Link>
@@ -153,12 +154,14 @@ function Navigation() {
                     </nav>
                 </div>
 
+                {currentMenuData && <div className={st('page-overlay')}></div>}
+
                 {currentMenuData && (
                     <div className={st('dropdown-menu', isClosingDropdown && 'dropdown-closing')}>
                         <div className="container">
                             <div className={st('dropdown-content')}>
                                 {currentMenuData.map((section, idx) => (
-                                    <div key={idx} className={st('dropdown-section')}>
+                                    <div key={idx} className={st('dropdown-section', idx === 0 && 'first-section')}>
                                         <p className={st('section-title')}>{section.heading}</p>
 
                                         <div className={st('section-items')}>
@@ -179,7 +182,7 @@ function Navigation() {
                     </div>
                 )}
             </div>
-        </>
+        </div>
     );
 }
 

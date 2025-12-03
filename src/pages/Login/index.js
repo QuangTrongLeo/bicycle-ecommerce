@@ -2,11 +2,11 @@ import { useState, useRef } from 'react';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleRight } from '@fortawesome/free-regular-svg-icons';
-import { checkUserLogin } from '../../dummydb';
+import { checkUserLogin } from '~/dummydb';
 
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setUser } from '../../redux/action/userAction';
+import { setUser } from '~/redux/action/userAction';
 
 import styles from './style.module.scss';
 const st = classNames.bind(styles);

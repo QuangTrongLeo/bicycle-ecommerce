@@ -3,21 +3,26 @@ import configs from '../../config';
 import { LargeSquareCard, MainHorizontalScroll, SmallSquareCard } from '../../components';
 import styles from './style.module.scss';
 import GradientText from '../../components/Text';
-import { getAllCategories, getNewestProducts, accessoryProducts } from '../../dummydb';
+
+import { getAllCategories, getNewestProductsFull, accessoryProducts } from '~/dummydb';
 
 const st = classNames.bind(styles);
 
 function Home() {
+    // Lấy danh mục
     const categories = getAllCategories();
-    const newProducts = getNewestProducts(5);
 
+    // Lấy sản phẩm mới nhất (full thông tin)
+    const newProducts = getNewestProductsFull(5);
+
+    // Lấy sản phẩm phụ kiện (full thông tin)
     const accessories = accessoryProducts(5);
-    console.log(accessories);
 
     return (
         <div className={st('container')}>
             <div className="row">
                 <div className="col l-12 m-12 c-12">
+                    {/* Header */}
                     <div className={st('header')}>
                         <GradientText
                             text={'Cửa hàng. Cách tốt nhất để bạn mua sản phẩm bạn thích'}
@@ -25,6 +30,8 @@ function Home() {
                             wordsPerLine={6}
                         />
                     </div>
+
+                    {/* Danh mục */}
                     <div className={st('product-group')}>
                         <MainHorizontalScroll>
                             {categories.map((category) => (
@@ -37,12 +44,15 @@ function Home() {
                             ))}
                         </MainHorizontalScroll>
                     </div>
+
+                    {/* Sản phẩm mới nhất */}
                     <div className={st('product-group')}>
                         <GradientText
                             text={'Những sản phẩm mới nhất. Quà này ai cũng mê.'}
                             colorWord={5}
                             fontSize={30}
                         />
+
                         <MainHorizontalScroll>
                             {newProducts.map((product) => (
                                 <LargeSquareCard
@@ -50,7 +60,7 @@ function Home() {
                                     to={`${configs.routes.detail}/${product.id}`}
                                     name={product.name}
                                     desc={product.desc}
-                                    img={product.img}
+                                    img={product.colors?.[0]?.images?.[0] || product.img}
                                     price={product.price}
                                     discount={product.discount}
                                 />
@@ -58,8 +68,10 @@ function Home() {
                         </MainHorizontalScroll>
                     </div>
 
+                    {/* Sản phẩm phụ kiện */}
                     <div className={st('product-group')}>
                         <GradientText text={'Cá nhân hóa. Món quà có một không hai.'} colorWord={3} fontSize={30} />
+
                         <MainHorizontalScroll>
                             {accessories.map((product) => (
                                 <LargeSquareCard
@@ -67,7 +79,7 @@ function Home() {
                                     to={`${configs.routes.detail}/${product.id}`}
                                     name={product.name}
                                     desc={product.desc}
-                                    img={product.img}
+                                    img={product.colors?.[0]?.images?.[0] || product.img}
                                     price={product.price}
                                     discount={product.discount}
                                 />
