@@ -4,7 +4,7 @@ import { LargeSquareCard, MainHorizontalScroll, SmallSquareCard } from '../../co
 import styles from './style.module.scss';
 import GradientText from '../../components/GradientText';
 
-import { getAllCategories, getNewestProductsFull, accessoryProducts } from '~/query';
+import { getAllCategories, getNewestProductsFull, accessoryProducts } from '~/data/services';
 
 const st = classNames.bind(styles);
 

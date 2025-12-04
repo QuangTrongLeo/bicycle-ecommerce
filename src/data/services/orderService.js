@@ -1,4 +1,4 @@
-import { orderItems, products, productColors, productSizes, orders, orderStatusHistory } from '~/api';
+import { orderItems, products, productColors, productSizes, orders, orderStatusHistory } from '~/data/api';
 
 export const getOrderDetail = (orderId) => {
     const order = orders.find((o) => o.id === orderId);

@@ -9,50 +9,51 @@ function MainHorizontalScroll({ children }) {
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
 
-    const scroll = useCallback((direction) => {
-        const container = scrollRef.current;
-        if (!container) return;
+    // Hàm scroll mượt
+    const smoothScroll = (element, target, duration = 500) => {
+        const start = element.scrollLeft;
+        const change = target - start;
+        const startTime = performance.now();
 
+        const animateScroll = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            element.scrollLeft = start + change * progress;
+            if (progress < 1) requestAnimationFrame(animateScroll);
+        };
+
+        requestAnimationFrame(animateScroll);
+    };
+
+    const scroll = (direction) => {
+        if (!scrollRef.current) return;
+        const container = scrollRef.current;
         const card = container.firstElementChild;
         if (!card) return;
 
-        // Lấy width + margin-right của item
-        const cardWidth = card.getBoundingClientRect().width;
         const style = window.getComputedStyle(card);
-        const margin = parseInt(style.marginRight) || 16;
-
-        const scrollAmount = cardWidth + margin;
-
+        const gap = parseInt(style.marginRight) || 16;
+        const scrollAmount = card.offsetWidth + gap;
         const target = container.scrollLeft + (direction === 'left' ? -scrollAmount : scrollAmount);
 
-        // Scroll native mượt ngay lập tức
-        container.scrollTo({
-            left: target,
-            behavior: 'smooth',
-        });
-    }, []);
+        smoothScroll(container, target, 200);
+    };
 
-    const updateButtons = useCallback(() => {
+    // Cập nhật trạng thái nút trái/phải
+    const updateButtons = () => {
         const container = scrollRef.current;
         if (!container) return;
-
-        setCanScrollLeft(container.scrollLeft > 1);
-        setCanScrollRight(container.scrollLeft + container.clientWidth < container.scrollWidth - 1);
-    }, []);
+        setCanScrollLeft(container.scrollLeft > 0);
+        setCanScrollRight(container.scrollLeft + container.clientWidth < container.scrollWidth);
+    };
 
     useEffect(() => {
         const container = scrollRef.current;
         if (!container) return;
-
-        const handleScroll = () => updateButtons();
-        container.addEventListener('scroll', handleScroll, { passive: true });
-
+        container.addEventListener('scroll', updateButtons);
         updateButtons();
-
-        return () => {
-            container.removeEventListener('scroll', handleScroll);
-        };
-    }, [updateButtons]);
+        return () => container.removeEventListener('scroll', updateButtons);
+    }, []);
 
     return (
         <div className={st('container')}>

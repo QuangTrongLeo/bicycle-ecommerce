@@ -10,7 +10,7 @@ import {
     getTopCategoriesBySold,
     getProductsByCategoryPaginate,
     getAllColors,
-} from '~/query/productQuery';
+} from '~/data/services/productService';
 
 const st = classNames.bind(styles);
 

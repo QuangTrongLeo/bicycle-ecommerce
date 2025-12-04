@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { getUserInfo } from '~/api/user/userApi';
+import { getUserInfo } from '~/data/api/user/userApi';
 
 import classNames from 'classnames/bind';
 import styles from './style.module.scss';

@@ -6,7 +6,7 @@ import {
     productSizes,
     orderItems,
     orderStatusHistory,
-} from '~/api';
+} from '~/data/api';
 
 export const getFullProduct = (productId) => {
     const p = products.find((x) => x.id === productId);
