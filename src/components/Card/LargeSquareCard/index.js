@@ -2,23 +2,12 @@ import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 import GradientText from '../../GradientText';
 import styles from './style.module.scss';
+import { formatCurrency, formatRoundToThousand } from '~/utils';
 
 const st = classNames.bind(styles);
 
-const formatCurrency = (value) => {
-    if (!value || isNaN(Number(value))) return '0';
-    return new Intl.NumberFormat('vi-VN', {
-        style: 'decimal',
-        minimumFractionDigits: 0,
-    }).format(Number(value));
-};
-
-const roundToThousand = (value) => {
-    return Math.round(value / 1000) * 1000;
-};
-
 function LargeSquareCard({ to = '#', img, name, desc, price, discount }) {
-    const originPrice = discount > 0 ? roundToThousand(price / (1 - discount / 100)) : null;
+    const originPrice = discount > 0 ? formatRoundToThousand(price / (1 - discount / 100)) : null;
 
     return (
         <Link to={to} className={st('link-wrapper')}>

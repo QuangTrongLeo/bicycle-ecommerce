@@ -11,8 +11,8 @@ const publishRoutes = [
     { path: configs.routes.collection, page: Collection, layout: SecondLayout },
     { path: `${configs.routes.detail}/:slug`, page: Detail },
     { path: configs.routes.searched, page: Searched },
-    { path: `${configs.routes.category}/:slug`, page: Category },
-    { path: `${configs.routes.sub_category}/:slug`, page: SubCategory, layout: SecondLayout },
+    { path: `${configs.routes.categories}/:slug`, page: Category },
+    { path: `${configs.routes.category}/:slug`, page: SubCategory, layout: SecondLayout },
 ];
 
 const userRoutes = [

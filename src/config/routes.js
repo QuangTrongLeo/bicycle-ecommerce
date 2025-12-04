@@ -5,8 +5,8 @@ const routes = {
     detail: '/detail',
     profile: '/profile',
     searched: '/searched',
+    categories: '/categories',
     category: '/category',
-    sub_category: '/sub-category',
     collection: '/collection',
 };
 
