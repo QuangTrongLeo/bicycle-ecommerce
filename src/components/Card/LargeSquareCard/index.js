@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
-import GradientText from '../../Text';
+import GradientText from '../../GradientText';
 import styles from './style.module.scss';
 
 const st = classNames.bind(styles);

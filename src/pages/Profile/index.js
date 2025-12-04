@@ -1,15 +1,12 @@
 import { useSelector } from 'react-redux';
-import { getUserInfo } from '../../dummydb';
+import { getUserInfo } from '~/api/user/userApi';
 
 import classNames from 'classnames/bind';
 import styles from './style.module.scss';
 import { Link } from 'react-router-dom';
 
-import rankNone from '../../assets/img/rank/none.png';
-import rankSilver from '../../assets/img/rank/silver.png';
-import rankGold from '../../assets/img/rank/gold.png';
-import rankPlatinum from '../../assets/img/rank/platinum.png';
-import cashIcon from '../../assets/img/user/mceclip6_39.png';
+import { rankImages } from '~/assets/images';
+import cashIcon from '../../assets/images/user/mceclip6_39.png';
 
 const st = classNames.bind(styles);
 
@@ -20,11 +17,11 @@ function Profile() {
 
     const { profile, wallet, rank } = getUserInfo(user.id);
 
-    const rankImages = {
-        none: rankNone,
-        silver: rankSilver,
-        gold: rankGold,
-        platinum: rankPlatinum,
+    const rankImgs = {
+        none: rankImages.none,
+        silver: rankImages.silver,
+        gold: rankImages.gold,
+        platinum: rankImages.platium,
     };
 
     return (
@@ -36,33 +33,33 @@ function Profile() {
                             <div className="col-md-9">
                                 <h3>Hi, {profile.fullName}</h3>
 
-                                <img className={st('rank-current')} src={rankImages[rank.rank]} alt="" />
+                                <img className={st('rank-current')} src={rankImgs[rank.rank]} alt="" />
 
                                 <div className={st('profile-spending')}>
                                     <p>
                                         Chi tiêu thêm <span>{rank.spendingToNextRank.toLocaleString()}đ</span> để lên
                                         hạng
                                     </p>
-                                    <img className={st('rank-next')} src={rankSilver} alt="" />
+                                    <img className={st('rank-next')} src={rankImages.silver} alt="" />
                                 </div>
 
                                 <div className={st('spend-line')}>
                                     <div className={st('spend-progress')}></div>
 
                                     <div className={st('spend-point')} style={{ left: '0%' }}>
-                                        <img src={rankNone} alt="" />
+                                        <img src={rankImages.none} alt="" />
                                     </div>
 
                                     <div className={st('spend-point')} style={{ left: '33.3%' }}>
-                                        <img src={rankSilver} alt="" />
+                                        <img src={rankImages.silver} alt="" />
                                     </div>
 
                                     <div className={st('spend-point')} style={{ left: '66.6%' }}>
-                                        <img src={rankGold} alt="" />
+                                        <img src={rankImages.gold} alt="" />
                                     </div>
 
                                     <div className={st('spend-point')} style={{ left: '99.9%' }}>
-                                        <img src={rankPlatinum} alt="" />
+                                        <img src={rankImages.platium} alt="" />
                                     </div>
                                 </div>
                             </div>

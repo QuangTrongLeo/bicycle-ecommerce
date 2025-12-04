@@ -10,7 +10,7 @@ import {
     getTopCategoriesBySold,
     getProductsByCategoryPaginate,
     getAllColors,
-} from '~/dummydb/api/productApi';
+} from '~/query/productQuery';
 
 const st = classNames.bind(styles);
 

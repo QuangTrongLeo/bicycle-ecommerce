@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleRight } from '@fortawesome/free-regular-svg-icons';
-import { checkUserLogin } from '~/dummydb';
+import { checkUserLogin } from '~/api/user/userApi';
 
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';

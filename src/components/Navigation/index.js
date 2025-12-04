@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faTruck, faCartShopping } from '@fortawesome/free-solid-svg-icons';
 
-import Logo from '../../assets/img/logo/logo.png';
+import Logo from '../../assets/images/logo/logo.png';
 import styles from './style.module.scss';
 const st = classNames.bind(styles);
 

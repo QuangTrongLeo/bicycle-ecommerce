@@ -2,9 +2,9 @@ import classNames from 'classnames/bind';
 import configs from '../../config';
 import { LargeSquareCard, MainHorizontalScroll, SmallSquareCard } from '../../components';
 import styles from './style.module.scss';
-import GradientText from '../../components/Text';
+import GradientText from '../../components/GradientText';
 
-import { getAllCategories, getNewestProductsFull, accessoryProducts } from '~/dummydb';
+import { getAllCategories, getNewestProductsFull, accessoryProducts } from '~/query';
 
 const st = classNames.bind(styles);
 
@@ -37,7 +37,7 @@ function Home() {
                             {categories.map((category) => (
                                 <SmallSquareCard
                                     key={category.id}
-                                    to={`${configs.routes.category}/${category.id}`}
+                                    to={`${configs.routes.category}/${category.name}`}
                                     name={category.name}
                                     img={category.img}
                                 />
@@ -57,7 +57,7 @@ function Home() {
                             {newProducts.map((product) => (
                                 <LargeSquareCard
                                     key={product.id}
-                                    to={`${configs.routes.detail}/${product.id}`}
+                                    to={`${configs.routes.detail}/${product.name}`}
                                     name={product.name}
                                     desc={product.desc}
                                     img={product.colors?.[0]?.images?.[0] || product.img}
