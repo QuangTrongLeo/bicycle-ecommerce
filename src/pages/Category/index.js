@@ -3,7 +3,7 @@ import styles from './style.module.scss';
 import configs from '../../config';
 import { CenterHorizontalScroll, SmallSquareCard } from '../../components';
 import { categoryImages } from '~/assets/images';
-import { slugify } from '~/utils';
+import { formatSlugify } from '~/utils';
 const st = classNames.bind(styles);
 
 const subCategories = [
@@ -37,7 +37,7 @@ function Category() {
                 {subCategories.map((sc) => (
                     <SmallSquareCard
                         key={sc.id}
-                        to={`${configs.routes.category}/${slugify(sc.name)}`}
+                        to={`${configs.routes.category}/${formatSlugify(sc.name)}`}
                         name={sc.name}
                         img={sc.img}
                     />

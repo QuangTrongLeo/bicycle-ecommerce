@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 import styles from './style.module.scss';
 import configs from '../../config';
 import { MediumRectangleCard } from '../../components';
-import { slugify } from '~/utils';
+import { formatSlugify } from '~/utils';
 import { xeDapFixedGearMagicbrosCX5PlusImages } from '~/assets/images/product/xe-dap-the-thao';
 import { muBaoHiemXeDapSCOHIROWORKImages } from '~/assets/images/product/phu-kien';
 const st = classNames.bind(styles);
@@ -166,11 +166,11 @@ const products = [
 function SubCategory() {
     return (
         <div>
-            <div className="row g-4">
+            <div className={st('row', 'g-4')}>
                 {products.map((product) => (
-                    <div key={product.id} className="col-12 col-md-4 col-lg-3">
+                    <div key={product.id} className={st('col-12', 'col-md-4', 'col-lg-3')}>
                         <MediumRectangleCard
-                            to={`${configs.routes.detail}/${slugify(product.name)}`}
+                            to={`${configs.routes.detail}/${formatSlugify(product.name)}`}
                             name={product.name}
                             desc={product.desc}
                             img={product.variants[0].img}

@@ -2,14 +2,14 @@ import { useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './style.module.scss';
 import { Link } from 'react-router-dom';
-import { currency, roundToThousand } from '~/utils';
+import { formatCurrency, formatRoundToThousand } from '~/utils';
 const st = classNames.bind(styles);
 
 function MediumRectangleCard({ to = '#', img, name, price, discount, variants }) {
     const [currentImg, setCurrentImg] = useState(img);
     const [selectedColor, setSelectedColor] = useState(variants[0].color_id);
 
-    const discountPrice = discount > 0 ? roundToThousand(price - (price * discount) / 100) : null;
+    const discountPrice = discount > 0 ? formatRoundToThousand(price - (price * discount) / 100) : null;
     const handleButtonClick = (e, variant) => {
         e.preventDefault();
         setCurrentImg(variant.img);
@@ -37,12 +37,12 @@ function MediumRectangleCard({ to = '#', img, name, price, discount, variants })
                     <div className={st('card-price')}>
                         {discount > 0 ? (
                             <>
-                                <span className={st('card-cur-price')}>{currency(discountPrice)}đ</span>
+                                <span className={st('card-cur-price')}>{formatCurrency(discountPrice)}đ</span>
                                 <span className={st('card-discount-percent')}>-{discount}%</span>
-                                <span className={st('card-origin-price')}>{currency(price)}đ</span>
+                                <span className={st('card-origin-price')}>{formatCurrency(price)}đ</span>
                             </>
                         ) : (
-                            <span className={st('card-cur-price')}>{currency(price)}đ</span>
+                            <span className={st('card-cur-price')}>{formatCurrency(price)}đ</span>
                         )}
                     </div>
                 </div>

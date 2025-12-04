@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 import configs from '../../config';
 import styles from './style.module.scss';
 import GradientText from '../../components/GradientText';
-import { slugify } from '~/utils';
+import { formatSlugify } from '~/utils';
 import { LargeSquareCard, MainHorizontalScroll, SmallSquareCard } from '../../components';
 import { getAllCategories, getNewestProductsFull, accessoryProducts } from '~/data/services';
 
@@ -37,7 +37,7 @@ function Home() {
                             {categories.map((category) => (
                                 <SmallSquareCard
                                     key={category.id}
-                                    to={`${configs.routes.categories}/${slugify(category.name)}`}
+                                    to={`${configs.routes.categories}/${formatSlugify(category.name)}`}
                                     name={category.name}
                                     img={category.img}
                                 />
@@ -57,7 +57,7 @@ function Home() {
                             {newProducts.map((product) => (
                                 <LargeSquareCard
                                     key={product.id}
-                                    to={`${configs.routes.detail}/${slugify(product.name)}`}
+                                    to={`${configs.routes.detail}/${formatSlugify(product.name)}`}
                                     name={product.name}
                                     desc={product.desc}
                                     img={product.colors?.[0]?.images?.[0] || product.img}
@@ -76,7 +76,7 @@ function Home() {
                             {accessories.map((product) => (
                                 <LargeSquareCard
                                     key={product.id}
-                                    to={`${configs.routes.detail}/${slugify(product.name)}`}
+                                    to={`${configs.routes.detail}/${formatSlugify(product.name)}`}
                                     name={product.name}
                                     desc={product.desc}
                                     img={product.colors?.[0]?.images?.[0] || product.img}

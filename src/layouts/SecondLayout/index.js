@@ -8,10 +8,11 @@ function SecondLayout({ children }) {
         <div className={st('wrapper')}>
             <Navigation />
             <div className={st('row', 'mx-5')}>
-                <div className={st('col-3')}>
+                <div className={st('col-12', 'col-lg-3')}>
                     <SideBar />
                 </div>
-                <div className={st('col-9')}>{children}</div>
+
+                <div className={st('col-12', 'col-lg-9')}>{children}</div>
             </div>
             <Footer />
         </div>

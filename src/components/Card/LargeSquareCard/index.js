@@ -2,12 +2,12 @@ import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 import GradientText from '../../GradientText';
 import styles from './style.module.scss';
-import { currency, roundToThousand } from '~/utils';
+import { formatCurrency, formatRoundToThousand } from '~/utils';
 
 const st = classNames.bind(styles);
 
 function LargeSquareCard({ to = '#', img, name, desc, price, discount }) {
-    const discountPrice = discount > 0 ? roundToThousand(price - (price * discount) / 100) : null;
+    const discountPrice = discount > 0 ? formatRoundToThousand(price - (price * discount) / 100) : null;
 
     return (
         <Link to={to} className={st('link-wrapper')}>
@@ -22,11 +22,11 @@ function LargeSquareCard({ to = '#', img, name, desc, price, discount }) {
                     <div className={st('card-price')}>
                         {discount > 0 ? (
                             <>
-                                <span className={st('price')}>{currency(discountPrice)}đ</span>
-                                <span className={st('origin-price')}>{currency(price)}đ</span>
+                                <span className={st('price')}>{formatCurrency(discountPrice)}đ</span>
+                                <span className={st('origin-price')}>{formatCurrency(price)}đ</span>
                             </>
                         ) : (
-                            <span className={st('price')}>{currency(price)}đ</span>
+                            <span className={st('price')}>{formatCurrency(price)}đ</span>
                         )}
                     </div>
                 </div>

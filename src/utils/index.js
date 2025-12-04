@@ -1,3 +1,3 @@
-export { default as slugify } from './slugify';
-export { default as currency } from './currency';
-export { default as roundToThousand } from './roundToThousand';
+export { default as formatSlugify } from './slugify';
+export { default as formatCurrency } from './currency';
+export { default as formatRoundToThousand } from './roundToThousand';
