@@ -2,12 +2,12 @@ import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 import GradientText from '../../GradientText';
 import styles from './style.module.scss';
-import { formatCurrency, formatRoundToThousand } from '~/utils';
+import { currency, roundToThousand } from '~/utils';
 
 const st = classNames.bind(styles);
 
 function LargeSquareCard({ to = '#', img, name, desc, price, discount }) {
-    const originPrice = discount > 0 ? formatRoundToThousand(price / (1 - discount / 100)) : null;
+    const discountPrice = discount > 0 ? roundToThousand(price - (price * discount) / 100) : null;
 
     return (
         <Link to={to} className={st('link-wrapper')}>
@@ -20,16 +20,21 @@ function LargeSquareCard({ to = '#', img, name, desc, price, discount }) {
                     <GradientText text={desc} fullColorWord={true} fontSize={24} />
 
                     <div className={st('card-price')}>
-                        <span className={st('price')}>{formatCurrency(price)}đ</span>
-
-                        {discount > 0 && <span className={st('origin-price')}>{formatCurrency(originPrice)}đ</span>}
+                        {discount > 0 ? (
+                            <>
+                                <span className={st('price')}>{currency(discountPrice)}đ</span>
+                                <span className={st('origin-price')}>{currency(price)}đ</span>
+                            </>
+                        ) : (
+                            <span className={st('price')}>{currency(price)}đ</span>
+                        )}
                     </div>
                 </div>
 
                 {/* Nếu cần badge giảm giá thì mở lại đoạn này */}
-                {/* {discount > 0 && (
+                {/* {finalDiscount > 0 && (
                     <div className={st('discount-badge')}>
-                        <span className={st('discount-text')}>-{discount}%</span>
+                        <span className={st('discount-text')}>-{Math.round(finalDiscount * 100)}%</span>
                     </div>
                 )} */}
             </div>

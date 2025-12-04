@@ -2,7 +2,7 @@
     --primary-color: #333333;
     --white-color: #fff;
     --black-color: #000000;
-    --blue-color: #0071e3;
+    --blue-color: blue;
     --bg-light-color: #e5e5e5;
     --gray-color: #494949;
     --gradient-blue-start-color: #337ae5;
@@ -22,7 +22,13 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: SF Pro Text, SF Pro Icons, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-family:
+        SF Pro Text,
+        SF Pro Icons,
+        Helvetica Neue,
+        Helvetica,
+        Arial,
+        sans-serif;
 }
 
 /* LUÔN LUÔN CÓ SCROLLBAR CHÍNH */

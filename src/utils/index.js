@@ -1,4 +1,3 @@
-import formatterUtils from './formatter';
-
 export { default as slugify } from './slugify';
-export const { formatCurrency, formatRoundToThousand } = formatterUtils;
+export { default as currency } from './currency';
+export { default as roundToThousand } from './roundToThousand';
