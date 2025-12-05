@@ -1,6 +1,6 @@
 import {
     products,
-    categories,
+    collections,
     productColors,
     productImages,
     productSizes,
@@ -31,7 +31,7 @@ export const getFullProduct = (productId) => {
 };
 
 export const getProductsByCategoryType = (type, limit) => {
-    const category = categories.find((c) => c.type === type);
+    const category = collections.find((c) => c.type === type);
     if (!category) return [];
 
     const list = products.filter((p) => p.categoryId === category.id);
@@ -42,7 +42,7 @@ export const getProductsByCategoryType = (type, limit) => {
 
 export const accessoryProducts = (limit = 10) => getProductsByCategoryType('accessory', limit);
 
-export const getAllCategories = () => [...categories];
+export const getAllCollections = () => [...collections];
 
 export const getNewestProductsFull = (limit = 10) => {
     const sorted = [...products].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, limit);
@@ -68,7 +68,7 @@ export const getAllProductsFullPaginate = (page = 1, limit = 10) => {
     };
 };
 
-export const getTopCategoriesBySold = (limit = 3) => {
+export const getTopCollectionsBySold = (limit = 3) => {
     // 1. Lấy các order đã completed từ lịch sử trạng thái
     const completedOrderIds = orderStatusHistory.filter((s) => s.status === 'completed').map((s) => s.orderId);
 
@@ -90,7 +90,7 @@ export const getTopCategoriesBySold = (limit = 3) => {
     // 3. Convert thành mảng & sort
     const sorted = Object.keys(categoryCount)
         .map((cateId) => ({
-            ...categories.find((c) => c.id === Number(cateId)),
+            ...collections.find((c) => c.id === Number(cateId)),
             sold: categoryCount[cateId],
         }))
         .sort((a, b) => b.sold - a.sold);

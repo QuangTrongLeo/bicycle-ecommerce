@@ -5,9 +5,8 @@ const routes = {
     detail: '/detail',
     profile: '/profile',
     searched: '/searched',
-    categories: '/categories',
-    category: '/category',
     collection: '/collection',
+    category: '/category',
 };
 
 export default routes;
