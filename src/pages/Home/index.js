@@ -4,13 +4,12 @@ import styles from './style.module.scss';
 import GradientText from '../../components/GradientText';
 import { formatSlugify } from '~/utils';
 import { LargeSquareCard, MainHorizontalScroll, SmallSquareCard } from '../../components';
-import { getAllCategories, getNewestProductsFull, accessoryProducts } from '~/data/services';
+import { getAllCollections, getNewestProductsFull, accessoryProducts } from '~/data/services';
 
 const st = classNames.bind(styles);
 
 function Home() {
-    // Lấy danh mục
-    const categories = getAllCategories();
+    const collections = getAllCollections();
 
     // Lấy sản phẩm mới nhất (full thông tin)
     const newProducts = getNewestProductsFull(5);
@@ -31,15 +30,15 @@ function Home() {
                         />
                     </div>
 
-                    {/* Danh mục */}
+                    {/* Collection */}
                     <div className={st('product-group')}>
                         <MainHorizontalScroll>
-                            {categories.map((category) => (
+                            {collections.map((collection) => (
                                 <SmallSquareCard
-                                    key={category.id}
-                                    to={`${configs.routes.categories}/${formatSlugify(category.name)}`}
-                                    name={category.name}
-                                    img={category.img}
+                                    key={collection.id}
+                                    to={`${configs.routes.collection}/${formatSlugify(collection.name)}`}
+                                    name={collection.name}
+                                    img={collection.img}
                                 />
                             ))}
                         </MainHorizontalScroll>
