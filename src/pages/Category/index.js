@@ -1,7 +1,7 @@
 import classNames from 'classnames/bind';
 import styles from './style.module.scss';
 import configs from '../../config';
-import { MediumRectangleCard } from '../../components';
+import { MediumRectangleCard, LimitList } from '../../components';
 import { formatSlugify } from '~/utils';
 import { xeDapFixedGearMagicbrosCX5PlusImages } from '~/assets/images/product/xe-dap-the-thao';
 import { muBaoHiemXeDapSCOHIROWORKImages } from '~/assets/images/product/phu-kien';
@@ -270,19 +270,21 @@ function Category() {
     return (
         <div>
             <div className={st('row', 'g-4')}>
-                {products.map((product) => (
-                    <div key={product.id} className={st('col-12', 'col-md-4', 'col-lg-3')}>
-                        <MediumRectangleCard
-                            to={`${configs.routes.detail}/${formatSlugify(product.name)}`}
-                            name={product.name}
-                            desc={product.desc}
-                            img={product.variants[0].img}
-                            price={product.price}
-                            discount={product.discount}
-                            variants={product.variants}
-                        />
-                    </div>
-                ))}
+                <LimitList>
+                    {products.map((product) => (
+                        <div key={product.id} className={st('col-12', 'col-md-4', 'col-lg-3')}>
+                            <MediumRectangleCard
+                                to={`${configs.routes.detail}/${formatSlugify(product.name)}`}
+                                name={product.name}
+                                desc={product.desc}
+                                img={product.variants[0].img}
+                                price={product.price}
+                                discount={product.discount}
+                                variants={product.variants}
+                            />
+                        </div>
+                    ))}
+                </LimitList>
             </div>
         </div>
     );
