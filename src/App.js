@@ -5,14 +5,14 @@ import { MainLayout } from './layouts';
 import { useSelector } from 'react-redux';
 
 function App() {
-    const { user, isAuthenticated } = useSelector((state) => state.user);
+    const { currentUser, isAuthenticated } = useSelector((state) => state.user);
+    console.log(currentUser + ' ' + isAuthenticated);
 
     let routes = [...publishRoutes];
-
-    if (isAuthenticated && user) {
+    if (isAuthenticated && currentUser) {
         routes = [...routes, ...userRoutes];
 
-        if (user.role === 'admin') {
+        if (currentUser.role === 'admin') {
             routes = [...routes, ...adminRoutes];
         }
     }

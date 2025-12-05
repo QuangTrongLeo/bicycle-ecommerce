@@ -4,22 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9af4d39d-8031-48b2-bfce-ad01bda15495" name="Changes" comment="design db">
-      <change afterPath="$PROJECT_DIR$/src/dummydb/api/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/dummydb/api/orderApi.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/dummydb/table/order/order.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/dummydb/table/order/orderItems.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/dummydb/table/order/orderStatusHistory.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/dummydb/table/product/productSizes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dummydb/api/productApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dummydb/api/productApi.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dummydb/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dummydb/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dummydb/table/categories.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dummydb/table/product/categories.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dummydb/table/productColors.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dummydb/table/product/productColors.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dummydb/table/productImages.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dummydb/table/product/productImages.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dummydb/table/productSizes.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dummydb/table/products.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dummydb/table/product/products.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Collection/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Collection/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Collection/style.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Collection/style.module.scss" afterDir="false" />
+    <list default="true" id="9af4d39d-8031-48b2-bfce-ad01bda15495" name="Changes" comment="finish collection">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,8 +50,8 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "designDB",
-    "last_opened_file_path": "E:/LearnUniversity/bicycle-ecommerce/src/components/Navigation",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "E:/LearnUniversity/BicycleEcommerce",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -104,7 +93,11 @@
       <workItem from="1764677457928" duration="141000" />
       <workItem from="1764677631327" duration="11365000" />
       <workItem from="1764744019311" duration="13000" />
-      <workItem from="1764750224249" duration="16651000" />
+      <workItem from="1764750224249" duration="16885000" />
+      <workItem from="1764816065155" duration="20000" />
+      <workItem from="1764821457448" duration="6000" />
+      <workItem from="1764821488679" duration="7000" />
+      <workItem from="1764928365760" duration="758000" />
     </task>
     <task id="LOCAL-00001" summary="design home">
       <option name="closed" value="true" />
@@ -130,7 +123,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764768732289</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="finish collection">
+      <option name="closed" value="true" />
+      <created>1764776192393</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1764776192393</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -139,6 +140,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="design home" />
     <MESSAGE value="design db" />
-    <option name="LAST_COMMIT_MESSAGE" value="design db" />
+    <MESSAGE value="finish collection" />
+    <option name="LAST_COMMIT_MESSAGE" value="finish collection" />
   </component>
 </project>
