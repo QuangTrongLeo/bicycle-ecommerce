@@ -1,5 +1,5 @@
 export { default as LargeRectangleCard } from './LargeRectangleCard';
-export { default as LargeSquareCard } from './LargeSquareCard';
-export { default as MediumRectangleCard } from './MediumRectangleCard';
+export { default as LargeProductCard } from './LargeProductCard';
+export { default as MainProductCard } from './MainProductCard';
 export { default as SmallRectangleCard } from './SmallRectangleCard';
-export { default as SmallSquareCard } from './SmallSquareCard';
+export { default as CategoryCard } from './CategoryCard';

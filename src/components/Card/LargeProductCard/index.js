@@ -6,7 +6,7 @@ import { formatCurrency, formatRoundToThousand } from '~/utils';
 
 const st = classNames.bind(styles);
 
-function LargeSquareCard({ to = '#', img, name, desc, price, discount }) {
+function LargeProductCard({ to = '#', img, name, desc, price, discount }) {
     const discountPrice = discount > 0 ? formatRoundToThousand(price - (price * discount) / 100) : null;
 
     return (
@@ -42,4 +42,4 @@ function LargeSquareCard({ to = '#', img, name, desc, price, discount }) {
     );
 }
 
-export default LargeSquareCard;
+export default LargeProductCard;

@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import styles from './style.module.scss';
-import { Header, SideBar, Footer, Navigation } from '../../components';
+import { SideBar, Footer, Navigation } from '../../components';
 const st = classNames.bind(styles);
 
 function SecondLayout({ children }) {

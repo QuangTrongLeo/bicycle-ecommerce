@@ -3,7 +3,7 @@ import configs from '../../config';
 import styles from './style.module.scss';
 import GradientText from '../../components/GradientText';
 import { formatSlugify } from '~/utils';
-import { LargeSquareCard, MainHorizontalScroll, SmallSquareCard } from '../../components';
+import { LargeProductCard, MainHorizontalScroll, CategoryCard } from '../../components';
 import { getAllCategories, getNewestProductsFull, accessoryProducts } from '~/data/services';
 
 const st = classNames.bind(styles);
@@ -34,7 +34,7 @@ function Home() {
                     <div className={st('product-group')}>
                         <MainHorizontalScroll>
                             {categories.map((category) => (
-                                <SmallSquareCard
+                                <CategoryCard
                                     key={category.id}
                                     to={`${configs.routes.category}/${formatSlugify(category.name)}`}
                                     name={category.name}
@@ -54,7 +54,7 @@ function Home() {
 
                         <MainHorizontalScroll>
                             {newProducts.map((product) => (
-                                <LargeSquareCard
+                                <LargeProductCard
                                     key={product.id}
                                     to={`${configs.routes.detail}/${formatSlugify(product.name)}`}
                                     name={product.name}
@@ -73,7 +73,7 @@ function Home() {
 
                         <MainHorizontalScroll>
                             {accessories.map((product) => (
-                                <LargeSquareCard
+                                <LargeProductCard
                                     key={product.id}
                                     to={`${configs.routes.detail}/${formatSlugify(product.name)}`}
                                     name={product.name}

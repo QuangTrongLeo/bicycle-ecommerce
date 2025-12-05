@@ -1,0 +1,162 @@
+.link-wrapper {
+    text-decoration: none;
+    display: block;
+}
+
+.card-product {
+    overflow: hidden;
+    border-radius: 10px !important;
+    transition: box-shadow 0.25s ease;
+
+    .card-img-wrapper {
+        position: relative;
+        width: 100%;
+        height: 70%;
+        overflow: hidden;
+
+        &:hover {
+            .card-img-top {
+                transform: scale(1.03);
+            }
+            .add-to-cart-overlay {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+        }
+    }
+
+    .card-img-top {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.35s ease;
+    }
+
+    .add-to-cart-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: var(--light-gray-color);
+        backdrop-filter: blur(2px);
+        opacity: 0;
+        visibility: hidden;
+        transition:
+            opacity 0.35s ease,
+            visibility 0.35s ease,
+            transform 0.35s ease;
+        transform: translateY(100%);
+
+        display: flex;
+        align-items: flex-end;
+        padding: 0;
+
+        .overlay-content {
+            width: 100%;
+            padding: 3% 4%;
+            background: transparent;
+            box-shadow: none;
+        }
+
+        .size-buttons-title {
+            text-align: center;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 2px;
+        }
+
+        .size-buttons-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+
+            .size-button {
+                width: 100%;
+                height: 24px;
+                padding: 0;
+                border: 1px solid #ccc;
+                background-color: var(--white-color);
+                color: var(--primary-color);
+                font-weight: bold;
+                cursor: pointer;
+                border-radius: 12px;
+                transition: all 0.2s;
+
+                &:hover:not([disabled]) {
+                    background-color: var(--black-color);
+                    border-color: var(--black-color);
+                    color: var(--white-color);
+                }
+
+                &.size-disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                    text-decoration: line-through;
+                    background-color: #f8f8f8;
+                }
+
+                &.size-selected {
+                    background-color: var(--blue-color);
+                    border-color: var(--blue-color);
+                    color: var(--white-color);
+                }
+            }
+        }
+    }
+
+    .card-body {
+        height: 30%;
+        padding: 1rem;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .card-color {
+            display: flex;
+            gap: 6%;
+        }
+
+        .card-name {
+            color: var(--primary-color);
+            padding: 2% 0 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            &:hover {
+                color: blue;
+            }
+        }
+
+        .card-price {
+            display: flex;
+            gap: 2%;
+
+            .card-cur-price {
+                font-size: 1.3rem;
+                font-weight: bold;
+                color: var(--primary-color);
+            }
+
+            .card-discount-percent {
+                font-size: 1.1rem;
+                padding: 1px 4px 0px;
+                font-weight: bold;
+                border-radius: 16px;
+                color: var(--white-color);
+                background-color: var(--blue-color);
+            }
+
+            .card-origin-price {
+                font-size: 1.1rem;
+                font-weight: normal;
+                color: var(--default-gray-color);
+                text-decoration: line-through;
+            }
+        }
+    }
+}

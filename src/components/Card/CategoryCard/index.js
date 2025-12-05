@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const st = classNames.bind(styles);
 
-function SmallSquareCard({ to = '#', img, name }) {
+function CategoryCard({ to = '#', img, name }) {
     return (
         <Link to={to} className={st('link-wrapper')}>
             <div className={st('card-product')}>
@@ -15,4 +15,4 @@ function SmallSquareCard({ to = '#', img, name }) {
     );
 }
 
-export default SmallSquareCard;
+export default CategoryCard;
