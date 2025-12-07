@@ -2,6 +2,7 @@ import classNames from 'classnames/bind';
 import styles from './style.module.scss';
 import configs from '../../config';
 import { useParams } from 'react-router-dom';
+import { useState } from 'react';
 import { formatSlugify } from '~/utils';
 import { categories } from '~/data/api';
 import { MainProductCard, LimitList, GradientText, CartNotification } from '../../components';
@@ -77,12 +78,42 @@ const findCategoryNameBySlug = (slug) => {
     return foundCategory ? foundCategory.name : 'Danh mục';
 };
 
+const initialCartData = {
+    name: '',
+    price: 0,
+    color: '',
+    size: '',
+    img: '',
+};
+
 function Category() {
     const { slug } = useParams();
+    const [showCartNotification, setShowCartNotification] = useState(false);
+    const [cartItemData, setCartItemData] = useState(initialCartData);
     const categoryName = findCategoryNameBySlug(slug);
+    const handleShowCartNotification = (data) => {
+        setCartItemData(data);
+        setShowCartNotification(true);
+        // setTimeout(() => {
+        //     setShowCartNotification(false);
+        // }, 3000);
+    };
+    const handleCloseCartNotification = () => {
+        setShowCartNotification(false);
+        setCartItemData(initialCartData);
+    };
     return (
         <div>
-            <CartNotification />
+            {showCartNotification && (
+                <CartNotification
+                    name={cartItemData.name}
+                    price={cartItemData.price}
+                    color={cartItemData.color}
+                    size={cartItemData.size}
+                    img={cartItemData.img}
+                    onClose={handleCloseCartNotification}
+                />
+            )}
             <GradientText text={categoryName} fullColorWord={true} />
             <div className={st('row', 'g-4')}>
                 <LimitList>
@@ -95,6 +126,7 @@ function Category() {
                                 price={product.price}
                                 discount={product.discount}
                                 variants={product.variants}
+                                onShowNotification={handleShowCartNotification}
                             />
                         </div>
                     ))}

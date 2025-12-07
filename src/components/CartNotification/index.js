@@ -13,29 +13,25 @@ function CartNotification({ img, name, color, size, price, onClose }) {
                     <div className={st('modal-header-cus', 'mx-4')}>
                         <h4 className={st('modal-title')}>Thêm vào giỏ hàng thành công</h4>
                         <button type="button" className={st('button-close')} onClick={onClose}>
-                            <i class="fa-solid fa-xmark"></i>
+                            <i className={st('fa-solid', 'fa-xmark')}></i>
                         </button>
                     </div>
                     <div className={st('modal-body', 'mx-2', 'row')}>
-                        <img
-                            src={xeDapFixedGearMagicbrosCX5PlusImages.white}
-                            className={st('modal-body-img', 'col-3')}
-                            alt={name}
-                        />
+                        <img src={img} className={st('modal-body-img', 'col-3')} alt={name} />
                         <div className={st('modal-body-info', 'col-9')}>
-                            <div className={st('modal-body-info__name')}>Xe Đạp Fixed Gear Magic bros CX5 Plus</div>
+                            <div className={st('modal-body-info__name')}>{name}</div>
                             <div className={st('modal-body-info__variant')}>
-                                <span>Trắng</span>
+                                <span>{color}</span>
                                 <span>/</span>
-                                <span>M</span>
+                                <span>{size}</span>
                             </div>
-                            <div className={st('modal-body-info__price')}>{formatCurrency(123000)}đ</div>
+                            <div className={st('modal-body-info__price')}>{formatCurrency(price)}đ</div>
                         </div>
                     </div>
                     <div className={st('modal-footer')}>
                         <Link>
                             <button type="button" className={st('btn', 'btn-primary')}>
-                                Xem giỏ hàng <i class="fa-solid fa-arrow-right"></i>
+                                Xem giỏ hàng <i className={st('fa-solid', 'fa-arrow-right')}></i>
                             </button>
                         </Link>
                     </div>
