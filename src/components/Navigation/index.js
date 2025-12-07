@@ -150,7 +150,11 @@ function Navigation() {
                                         className={st('input-icon')}
                                         onClick={() => navigate('/profile')}
                                     />
-                                    <FontAwesomeIcon icon={faCartShopping} className={st('input-icon')} />
+                                    <FontAwesomeIcon
+                                        icon={faCartShopping}
+                                        className={st('input-icon')}
+                                        onClick={() => navigate('/cart')}
+                                    />
                                     <FontAwesomeIcon icon={faTruck} className={st('input-icon')} />
                                 </>
                             ) : (

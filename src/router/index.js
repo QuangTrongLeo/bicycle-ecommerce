@@ -1,5 +1,5 @@
 import configs from '../config';
-import { Home, Login, Register, Detail, Searched, Profile, Category, Collection } from '../pages';
+import { Home, Login, Register, Detail, Searched, Profile, Category, Collection, Cart } from '../pages';
 import { SecondLayout } from '../layouts';
 
 const excludeForUser = [configs.routes.login, configs.routes.register];
@@ -16,6 +16,7 @@ const publishRoutes = [
 
 const userRoutes = [
     { path: configs.routes.profile, page: Profile },
+    { path: configs.routes.cart, page: Cart },
     ...publishRoutes.filter((route) => !excludeForUser.includes(route.path)),
 ];
 

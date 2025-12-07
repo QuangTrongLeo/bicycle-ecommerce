@@ -6,16 +6,16 @@ const INITIAL_STATE = {
 };
 
 // REDUCER
-const sizeReducer = (state = INITIAL_STATE, action) => {
+const sizesReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case ADD_SIZE:
             const existingIndex = state.sizes.findIndex((item) => item.sizeId === action.payload.sizeId);
             if (existingIndex >= 0) {
-                const updatedSizes = [...state.sizes];
-                updatedSizes[existingIndex].quantity = action.payload.quantity;
+                const updatedsizes = [...state.sizes];
+                updatedsizes[existingIndex].quantity = action.payload.quantity;
                 return {
                     ...state,
-                    sizes: updatedSizes,
+                    sizes: updatedsizes,
                 };
             } else {
                 return {
@@ -43,4 +43,4 @@ const sizeReducer = (state = INITIAL_STATE, action) => {
     }
 };
 
-export default sizeReducer;
+export default sizesReducer;

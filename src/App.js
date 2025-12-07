@@ -9,10 +9,10 @@ function App() {
 
     let routes = [...publishRoutes];
     if (isAuthenticated && currentUser) {
-        routes = [...routes, ...userRoutes];
+        routes = [...userRoutes];
 
         if (currentUser.role === 'admin') {
-            routes = [...routes, ...adminRoutes];
+            routes = [...adminRoutes];
         }
     }
 
