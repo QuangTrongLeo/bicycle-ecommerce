@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import classNames from 'classnames/bind';
 import { useSelector, useDispatch } from 'react-redux';
 import { UPDATE_SIZE_QUANTITY, REMOVE_SIZE } from '~/redux/action/cartAction';
-import { getProductFromSizeId } from '~/data/services/productService';
+import { getProductBySizeId } from '~/data/services';
 import { getAllDeliveryMethods, getAllPaymentMethods, calculateDelivery } from '~/data/services/deliveryService';
 
 import styles from './style.module.scss';
@@ -32,7 +32,7 @@ function Cart() {
 
         const fullItems = sizes
             .map((item) => {
-                const productDetail = getProductFromSizeId(item.sizeId);
+                const productDetail = getProductBySizeId(item.sizeId);
                 if (!productDetail) return null;
                 return { ...item, ...productDetail };
             })

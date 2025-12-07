@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './style.module.scss';
-import { getFullProduct } from '~/data/services';
+import { getProductById } from '~/data/services';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -33,7 +33,7 @@ function Detail() {
     useEffect(() => {
         async function loadData() {
             try {
-                const raw = await getFullProduct(Number(id));
+                const raw = await getProductById(Number(id));
                 if (!raw) return;
 
                 const normalized = {
