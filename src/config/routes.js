@@ -8,6 +8,8 @@ const routes = {
     collection: '/collection',
     category: '/category',
     cart: '/cart',
+    orderHistory: '/order-history',
+    detailOrderHistory: '/detail-order-history',
 };
 
 export default routes;

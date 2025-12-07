@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getUserInfo } from '~/data/api/user/userApi';
 
 import classNames from 'classnames/bind';
@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 
 import { rankImages } from '~/assets/images';
 import cashIcon from '../../assets/images/user/mceclip6_39.png';
+import { logoutUser } from '~/redux/action/userAction';
 
 const st = classNames.bind(styles);
 
@@ -16,6 +17,8 @@ function Profile() {
     if (!user) return <h2>Vui lòng đăng nhập!</h2>;
 
     const { profile, wallet, rank } = getUserInfo(user.id);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const dispatch = useDispatch();
 
     const rankImgs = {
         none: rankImages.none,
@@ -95,8 +98,10 @@ function Profile() {
                             <i className="fa-solid fa-chevron-right"></i>
                         </div>
 
-                        <Link to="/logout">
-                            <div className={st('menu-item-logout')}>Đăng xuất</div>
+                        <Link to="/">
+                            <div className={st('menu-item-logout')} onClick={() => dispatch(logoutUser())}>
+                                Đăng xuất
+                            </div>
                         </Link>
                     </div>
                 </div>

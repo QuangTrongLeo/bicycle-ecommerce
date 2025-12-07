@@ -1,0 +1,73 @@
+.order-history-page {
+    display: flex;
+    flex-direction: column;
+    height: 570px;
+    font-size: 14px;
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        flex: 1; /* chiếm toàn bộ khoảng trống */
+        max-width: 1400px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .status-tabs {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+
+        .btn {
+            font-size: 14px;
+            padding: 6px 12px;
+        }
+    }
+
+    .order-list {
+        flex: 1; /* chiếm khoảng trống giữa header và pagination */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .pagination-wrapper {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: auto; /* luôn nằm dưới cùng */
+        padding: 10px 0;
+        flex-shrink: 0;
+
+        .btn {
+            padding: 0.375rem 0.75rem;
+            border-radius: 4px;
+
+            &.btn-primary {
+                background-color: #0d6efd;
+                color: #fff;
+                border-color: #0d6efd;
+            }
+
+            &:disabled {
+                cursor: not-allowed;
+                opacity: 0.5;
+            }
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .status-tabs {
+            gap: 8px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .status-tabs {
+            flex-direction: column;
+            gap: 5px;
+        }
+    }
+}

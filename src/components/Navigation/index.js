@@ -146,16 +146,20 @@ function Navigation() {
                             {isAuthenticated ? (
                                 <>
                                     <FontAwesomeIcon
-                                        icon={faUser}
-                                        className={st('input-icon')}
-                                        onClick={() => navigate('/profile')}
-                                    />
-                                    <FontAwesomeIcon
                                         icon={faCartShopping}
                                         className={st('input-icon')}
                                         onClick={() => navigate('/cart')}
                                     />
-                                    <FontAwesomeIcon icon={faTruck} className={st('input-icon')} />
+                                    <FontAwesomeIcon
+                                        icon={faTruck}
+                                        className={st('input-icon')}
+                                        onClick={() => navigate('/order-history')}
+                                    />
+                                    <FontAwesomeIcon
+                                        icon={faUser}
+                                        className={st('input-icon')}
+                                        onClick={() => navigate('/profile')}
+                                    />
                                 </>
                             ) : (
                                 <Link to="/login">Login</Link>

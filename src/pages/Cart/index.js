@@ -1,15 +1,14 @@
 import { useState, useEffect, useMemo } from 'react';
 import classNames from 'classnames/bind';
 import { useSelector, useDispatch } from 'react-redux';
-import { UPDATE_SIZE_QUANTITY, REMOVE_SIZE } from '~/redux/action/cartAction';
+import { UPDATE_SIZE_QUANTITY, REMOVE_SIZE, confirmOrder } from '~/redux/action/shoppingAction';
 import { getProductFromSizeId } from '~/data/services/productService';
-import { getAllDeliveryMethods, getAllPaymentMethods, calculateDelivery } from '~/data/services/deliveryService';
-
+import { getAllDeliveryMethods, getAllPaymentMethods, calculateDelivery } from '~/data/services';
 import styles from './style.module.scss';
 const st = classNames.bind(styles);
 
 function Cart() {
-    const { sizes } = useSelector((state) => state.cart);
+    const { sizes } = useSelector((state) => state.shopping);
     const dispatch = useDispatch();
 
     const [shoppingCartItems, setShoppingCartItems] = useState([]);
@@ -47,12 +46,21 @@ function Cart() {
         return productsTotal + deliveryFee;
     }, [selectedItems, selectedDeliveryId]);
 
+    // --------------------------
+    // HANDLE QUANTITY
+    // --------------------------
     const increaseQuantity = (index) => {
         const item = shoppingCartItems[index];
-        dispatch({
-            type: UPDATE_SIZE_QUANTITY,
-            payload: { sizeId: item.sizeId, quantity: item.quantity + 1 },
-        });
+        const productDetail = getProductFromSizeId(item.sizeId);
+
+        if (item.quantity < productDetail.stock) {
+            dispatch({
+                type: UPDATE_SIZE_QUANTITY,
+                payload: { sizeId: item.sizeId, quantity: item.quantity + 1 },
+            });
+        } else {
+            alert(`Không thể mua quá tồn kho (${productDetail.stock})`);
+        }
     };
 
     const decreaseQuantity = (index) => {
@@ -80,10 +88,44 @@ function Cart() {
 
     const isSelected = (item) => selectedItems.some((i) => i.sizeId === item.sizeId);
 
+    // --------------------------
+    // HANDLE CHECKOUT
+    // --------------------------
+    const handleCheckout = () => {
+        if (selectedItems.length === 0) return;
+
+        // kiểm tra tồn kho trước khi checkout
+        for (const item of selectedItems) {
+            const productDetail = getProductFromSizeId(item.sizeId);
+            if (item.quantity > productDetail.stock) {
+                alert(`Sản phẩm ${productDetail.nameProduct} vượt tồn kho. Vui lòng giảm số lượng.`);
+                return;
+            }
+        }
+
+        const orderItems = selectedItems.map((item) => ({
+            sizeId: item.sizeId,
+            quantity: item.quantity,
+            price: item.discountPrice,
+        }));
+
+        dispatch(
+            confirmOrder({
+                items: orderItems,
+                deliveryId: selectedDeliveryId,
+                paymentId: selectedPaymentId,
+            })
+        );
+
+        setSelectedItems([]);
+        alert('Đơn hàng đã được lưu vào lịch sử!');
+    };
+
     return (
         <div className={st('cart-page')}>
             <main className="container py-5">
                 <div className="row">
+                    {/* LEFT - Cart items */}
                     <div className={`${st('right')} col-lg-8`}>
                         <h1 className="fw-bold">Giỏ hàng</h1>
                         {shoppingCartItems.length === 0 && (
@@ -99,11 +141,7 @@ function Cart() {
                                 style={{ cursor: 'pointer' }}>
                                 <div className="row align-items-center">
                                     <div className="col-2">
-                                        <img
-                                            src={`${item.image}`}
-                                            alt={item.nameProduct}
-                                            className="img-fluid rounded-3"
-                                        />
+                                        <img src={item.image} alt={item.nameProduct} className="img-fluid rounded-3" />
                                     </div>
                                     <div className="col-4">
                                         <h6 className="text-muted">{item.nameProduct}</h6>
@@ -127,7 +165,7 @@ function Cart() {
                                         </button>
                                     </div>
                                     <div className="col-3">
-                                        <h6 className={'text-end'}>{item.discountPrice.toLocaleString()}đ</h6>
+                                        <h6 className="text-end">{item.discountPrice.toLocaleString()}đ</h6>
                                     </div>
                                     <div className="col-1 text-end">
                                         <button
@@ -144,7 +182,7 @@ function Cart() {
                         ))}
                     </div>
 
-                    {/* Summary */}
+                    {/* RIGHT - Summary */}
                     <div className="col-lg-4">
                         <div className="card p-4">
                             <h3 className="mb-4 fw-bold">Tóm tắt đơn hàng</h3>
@@ -184,11 +222,6 @@ function Cart() {
                                 </select>
                             </div>
 
-                            <div className="mb-3">
-                                <h5>Voucher</h5>
-                                <button className="btn btn-outline-primary w-100">Chọn Voucher</button>
-                            </div>
-
                             <hr />
 
                             <div className="mb-3 d-flex align-items-center justify-content-between">
@@ -213,8 +246,11 @@ function Cart() {
                                 <div className="text-danger fw-bold">{totalAmount.toLocaleString()}đ</div>
                             </div>
 
-                            <button className="btn btn-dark w-100 btn-lg" disabled={selectedItems.length === 0}>
-                                Thanh toán ({selectedItems.length})
+                            <button
+                                className="btn btn-dark w-100 btn-lg"
+                                disabled={selectedItems.length === 0}
+                                onClick={handleCheckout}>
+                                Thanh toán
                             </button>
                         </div>
                     </div>

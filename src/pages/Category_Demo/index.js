@@ -28,27 +28,17 @@ function Category_Demo() {
     const [data, setData] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
 
-    // ⭐ TRẠNG THÁI: màu đang chọn của từng sản phẩm
     const [selectedColorByProduct, setSelectedColorByProduct] = useState({});
 
-    // =============================
-    // LẤY DANH SÁCH MÀU
-    // =============================
     useEffect(() => {
         setAvailableColors(getAllColors());
     }, []);
 
-    // =============================
-    // LẤY TOP CATEGORY
-    // =============================
     useEffect(() => {
         const top = getTopCategoriesBySold(3);
         setCategories(top);
     }, []);
 
-    // =============================
-    // LOAD PRODUCTS
-    // =============================
     useEffect(() => {
         let res;
 
@@ -74,9 +64,6 @@ function Category_Demo() {
         setTotalPages(res.totalPages);
     }, [page, query, category, color]);
 
-    // =============================
-    // TÌM KIẾM
-    // =============================
     const onSearch = (value) => {
         setQuery(value);
         setPage(1);
@@ -89,9 +76,6 @@ function Category_Demo() {
         });
     };
 
-    // =============================
-    // CHỌN CATEGORY
-    // =============================
     const onSelectCategory = (id) => {
         setCategory(id);
         setPage(1);
@@ -104,9 +88,6 @@ function Category_Demo() {
         });
     };
 
-    // =============================
-    // CHỌN MÀU TRONG SIDEBAR
-    // =============================
     const onSelectColor = (hex) => {
         const newValue = hex === color ? '' : hex;
 
@@ -125,7 +106,6 @@ function Category_Demo() {
         <div className={st('collection')}>
             <div className="container">
                 <div className="row">
-                    {/* ================== SIDEBAR ================== */}
                     <div className="col-md-2">
                         <div className={st('filter')}>
                             <p className={st('filter-title')}>Nhóm sản phẩm</p>
