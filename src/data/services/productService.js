@@ -7,6 +7,7 @@ import {
     orderItems,
     orderStatusHistory,
 } from '~/data/api';
+import { useSelector } from 'react-redux';
 
 export const getFullProduct = (productId) => {
     const p = products.find((x) => x.id === productId);
@@ -24,7 +25,7 @@ export const getFullProduct = (productId) => {
                 .map((s) => ({
                     id: s.id,
                     size: s.size,
-                    price: s.price,
+                    stock: s.stock,
                 })),
         })),
     };
@@ -125,4 +126,30 @@ export const getAllColors = (limit = 8) => {
         .filter((item, index, arr) => arr.findIndex((x) => x.code === item.code) === index);
 
     return unique.slice(0, limit);
+};
+
+export const getProductFromSizeId = (sizeId) => {
+    const size = productSizes.find((s) => s.id === sizeId);
+    if (!size) return null;
+
+    const color = productColors.find((c) => c.id === size.colorId);
+    if (!color) return null;
+
+    const product = products.find((p) => p.id === color.productId);
+    if (!product) return null;
+
+    const images = productImages.filter((img) => img.colorId === color.id).map((i) => i.imageUrl);
+
+    return {
+        productId: product.id,
+        nameProduct: product.name,
+        nameSize: size.size,
+        stock: size.stock,
+        colorId: color.id,
+        nameColor: color.colorName,
+        colorCode: color.colorHex,
+        image: images[0] || '',
+        price: product.price,
+        discountPrice: product.discount || product.price,
+    };
 };

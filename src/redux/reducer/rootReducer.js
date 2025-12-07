@@ -1,10 +1,10 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import counterReducer from '../reducer/counterReducer';
 import userReducer from '../reducer/userReducer';
+import cartReducer from '../reducer/cartReducer';
 
 const rootReducer = combineReducers({
-    counter: counterReducer,
     user: userReducer,
+    cart: cartReducer,
 });
 
 export default rootReducer;

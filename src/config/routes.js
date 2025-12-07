@@ -7,6 +7,7 @@ const routes = {
     searched: '/searched',
     collection: '/collection',
     category: '/category',
+    cart: '/cart',
 };
 
 export default routes;

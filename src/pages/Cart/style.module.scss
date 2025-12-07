@@ -1,0 +1,109 @@
+.cart-page {
+    font-size: 16px;
+
+    h6 {
+        font-size: 16px;
+    }
+
+    input[type="number"] {
+        text-align: center;
+
+        &::-webkit-inner-spin-button,
+        &::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    }
+
+    .right {
+        border: 1px solid #007bff;
+        border-radius: 10px;
+        padding: 16px;
+    }
+
+    .items {
+        border: 2px solid transparent;
+        border-radius: 8px;
+        padding: 20px;
+        transition: border 0.3s ease, background-color 0.3s ease;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        &:hover {
+            border-color: #007bff33;
+        }
+
+        &.selected {
+            border-color: #007bff;
+            background-color: #f0f8ff;
+        }
+
+        input[type="checkbox"] {
+            display: none;
+        }
+    }
+
+    .quantity {
+        border: 1px solid #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+        border-radius: 20px;
+    }
+
+    .btn-quantity {
+        background-color: transparent !important;
+    }
+
+    .input-quantity {
+        max-width: 60px;
+        border: none;
+        background-color: transparent;
+        text-align: center;
+    }
+
+    #paymentId,
+    #deliverySelect {
+        min-width: 200px;
+        border-radius: 5px;
+        font-size: 16px;
+        background-color: #f9f9f9;
+        transition: border 0.3s ease;
+
+        &:focus {
+            border-color: #007bff;
+        }
+
+        option {
+            padding: 10px;
+            font-size: 16px;
+            background-color: #fff;
+
+            &:hover {
+                background-color: #eaeaea;
+            }
+        }
+    }
+
+    #totalSelectedItems,
+    #feeDisplay,
+    #convenient {
+        font-size: 16px;
+    }
+
+    .text-body {
+        font-size: 20px;
+    }
+
+    .hover-red {
+        &:hover {
+            color: red !important;
+        }
+    }
+
+    .quantityShoppingCart {
+        background-color: transparent !important;
+    }
+}

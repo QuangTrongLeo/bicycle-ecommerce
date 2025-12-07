@@ -6,14 +6,13 @@ import { useSelector } from 'react-redux';
 
 function App() {
     const { currentUser, isAuthenticated } = useSelector((state) => state.user);
-    console.log(currentUser + ' ' + isAuthenticated);
 
     let routes = [...publishRoutes];
     if (isAuthenticated && currentUser) {
-        routes = [...routes, ...userRoutes];
+        routes = [...userRoutes];
 
         if (currentUser.role === 'admin') {
-            routes = [...routes, ...adminRoutes];
+            routes = [...adminRoutes];
         }
     }
 
