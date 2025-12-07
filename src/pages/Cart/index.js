@@ -85,7 +85,7 @@ function Cart() {
             <main className="container py-5">
                 <div className="row">
                     <div className={`${st('right')} col-lg-8`}>
-                        <h1 className="fw-bold mb-4">Giỏ hàng</h1>
+                        <h1 className="fw-bold">Giỏ hàng</h1>
                         {shoppingCartItems.length === 0 && (
                             <div className="alert alert-info text-center">
                                 Giỏ hàng của bạn đang trống. Hãy thêm sản phẩm vào giỏ hàng để tiếp tục mua sắm!
