@@ -1,3 +1,4 @@
+export { default as CartNotification } from './CartNotification';
 export { default as DisclosureItem } from './DisclosureItem';
 export { default as DropDown } from './DropDown';
 export { default as Footer } from './Footer';
