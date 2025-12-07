@@ -5,12 +5,13 @@ import { Link } from 'react-router-dom';
 import { formatCurrency, formatRoundToThousand } from '~/utils';
 const st = classNames.bind(styles);
 
-function MainProductCard({ to = '#', name, price, discount, variants }) {
+function MainProductCard({ to = '#', name, price, discount, variants, onShowNotification }) {
     const [selectedSize, setSelectedSize] = useState(null);
     const [selectedColor, setSelectedColor] = useState(variants[0]);
     const [currentImg, setCurrentImg] = useState(variants[0].images[0]);
 
-    const discountPrice = discount > 0 ? formatRoundToThousand(price - (price * discount) / 100) : null;
+    const finalPrice =
+        discount > 0 ? formatRoundToThousand(price - (price * discount) / 100) : formatRoundToThousand(price);
 
     const handleSelectColor = (e, variant) => {
         e.preventDefault();
@@ -24,8 +25,18 @@ function MainProductCard({ to = '#', name, price, discount, variants }) {
         if (size.quantity > 0) {
             setSelectedSize(size);
             setSelectedSize(null);
+            const itemData = {
+                name: name,
+                price: finalPrice,
+                color: selectedColor.color_name,
+                size: size.size_name,
+                img: selectedColor.images[0],
+            };
+            if (onShowNotification) {
+                onShowNotification(itemData);
+            }
             console.log(
-                `Đã thêm vào giỏ hàng: Sản phẩm ${name}, Màu: ${selectedColor.color_name}, Size: ${size.size_name}`
+                `Đã thêm vào giỏ hàng: Sản phẩm ${name}, Giá ${finalPrice}, Màu: ${selectedColor.color_name}, Size: ${size.size_name}`
             );
         } else {
             console.log(`Size ${size.size_name} đã hết hàng.`);
@@ -93,7 +104,7 @@ function MainProductCard({ to = '#', name, price, discount, variants }) {
                     <div className={st('card-price')}>
                         {discount > 0 ? (
                             <>
-                                <span className={st('card-cur-price')}>{formatCurrency(discountPrice)}đ</span>
+                                <span className={st('card-cur-price')}>{formatCurrency(finalPrice)}đ</span>
                                 <span className={st('card-discount-percent')}>-{discount}%</span>
                                 <span className={st('card-origin-price')}>{formatCurrency(price)}đ</span>
                             </>

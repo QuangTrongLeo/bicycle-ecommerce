@@ -7,6 +7,7 @@ import {
     orderItems,
     orderStatusHistory,
 } from '~/data/api';
+import { getCategoryBySlug } from './categoryService';
 
 export const getFullProduct = (productId) => {
     const p = products.find((x) => x.id === productId);
@@ -125,4 +126,14 @@ export const getAllColors = (limit = 8) => {
         .filter((item, index, arr) => arr.findIndex((x) => x.code === item.code) === index);
 
     return unique.slice(0, limit);
+};
+
+export const getProductsByCategoryName = (slug) => {
+    const category = getCategoryBySlug(slug);
+    return products
+        .filter((product) => product.categoryId === category.id)
+        .map((product) => ({
+            ...product,
+            categoryName: category.name,
+        }));
 };
