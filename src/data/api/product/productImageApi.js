@@ -12,4 +12,5 @@ export const productImages = [
     { id: 8, colorId: 8, imageUrl: xeDapFixedGearMagicbrosCX5PlusImages.white },
     { id: 9, colorId: 9, imageUrl: muBaoHiemXeDapSCOHIROWORKImages.yellow },
     { id: 10, colorId: 10, imageUrl: muBaoHiemXeDapSCOHIROWORKImages.yellow },
+    { id: 11, colorId: 1, imageUrl: muBaoHiemXeDapSCOHIROWORKImages.yellow },
 ];

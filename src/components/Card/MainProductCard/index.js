@@ -5,41 +5,56 @@ import { Link } from 'react-router-dom';
 import { formatCurrency, formatRoundToThousand } from '~/utils';
 const st = classNames.bind(styles);
 
-function MainProductCard({ to = '#', name, price, discount, variants }) {
+function MainProductCard({ to = '#', name, price, discount, colors, onShow }) {
     const [selectedSize, setSelectedSize] = useState(null);
-    const [selectedColor, setSelectedColor] = useState(variants[0]);
-    const [currentImg, setCurrentImg] = useState(variants[0].images[0]);
+    const [selectedColor, setSelectedColor] = useState(colors[0]);
+    const [currentImg, setCurrentImg] = useState(colors[0].images[0].imageUrl);
+    const [quantity] = useState(1);
 
-    const discountPrice = discount > 0 ? formatRoundToThousand(price - (price * discount) / 100) : null;
+    const finalPrice =
+        discount > 0 ? formatRoundToThousand(price - (price * discount) / 100) : formatRoundToThousand(price);
 
-    const handleSelectColor = (e, variant) => {
+    const createItem = (size) => ({
+        name: name,
+        price: finalPrice,
+        color: selectedColor.colorName,
+        size: size.sizeName,
+        image: selectedColor.images[0].imageUrl,
+        quantity: quantity,
+    });
+
+    const handleSelectColor = (e, color) => {
         e.preventDefault();
-        setSelectedColor(variant);
-        setCurrentImg(variant.images[0]);
+        setSelectedColor(color);
+        setCurrentImg(color.images[0].imageUrl);
         setSelectedSize(null);
     };
 
     const handleSelectSize = (e, size) => {
         e.preventDefault();
-        if (size.quantity > 0) {
+        if (size.stock > 0) {
             setSelectedSize(size);
             setSelectedSize(null);
+            const item = createItem(size);
+            if (onShow) {
+                onShow(item);
+            }
             console.log(
-                `Đã thêm vào giỏ hàng: Sản phẩm ${name}, Màu: ${selectedColor.color_name}, Size: ${size.size_name}`
+                `Đã thêm vào giỏ hàng: Sản phẩm ${name}, Giá ${finalPrice}, Màu: ${selectedColor.colorName}, Size: ${size.sizeName}, Số lượng: ${quantity}`
             );
         } else {
-            console.log(`Size ${size.size_name} đã hết hàng.`);
+            console.log(`Size ${size.sizeName} đã hết hàng.`);
         }
     };
 
     const handleMouseEnter = () => {
         if (selectedColor.images.length > 1) {
-            setCurrentImg(selectedColor.images[1]);
+            setCurrentImg(selectedColor.images[1].imageUrl);
         }
     };
 
     const handleMouseLeave = () => {
-        setCurrentImg(selectedColor.images[0]);
+        setCurrentImg(selectedColor.images[0].imageUrl);
     };
 
     return (
@@ -55,14 +70,14 @@ function MainProductCard({ to = '#', name, price, discount, variants }) {
                             <div className={st('size-buttons-container')}>
                                 {selectedColor.sizes.map((size) => (
                                     <button
-                                        key={size.size_id}
+                                        key={size.sizeId}
                                         className={st('size-button', {
-                                            'size-disabled': size.quantity <= 0,
-                                            'size-selected': selectedSize && selectedSize.size_id === size.size_id,
+                                            'size-disabled': size.stock <= 0,
+                                            'size-selected': selectedSize && selectedSize.sizeId === size.sizeId,
                                         })}
                                         onClick={(e) => handleSelectSize(e, size)}
-                                        disabled={size.quantity <= 0}>
-                                        {size.size_name}
+                                        disabled={size.stock <= 0}>
+                                        {size.sizeName}
                                     </button>
                                 ))}
                             </div>
@@ -73,15 +88,15 @@ function MainProductCard({ to = '#', name, price, discount, variants }) {
                 <div className={st('card-body')}>
                     {/* COLORS */}
                     <div className={st('card-color')}>
-                        {variants.map((variant) => (
+                        {colors.map((color) => (
                             <button
-                                key={variant.color_id}
-                                style={{ backgroundColor: variant.hex_code }}
-                                onClick={(e) => handleSelectColor(e, variant)}
+                                key={color.colorId}
+                                style={{ backgroundColor: color.colorHex }}
+                                onClick={(e) => handleSelectColor(e, color)}
                                 className={st('color-btn', {
-                                    selected: selectedColor.color_id === variant.color_id,
+                                    selected: selectedColor.colorId === color.colorId,
                                 })}>
-                                {variant.color_name}
+                                {color.colorName}
                             </button>
                         ))}
                     </div>
@@ -93,7 +108,7 @@ function MainProductCard({ to = '#', name, price, discount, variants }) {
                     <div className={st('card-price')}>
                         {discount > 0 ? (
                             <>
-                                <span className={st('card-cur-price')}>{formatCurrency(discountPrice)}đ</span>
+                                <span className={st('card-cur-price')}>{formatCurrency(finalPrice)}đ</span>
                                 <span className={st('card-discount-percent')}>-{discount}%</span>
                                 <span className={st('card-origin-price')}>{formatCurrency(price)}đ</span>
                             </>

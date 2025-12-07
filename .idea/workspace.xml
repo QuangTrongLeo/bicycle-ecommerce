@@ -4,33 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9af4d39d-8031-48b2-bfce-ad01bda15495" name="Changes" comment="fix">
-      <change afterPath="$PROJECT_DIR$/src/pages/DetailOrderHistory/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/DetailOrderHistory/style.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/OrderHistory/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/OrderHistory/style.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/paginate.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Navigation/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Navigation/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/api/product/productSizeApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/api/product/productSizeApi.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/services/deliveryService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/services/deliveryService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/services/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/services/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/services/orderService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/services/orderService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/services/productService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/services/productService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Cart/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Cart/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Category_Demo/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Category_Demo/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Detail/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DetailProduct/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Detail/style.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DetailProduct/style.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Login/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Login/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Register/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Register/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/action/cartAction.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/action/shoppingAction.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/reducer/cartReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/reducer/shoppingReducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/reducer/rootReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/reducer/rootReducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/store.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/index.js" afterDir="false" />
-    </list>
+    <list default="true" id="9af4d39d-8031-48b2-bfce-ad01bda15495" name="Changes" comment="add order-history and detail-order-history" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -71,7 +45,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "orderHistoryAndDetailOrderHistory",
     "last_opened_file_path": "E:/LearnUniversity/BicycleEcommerce/src/pages/DetailOrderHistory",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -125,7 +99,7 @@
       <workItem from="1765024989108" duration="632000" />
       <workItem from="1765076672450" duration="7766000" />
       <workItem from="1765086860558" duration="6726000" />
-      <workItem from="1765100032367" duration="11043000" />
+      <workItem from="1765100032367" duration="11457000" />
     </task>
     <task id="LOCAL-00001" summary="design home">
       <option name="closed" value="true" />
@@ -199,7 +173,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765093443372</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="add order-history and detail-order-history">
+      <option name="closed" value="true" />
+      <created>1765111449799</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1765111449799</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -223,6 +205,7 @@
     <MESSAGE value="fix bug" />
     <MESSAGE value="detail and cart" />
     <MESSAGE value="merger" />
-    <option name="LAST_COMMIT_MESSAGE" value="merger" />
+    <MESSAGE value="add order-history and detail-order-history" />
+    <option name="LAST_COMMIT_MESSAGE" value="add order-history and detail-order-history" />
   </component>
 </project>
