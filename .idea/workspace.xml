@@ -5,18 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9af4d39d-8031-48b2-bfce-ad01bda15495" name="Changes" comment="fix bug">
-      <change afterPath="$PROJECT_DIR$/src/redux/action/cardAction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/redux/reducer/cardReducer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/api/product/productSizeApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/api/product/productSizeApi.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/services/productService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/services/productService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Category_Demo/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Category_Demo/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Detail/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Detail/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Detail/style.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Detail/style.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/action/counterAction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/reducer/counterReducer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/action/cardAction.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/action/cartAction.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/reducer/cardReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/reducer/cartReducer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/reducer/rootReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/reducer/rootReducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/store.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,7 +104,7 @@
       <workItem from="1764928365760" duration="1040000" />
       <workItem from="1764929850171" duration="280000" />
       <workItem from="1765024989108" duration="632000" />
-      <workItem from="1765076672450" duration="5459000" />
+      <workItem from="1765076672450" duration="6548000" />
     </task>
     <task id="LOCAL-00001" summary="design home">
       <option name="closed" value="true" />
@@ -150,7 +146,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764929201330</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="fix bug">
+      <option name="closed" value="true" />
+      <created>1765082234755</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1765082234755</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import { useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import styles from './style.module.scss';
 import { SearchBox } from '~/components/Input';
@@ -185,7 +186,9 @@ function Category_Demo() {
                                         <div className="col-md-3" key={p.id}>
                                             <div className={st('card')}>
                                                 <div className={st('card-img')}>
-                                                    <img src={selectedColor.images?.[0]} alt={p.name} />
+                                                    <Link to={`/detail/${p.id}`}>
+                                                        <img src={selectedColor.images?.[0]} alt={p.name} />
+                                                    </Link>
 
                                                     <div className={st('card-size')}>
                                                         {selectedColor.sizes?.map((s) => (

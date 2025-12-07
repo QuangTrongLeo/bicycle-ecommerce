@@ -15,10 +15,14 @@ import {
     faCartShopping,
 } from '@fortawesome/free-solid-svg-icons';
 
+import { useDispatch } from 'react-redux';
+import { addSize } from '~/redux/action/cartAction';
+
 const st = classNames.bind(styles);
 
 function Detail() {
     const { id } = useParams();
+    const dispatch = useDispatch();
 
     const [product, setProduct] = useState(null);
     const [selectedColorIndex, setSelectedColorIndex] = useState(0);
@@ -26,14 +30,10 @@ function Detail() {
     const [selectedImg, setSelectedImg] = useState('');
     const [quantity, setQuantity] = useState(1);
 
-    // ---------------------------------------
-    // LOAD DATA + NORMALIZE
-    // ---------------------------------------
     useEffect(() => {
         async function loadData() {
             try {
                 const raw = await getFullProduct(Number(id));
-                console.log(raw);
                 if (!raw) return;
 
                 const normalized = {
@@ -50,11 +50,13 @@ function Detail() {
 
                 setProduct(normalized);
 
-                const defaultIndex = 0;
-                setSelectedColorIndex(defaultIndex);
-                setSelectedSizeIndex(null);
+                const defaultColorIndex = 0;
+                setSelectedColorIndex(defaultColorIndex);
 
-                const imgs = normalized.colors?.[defaultIndex]?.images ?? [];
+                const firstSizeIndex = normalized.colors?.[defaultColorIndex]?.sizes?.length > 0 ? 0 : null;
+                setSelectedSizeIndex(firstSizeIndex);
+
+                const imgs = normalized.colors[defaultColorIndex].images ?? [];
                 setSelectedImg(imgs[0] || '');
             } catch (error) {
                 console.error('Lỗi tải sản phẩm:', error);
@@ -85,6 +87,22 @@ function Detail() {
     };
 
     const decrease = () => setQuantity((q) => (q > 1 ? q - 1 : 1));
+
+    const handleAddToCart = () => {
+        if (selectedSizeIndex === null) return;
+
+        const selectedSize = currentColor.sizes[selectedSizeIndex];
+
+        dispatch(
+            addSize({
+                sizeId: selectedSize.id,
+                quantity: quantity,
+            })
+        );
+
+        setQuantity(1);
+        alert(`Đã thêm Size ${selectedSize.size} vào giỏ hàng`);
+    };
 
     if (!product) return <h3>Đang tải dữ liệu sản phẩm...</h3>;
 
@@ -168,7 +186,7 @@ function Detail() {
                                             <button
                                                 className={st(
                                                     'option-size',
-                                                    i === selectedSizeIndex && 'optionSizeOnClicked'
+                                                    i === selectedSizeIndex && 'sizeOnClicked' // ✅ thêm class size đang chọn
                                                 )}
                                                 onClick={() => {
                                                     setSelectedSizeIndex(i);
@@ -234,7 +252,8 @@ function Detail() {
                                                 'justify-content-center',
                                                 'align-items-center'
                                             )}
-                                            disabled={selectedSizeIndex === null}>
+                                            disabled={selectedSizeIndex === null}
+                                            onClick={handleAddToCart}>
                                             <FontAwesomeIcon icon={faCartShopping} className="mx-2" />
                                             <span className="fw-bold">Thêm vào giỏ hàng</span>
                                         </button>

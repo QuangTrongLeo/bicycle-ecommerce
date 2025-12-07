@@ -1,4 +1,4 @@
-import { ADD_SIZE, UPDATE_SIZE_QUANTITY, REMOVE_SIZE } from '~/redux/action/cardAction';
+import { ADD_SIZE, UPDATE_SIZE_QUANTITY, REMOVE_SIZE } from '~/redux/action/cartAction';
 
 // INITIAL STATE
 const INITIAL_STATE = {
