@@ -10,8 +10,8 @@ import {
     getAllProductsFullPaginate,
     getTopCategoriesBySold,
     getProductsByCategoryPaginate,
-    getAllColors,
-} from '~/data/services/productService';
+    getColors,
+} from '~/data/services';
 
 const st = classNames.bind(styles);
 
@@ -31,7 +31,7 @@ function Category_Demo() {
     const [selectedColorByProduct, setSelectedColorByProduct] = useState({});
 
     useEffect(() => {
-        setAvailableColors(getAllColors());
+        setAvailableColors(getColors());
     }, []);
 
     useEffect(() => {

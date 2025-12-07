@@ -5,13 +5,13 @@ import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { formatSlugify } from '~/utils';
 import { MainProductCard, LimitList, GradientText, CartNotification } from '../../components';
-import { getCategoryNameBySlug, getProductsByCategoryName } from '~/data/services';
+import { getCategoryNameBySlug, getProductsByCategorySlug } from '~/data/services';
 const st = classNames.bind(styles);
 
 function Category() {
     const { slug } = useParams();
     const [cartItem, setCartItem] = useState(null);
-    const [products, setProducts] = useState(getProductsByCategoryName(slug));
+    const [products] = useState(getProductsByCategorySlug(slug));
     const [showCartNotification, setShowCartNotification] = useState(false);
     const categoryName = getCategoryNameBySlug(slug);
     console.log(categoryName);

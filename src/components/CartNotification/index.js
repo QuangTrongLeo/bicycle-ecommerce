@@ -1,5 +1,6 @@
 import classNames from 'classnames/bind';
 import styles from './style.module.scss';
+import configs from '~/config';
 import { Link } from 'react-router-dom';
 import { formatCurrency } from '~/utils';
 const st = classNames.bind(styles);
@@ -30,7 +31,7 @@ function CartNotification({ name, price, color, size, img, quantity, onClose }) 
                         </div>
                     </div>
                     <div className={st('modal-footer')}>
-                        <Link>
+                        <Link to={configs.routes.cart}>
                             <button type="button" className={st('btn', 'btn-primary')}>
                                 Xem giỏ hàng <i className={st('fa-solid', 'fa-arrow-right')}></i>
                             </button>

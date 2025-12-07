@@ -13,3 +13,15 @@ export const getColorsByProductId = (productId) => {
             sizes: getSizesByColorId(c.id),
         }));
 };
+
+export const getColors = (limit = 8) => {
+    const unique = productColors
+        .map((c) => ({
+            id: c.id,
+            code: c.colorHex,
+            name: c.colorName,
+        }))
+        .filter((item, index, arr) => arr.findIndex((x) => x.code === item.code) === index);
+
+    return unique.slice(0, limit);
+};

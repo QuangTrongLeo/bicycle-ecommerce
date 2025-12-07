@@ -1,17 +1,8 @@
-import {
-    products,
-    categories,
-    productColors,
-    productImages,
-    productSizes,
-    orderItems,
-    orderStatusHistory,
-} from '~/data/api';
-import { useSelector } from 'react-redux';
+import { products, categories, productColors, productImages, productSizes } from '~/data/api';
 import { getColorsByProductId } from './colorService';
 import { getCategoryIdBySlug } from './categoryService';
 
-export const getFullProduct = (productId) => {
+export const getProductById = (productId) => {
     const p = products.find((x) => x.id === productId);
     if (!p) return null;
 
@@ -38,23 +29,20 @@ export const getProductsByCategoryType = (type, limit) => {
     if (!category) return [];
 
     const list = products.filter((p) => p.categoryId === category.id);
-    const fullList = list.map((p) => getFullProduct(p.id));
+    const fullList = list.map((p) => getProductById(p.id));
 
     return limit ? fullList.slice(0, limit) : fullList;
 };
 
 export const accessoryProducts = (limit = 10) => getProductsByCategoryType('accessory', limit);
 
-export const getAllCategories = () => [...categories];
-
-export const getNewestProductsFull = (limit = 10) => {
+export const getNewestProducts = (limit = 10) => {
     const sorted = [...products].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, limit);
-
-    return sorted.map((p) => getFullProduct(p.id));
+    return sorted.map((p) => getProductById(p.id));
 };
 
 export const getAllProductsFullPaginate = (page = 1, limit = 10) => {
-    const fullList = products.map((p) => getFullProduct(p.id));
+    const fullList = products.map((p) => getProductById(p.id));
 
     const total = fullList.length;
     const totalPages = Math.ceil(total / limit);
@@ -71,39 +59,9 @@ export const getAllProductsFullPaginate = (page = 1, limit = 10) => {
     };
 };
 
-export const getTopCategoriesBySold = (limit = 3) => {
-    // 1. Lấy các order đã completed từ lịch sử trạng thái
-    const completedOrderIds = orderStatusHistory.filter((s) => s.status === 'completed').map((s) => s.orderId);
-
-    // 2. Đếm số lượng bán theo category
-    const categoryCount = {};
-
-    orderItems.forEach((item) => {
-        // chỉ tính các item thuộc order đã hoàn thành
-        if (!completedOrderIds.includes(item.orderId)) return;
-
-        const product = products.find((p) => p.id === item.productId);
-        if (!product) return;
-
-        const cateId = product.categoryId;
-
-        categoryCount[cateId] = (categoryCount[cateId] || 0) + item.quantity;
-    });
-
-    // 3. Convert thành mảng & sort
-    const sorted = Object.keys(categoryCount)
-        .map((cateId) => ({
-            ...categories.find((c) => c.id === Number(cateId)),
-            sold: categoryCount[cateId],
-        }))
-        .sort((a, b) => b.sold - a.sold);
-
-    return sorted.slice(0, limit);
-};
-
 export const getProductsByCategoryPaginate = (categoryId, page = 1, limit = 8) => {
     let list = products.filter((p) => p.categoryId === Number(categoryId));
-    const full = list.map((p) => getFullProduct(p.id));
+    const full = list.map((p) => getProductById(p.id));
 
     const total = full.length;
     const totalPages = Math.ceil(total / limit);
@@ -118,19 +76,7 @@ export const getProductsByCategoryPaginate = (categoryId, page = 1, limit = 8) =
     };
 };
 
-export const getAllColors = (limit = 8) => {
-    const unique = productColors
-        .map((c) => ({
-            id: c.id,
-            code: c.colorHex,
-            name: c.colorName,
-        }))
-        .filter((item, index, arr) => arr.findIndex((x) => x.code === item.code) === index);
-
-    return unique.slice(0, limit);
-};
-
-export const getProductFromSizeId = (sizeId) => {
+export const getProductBySizeId = (sizeId) => {
     const size = productSizes.find((s) => s.id === sizeId);
     if (!size) return null;
 
@@ -156,10 +102,9 @@ export const getProductFromSizeId = (sizeId) => {
     };
 };
 
-export const getProductsByCategoryName = (slug) => {
-    const categoryId = getCategoryIdBySlug(slug);
+export const getProductsByCategorySlug = (slug) => {
     return products
-        .filter((p) => p.categoryId === categoryId)
+        .filter((p) => p.categoryId === getCategoryIdBySlug(slug))
         .map((p) => ({
             id: p.id,
             name: p.name,

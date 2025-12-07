@@ -4,15 +4,15 @@ import styles from './style.module.scss';
 import GradientText from '../../components/GradientText';
 import { formatSlugify } from '~/utils';
 import { LargeProductCard, MainHorizontalScroll, CategoryCard } from '../../components';
-import { getAllCategories, getNewestProductsFull, accessoryProducts } from '~/data/services';
+import { getCategories, getNewestProducts, accessoryProducts } from '~/data/services';
 
 const st = classNames.bind(styles);
 
 function Home() {
-    const categories = getAllCategories();
+    const categories = getCategories();
 
     // Lấy sản phẩm mới nhất (full thông tin)
-    const newProducts = getNewestProductsFull(5);
+    const newProducts = getNewestProducts(5);
 
     // Lấy sản phẩm phụ kiện (full thông tin)
     const accessories = accessoryProducts(5);
