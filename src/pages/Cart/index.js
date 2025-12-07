@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
 import classNames from 'classnames/bind';
 import { useSelector, useDispatch } from 'react-redux';
-import { UPDATE_SIZE_QUANTITY, REMOVE_SIZE } from '~/redux/action/cartAction';
-import { getProductBySizeId } from '~/data/services';
-import { getAllDeliveryMethods, getAllPaymentMethods, calculateDelivery } from '~/data/services/deliveryService';
+import { UPDATE_SIZE_QUANTITY, REMOVE_SIZE } from '~/redux/action/shoppingAction';
+import { getAllDeliveryMethods, getAllPaymentMethods, calculateDelivery, getProductBySizeId } from '~/data/services';
+import { confirmOrder } from '~/redux/action/shoppingAction';
 
 import styles from './style.module.scss';
 const st = classNames.bind(styles);
@@ -52,7 +52,7 @@ function Cart() {
     // --------------------------
     const increaseQuantity = (index) => {
         const item = shoppingCartItems[index];
-        const productDetail = getProductFromSizeId(item.sizeId);
+        const productDetail = getProductBySizeId(item.sizeId);
 
         if (item.quantity < productDetail.stock) {
             dispatch({
@@ -97,7 +97,7 @@ function Cart() {
 
         // kiểm tra tồn kho trước khi checkout
         for (const item of selectedItems) {
-            const productDetail = getProductFromSizeId(item.sizeId);
+            const productDetail = getProductBySizeId(item.sizeId);
             if (item.quantity > productDetail.stock) {
                 alert(`Sản phẩm ${productDetail.nameProduct} vượt tồn kho. Vui lòng giảm số lượng.`);
                 return;
