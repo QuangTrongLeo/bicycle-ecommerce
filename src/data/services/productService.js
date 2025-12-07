@@ -24,7 +24,7 @@ export const getFullProduct = (productId) => {
                 .map((s) => ({
                     id: s.id,
                     size: s.size,
-                    price: s.price,
+                    stock: s.stock,
                 })),
         })),
     };

@@ -8,7 +8,7 @@ const publishRoutes = [
     { path: configs.routes.home, page: Home },
     { path: configs.routes.login, page: Login },
     { path: configs.routes.register, page: Register },
-    { path: `${configs.routes.detail}/:slug`, page: Detail },
+    { path: `${configs.routes.detail}/:id`, page: Detail },
     { path: configs.routes.searched, page: Searched },
     { path: `${configs.routes.collection}`, page: Collection },
     { path: `${configs.routes.category}/:slug`, page: Category, layout: SecondLayout },
