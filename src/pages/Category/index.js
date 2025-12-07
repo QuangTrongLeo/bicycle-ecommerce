@@ -4,113 +4,36 @@ import configs from '../../config';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { formatSlugify } from '~/utils';
-import { categories } from '~/data/api';
 import { MainProductCard, LimitList, GradientText, CartNotification } from '../../components';
-import { xeDapFixedGearMagicbrosCX5PlusImages } from '~/assets/images/product/xe-dap-the-thao';
-import { muBaoHiemXeDapSCOHIROWORKImages } from '~/assets/images/product/phu-kien';
+import { getCategoryNameBySlug, getProductsByCategoryName } from '~/data/services';
 const st = classNames.bind(styles);
-
-const products = [
-    {
-        id: 1,
-        name: 'Xe Đạp Fixed Gear Magicbros CX5 Plus',
-        price: '3490000',
-        discount: '13',
-        desc: 'Mô tả chi tiết về xe đạp Fixed Gear Magicbros CX5 Plus.',
-        category_id: 1,
-        category_name: 'Xe Đạp',
-
-        variants: [
-            {
-                color_id: 1,
-                color_name: 'Trắng',
-                hex_code: 'var(--white-color)',
-
-                images: [xeDapFixedGearMagicbrosCX5PlusImages.white, muBaoHiemXeDapSCOHIROWORKImages.yellow],
-
-                sizes: [
-                    { size_id: 101, size_name: 'S', quantity: 20 },
-                    { size_id: 102, size_name: 'M', quantity: 30 },
-                    { size_id: 103, size_name: 'L', quantity: 0 },
-                ],
-            },
-
-            {
-                color_id: 2,
-                color_name: 'Vàng',
-                hex_code: 'yellow',
-
-                images: [muBaoHiemXeDapSCOHIROWORKImages.yellow],
-
-                sizes: [
-                    { size_id: 201, size_name: 'M', quantity: 15 },
-                    { size_id: 202, size_name: 'L', quantity: 15 },
-                ],
-            },
-        ],
-    },
-
-    {
-        id: 2,
-        name: 'Mũ Bảo Hiểm Xe Đạp SCOHIR WORK',
-        price: '850000',
-        discount: '0',
-        desc: 'Mũ bảo hiểm chất lượng cao dành cho xe đạp.',
-        category_id: 2,
-        category_name: 'Phụ Kiện',
-
-        variants: [
-            {
-                color_id: 3,
-                color_name: 'Vàng',
-                hex_code: 'yellow',
-
-                images: [muBaoHiemXeDapSCOHIROWORKImages.yellow],
-
-                sizes: [{ size_id: 101, size_name: 'M', quantity: 75 }],
-            },
-        ],
-    },
-];
-
-const findCategoryNameBySlug = (slug) => {
-    const foundCategory = categories.find((cat) => formatSlugify(cat.name) === slug);
-    return foundCategory ? foundCategory.name : 'Danh mục';
-};
-
-const initialCartData = {
-    name: '',
-    price: 0,
-    color: '',
-    size: '',
-    img: '',
-};
 
 function Category() {
     const { slug } = useParams();
+    const [cartItem, setCartItem] = useState(null);
+    const [products, setProducts] = useState(getProductsByCategoryName(slug));
     const [showCartNotification, setShowCartNotification] = useState(false);
-    const [cartItemData, setCartItemData] = useState(initialCartData);
-    const categoryName = findCategoryNameBySlug(slug);
+    const categoryName = getCategoryNameBySlug(slug);
+    console.log(categoryName);
+    console.log(products);
     const handleShowCartNotification = (data) => {
-        setCartItemData(data);
+        setCartItem(data);
         setShowCartNotification(true);
-        // setTimeout(() => {
-        //     setShowCartNotification(false);
-        // }, 3000);
     };
     const handleCloseCartNotification = () => {
         setShowCartNotification(false);
-        setCartItemData(initialCartData);
+        setCartItem(cartItem);
     };
     return (
         <div>
             {showCartNotification && (
                 <CartNotification
-                    name={cartItemData.name}
-                    price={cartItemData.price}
-                    color={cartItemData.color}
-                    size={cartItemData.size}
-                    img={cartItemData.img}
+                    name={cartItem.name}
+                    price={cartItem.price}
+                    color={cartItem.color}
+                    size={cartItem.size}
+                    img={cartItem.image}
+                    quantity={cartItem.quantity}
                     onClose={handleCloseCartNotification}
                 />
             )}
@@ -125,8 +48,8 @@ function Category() {
                                 desc={product.desc}
                                 price={product.price}
                                 discount={product.discount}
-                                variants={product.variants}
-                                onShowNotification={handleShowCartNotification}
+                                colors={product.colors}
+                                onShow={handleShowCartNotification}
                             />
                         </div>
                     ))}

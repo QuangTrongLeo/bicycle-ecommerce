@@ -8,6 +8,8 @@ import {
     orderStatusHistory,
 } from '~/data/api';
 import { useSelector } from 'react-redux';
+import { getColorsByProductId } from './colorService';
+import { getCategoryIdBySlug } from './categoryService';
 
 export const getFullProduct = (productId) => {
     const p = products.find((x) => x.id === productId);
@@ -152,4 +154,19 @@ export const getProductFromSizeId = (sizeId) => {
         price: product.price,
         discountPrice: product.discount || product.price,
     };
+};
+
+export const getProductsByCategoryName = (slug) => {
+    const categoryId = getCategoryIdBySlug(slug);
+    return products
+        .filter((p) => p.categoryId === categoryId)
+        .map((p) => ({
+            id: p.id,
+            name: p.name,
+            desc: p.desc,
+            price: p.price,
+            discount: p.discount,
+            categoryId: p.categoryId,
+            colors: getColorsByProductId(p.id),
+        }));
 };

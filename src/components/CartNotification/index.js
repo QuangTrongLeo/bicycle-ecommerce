@@ -2,10 +2,9 @@ import classNames from 'classnames/bind';
 import styles from './style.module.scss';
 import { Link } from 'react-router-dom';
 import { formatCurrency } from '~/utils';
-import { xeDapFixedGearMagicbrosCX5PlusImages } from '~/assets/images';
 const st = classNames.bind(styles);
 
-function CartNotification({ img, name, color, size, price, onClose }) {
+function CartNotification({ name, price, color, size, img, quantity, onClose }) {
     return (
         <div className={st('modal', 'show-modal')}>
             <div className={st('modal-dialog', 'show-modal-dialog')}>
@@ -24,6 +23,8 @@ function CartNotification({ img, name, color, size, price, onClose }) {
                                 <span>{color}</span>
                                 <span>/</span>
                                 <span>{size}</span>
+                                <span>/</span>
+                                <span>{quantity}</span>
                             </div>
                             <div className={st('modal-body-info__price')}>{formatCurrency(price)}đ</div>
                         </div>
