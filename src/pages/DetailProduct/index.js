@@ -15,8 +15,8 @@ import {
     faCartShopping,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { useDispatch } from 'react-redux';
-import { addSize } from '~/redux/action/cartAction';
+import { useDispatch, useSelector } from 'react-redux';
+import { addSize } from '~/redux/action/shoppingAction';
 
 const st = classNames.bind(styles);
 
@@ -66,9 +66,6 @@ function Detail() {
         loadData();
     }, [id]);
 
-    // -------------------------------
-    // HANDLERS
-    // -------------------------------
     const handleSelectColor = (index) => {
         setSelectedColorIndex(index);
         setSelectedSizeIndex(null);
@@ -87,11 +84,19 @@ function Detail() {
     };
 
     const decrease = () => setQuantity((q) => (q > 1 ? q - 1 : 1));
+    const { sizes: cartSizes } = useSelector((state) => state.shopping);
 
     const handleAddToCart = () => {
         if (selectedSizeIndex === null) return;
 
         const selectedSize = currentColor.sizes[selectedSizeIndex];
+        const quantityInCart = cartSizes.find((item) => item.sizeId === selectedSize.id)?.quantity || 0;
+        const totalQuantity = quantityInCart + quantity;
+
+        if (totalQuantity > selectedSize.stock) {
+            alert(`Bạn chỉ có thể mua tối đa ${selectedSize.stock} sản phẩm cho Size ${selectedSize.size}`);
+            return;
+        }
 
         dispatch(
             addSize({
@@ -146,7 +151,7 @@ function Detail() {
 
                         {/* INFO */}
                         <div className="col-12 col-md-5">
-                            <div className={st('info', 'mt-5 ms-3')}>
+                            <div className={st('info', 'ms-3')}>
                                 <h1 className="fw-bold" style={{ fontSize: 32 }}>
                                     {product.name}
                                 </h1>
@@ -211,16 +216,10 @@ function Detail() {
                                 <div className="row mb-5">
                                     <div className="col-auto">
                                         <button
-                                            className={st(
-                                                'sl-box',
-                                                'rounded-pill',
-                                                'd-flex',
-                                                'justify-content-between',
-                                                'align-items-center',
-                                                'me-2'
-                                            )}
+                                            className={`sl-box rounded-pill d-flex justify-content-lg-around align-items-center me-2`}
                                             style={{
                                                 width: 100,
+                                                height: 50,
                                                 backgroundColor: '#fff',
                                                 border: '1px solid black',
                                             }}>
@@ -242,7 +241,7 @@ function Detail() {
                                         </button>
                                     </div>
 
-                                    <div className="col-auto" style={{ flex: 1 }}>
+                                    <div className="col-auto" style={{ flex: 1, height: 50 }}>
                                         <button
                                             className={st(
                                                 'addToCard',

@@ -7,7 +7,6 @@ import {
     orderItems,
     orderStatusHistory,
 } from '~/data/api';
-import { useSelector } from 'react-redux';
 
 export const getFullProduct = (productId) => {
     const p = products.find((x) => x.id === productId);
