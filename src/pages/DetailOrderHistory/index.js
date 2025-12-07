@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
-import { getAllDeliveryMethods, getAllPaymentMethods, getProductFromSizeId } from '~/data/services';
+import { getAllDeliveryMethods, getAllPaymentMethods, getProductBySizeId } from '~/data/services';
 import styles from './style.module.scss';
 
 const st = classNames.bind(styles);
@@ -79,7 +79,7 @@ function DetailOrderHistory() {
                         </thead>
                         <tbody>
                             {orderProducts.items.map((item, idx) => {
-                                const productInfo = getProductFromSizeId(item.sizeId);
+                                const productInfo = getProductBySizeId(item.sizeId);
                                 console.log(productInfo);
                                 return (
                                     <tr key={idx}>
