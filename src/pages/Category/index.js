@@ -4,7 +4,7 @@ import configs from '../../config';
 import { useParams } from 'react-router-dom';
 import { formatSlugify } from '~/utils';
 import { categories } from '~/data/api';
-import { MainProductCard, LimitList, GradientText } from '../../components';
+import { MainProductCard, LimitList, GradientText, CartNotification } from '../../components';
 import { xeDapFixedGearMagicbrosCX5PlusImages } from '~/assets/images/product/xe-dap-the-thao';
 import { muBaoHiemXeDapSCOHIROWORKImages } from '~/assets/images/product/phu-kien';
 const st = classNames.bind(styles);
@@ -82,6 +82,7 @@ function Category() {
     const categoryName = findCategoryNameBySlug(slug);
     return (
         <div>
+            <CartNotification />
             <GradientText text={categoryName} fullColorWord={true} />
             <div className={st('row', 'g-4')}>
                 <LimitList>

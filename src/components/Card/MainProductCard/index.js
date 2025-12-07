@@ -21,9 +21,9 @@ function MainProductCard({ to = '#', name, price, discount, variants }) {
 
     const handleSelectSize = (e, size) => {
         e.preventDefault();
-
         if (size.quantity > 0) {
             setSelectedSize(size);
+            setSelectedSize(null);
             console.log(
                 `Đã thêm vào giỏ hàng: Sản phẩm ${name}, Màu: ${selectedColor.color_name}, Size: ${size.size_name}`
             );
