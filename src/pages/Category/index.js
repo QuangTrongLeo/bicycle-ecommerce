@@ -3,18 +3,17 @@ import styles from './style.module.scss';
 import configs from '../../config';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
-import { formatSlugify } from '~/utils';
+// import { formatSlugify } from '~/utils';
 import { MainProductCard, LimitList, GradientText, CartNotification } from '../../components';
-import { getCategoryNameBySlug, getProductsByCategorySlug } from '~/data/services';
+import { getCategoryBySlug, getProductsByCategoryId, getProductById } from '~/data/services';
 const st = classNames.bind(styles);
 
 function Category() {
     const { slug } = useParams();
     const [cartItem, setCartItem] = useState(null);
-    const [products] = useState(getProductsByCategorySlug(slug));
+    const [products] = useState(getProductsByCategoryId(getCategoryBySlug(slug).id));
     const [showCartNotification, setShowCartNotification] = useState(false);
-    const categoryName = getCategoryNameBySlug(slug);
-    console.log(categoryName);
+    console.log(getProductById(1));
     console.log(products);
     const handleShowCartNotification = (data) => {
         setCartItem(data);
@@ -37,13 +36,13 @@ function Category() {
                     onClose={handleCloseCartNotification}
                 />
             )}
-            <GradientText text={categoryName} fullColorWord={true} />
+            <GradientText text={getCategoryBySlug(slug).name} fullColorWord={true} />
             <div className={st('row', 'g-4')}>
                 <LimitList>
                     {products.map((product) => (
                         <div key={product.id} className={st('col-12', 'col-md-4', 'col-lg-3')}>
                             <MainProductCard
-                                to={`${configs.routes.detail}/${formatSlugify(product.name)}`}
+                                to={`${configs.routes.detail}/${product.id}`}
                                 name={product.name}
                                 desc={product.desc}
                                 price={product.price}

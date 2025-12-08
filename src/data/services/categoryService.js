@@ -3,14 +3,9 @@ import { formatSlugify } from '~/utils';
 
 export const getCategories = () => [...categories];
 
-export const getCategoryNameBySlug = (slug) => {
+export const getCategoryBySlug = (slug) => {
     const category = categories.find((c) => formatSlugify(c.name) === slug);
-    return category ? category.name : null;
-};
-
-export const getCategoryIdBySlug = (slug) => {
-    const category = categories.find((c) => formatSlugify(c.name) === slug);
-    return category ? category.id : null;
+    return category || null;
 };
 
 export const getTopCategoriesBySold = (limit = 3) => {

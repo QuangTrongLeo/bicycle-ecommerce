@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import styles from './style.module.scss';
 import { getProductById } from '~/data/services';
@@ -25,93 +25,66 @@ function Detail() {
     const dispatch = useDispatch();
 
     const [product, setProduct] = useState(null);
-    const [selectedColorIndex, setSelectedColorIndex] = useState(0);
-    const [selectedSizeIndex, setSelectedSizeIndex] = useState(null);
+    const [selectedColor, setSelectedColor] = useState(null);
+    const [selectedSize, setSelectedSize] = useState(null);
     const [selectedImg, setSelectedImg] = useState('');
     const [quantity, setQuantity] = useState(1);
 
+    const { sizes: cartSizes } = useSelector((state) => state.shopping);
+
+    // Load product
     useEffect(() => {
-        async function loadData() {
-            try {
-                const raw = await getProductById(Number(id));
-                if (!raw) return;
+        const p = getProductById(Number(id));
+        if (!p) return;
 
-                const normalized = {
-                    ...raw,
-                    colors:
-                        raw.colors?.map((c) => ({
-                            id: c.id,
-                            name: c.colorName,
-                            code: c.colorHex,
-                            images: c.images ?? [],
-                            sizes: c.sizes ?? [],
-                        })) ?? [],
-                };
+        const firstColor = p.colors[0];
+        const firstSize = firstColor.sizes[0];
 
-                setProduct(normalized);
-
-                const defaultColorIndex = 0;
-                setSelectedColorIndex(defaultColorIndex);
-
-                const firstSizeIndex = normalized.colors?.[defaultColorIndex]?.sizes?.length > 0 ? 0 : null;
-                setSelectedSizeIndex(firstSizeIndex);
-
-                const imgs = normalized.colors[defaultColorIndex].images ?? [];
-                setSelectedImg(imgs[0] || '');
-            } catch (error) {
-                console.error('Lỗi tải sản phẩm:', error);
-            }
-        }
-
-        loadData();
+        setProduct(p);
+        setSelectedColor(firstColor);
+        setSelectedSize(firstSize);
+        setSelectedImg(firstColor.images[0].imageUrl);
     }, [id]);
 
-    const handleSelectColor = (index) => {
-        setSelectedColorIndex(index);
-        setSelectedSizeIndex(null);
-        setQuantity(1);
+    if (!product || !selectedColor || !selectedSize) return <h3>Đang tải dữ liệu sản phẩm...</h3>;
 
-        const imgs = product.colors[index].images;
-        setSelectedImg(imgs[0] || '');
+    const currentColor = selectedColor;
+    const currentSize = selectedSize;
+
+    const handleSelectColor = (colorObj) => {
+        setSelectedColor(colorObj);
+        setSelectedSize(colorObj.sizes[0]);
+        setQuantity(1);
+        setSelectedImg(colorObj.images[0].imageUrl);
     };
 
     const increase = () => {
-        if (selectedSizeIndex === null) return;
-
-        const maxStock = currentColor.sizes[selectedSizeIndex].stock;
-
+        const maxStock = currentSize.stock;
         setQuantity((q) => (q < maxStock ? q + 1 : q));
     };
 
     const decrease = () => setQuantity((q) => (q > 1 ? q - 1 : 1));
-    const { sizes: cartSizes } = useSelector((state) => state.shopping);
 
     const handleAddToCart = () => {
-        if (selectedSizeIndex === null) return;
+        const quantityInCart = cartSizes.find((item) => item.sizeId === currentSize.sizeId)?.quantity || 0;
 
-        const selectedSize = currentColor.sizes[selectedSizeIndex];
-        const quantityInCart = cartSizes.find((item) => item.sizeId === selectedSize.id)?.quantity || 0;
         const totalQuantity = quantityInCart + quantity;
 
-        if (totalQuantity > selectedSize.stock) {
-            alert(`Bạn chỉ có thể mua tối đa ${selectedSize.stock} sản phẩm cho Size ${selectedSize.size}`);
+        if (totalQuantity > currentSize.stock) {
+            alert(`Bạn chỉ có thể mua tối đa ${currentSize.stock} sản phẩm cho Size ${currentSize.sizeName}`);
             return;
         }
 
         dispatch(
             addSize({
-                sizeId: selectedSize.id,
-                quantity: quantity,
+                sizeId: currentSize.sizeId,
+                quantity,
             })
         );
 
+        alert(`Đã thêm Size ${currentSize.sizeName} vào giỏ hàng`);
         setQuantity(1);
-        alert(`Đã thêm Size ${selectedSize.size} vào giỏ hàng`);
     };
-
-    if (!product) return <h3>Đang tải dữ liệu sản phẩm...</h3>;
-
-    const currentColor = product.colors[selectedColorIndex];
 
     return (
         <div className={st('detail-page')}>
@@ -124,7 +97,6 @@ function Detail() {
                     </div>
                 </div>
 
-                {/* CONTENT */}
                 <div className={st('content-detail', 'container')}>
                     <div className="row">
                         {/* THUMBNAIL */}
@@ -133,10 +105,10 @@ function Detail() {
                                 {currentColor.images.map((img, i) => (
                                     <div key={i} className={st('thumbnail-item')}>
                                         <img
-                                            src={img}
+                                            src={img.imageUrl}
                                             className="img-fluid"
                                             style={{ objectFit: 'contain' }}
-                                            onClick={() => setSelectedImg(img)}
+                                            onClick={() => setSelectedImg(img.imageUrl)}
                                             alt=""
                                         />
                                     </div>
@@ -164,16 +136,16 @@ function Detail() {
                                 <h3 className="mt-4">Màu sắc</h3>
                                 <div className="row mb-1">
                                     <div className={st('color-listProduct')}>
-                                        {product.colors.map((color, i) => (
+                                        {product.colors.map((color) => (
                                             <div
-                                                key={color.id}
+                                                key={color.colorId}
                                                 className={st(
                                                     'option-color',
-                                                    i === selectedColorIndex && 'optionColorOnClicked'
+                                                    selectedColor.colorId === color.colorId && 'optionColorOnClicked'
                                                 )}
-                                                onClick={() => handleSelectColor(i)}>
+                                                onClick={() => handleSelectColor(color)}>
                                                 <button
-                                                    style={{ backgroundColor: color.code }}
+                                                    style={{ backgroundColor: color.colorHex }}
                                                     className={st('color-button')}
                                                 />
                                             </div>
@@ -184,17 +156,15 @@ function Detail() {
                                 {/* SIZES */}
                                 <h3 className="mt-4">Kích cỡ</h3>
                                 <div className="row mb-4">
-                                    {currentColor.sizes.length === 0 && <p>Không có size cho màu này</p>}
-
-                                    {currentColor.sizes.map((size, i) => (
-                                        <div className="col-auto text-center" key={size.id}>
+                                    {currentColor.sizes.map((size) => (
+                                        <div className="col-auto text-center" key={size.sizeId}>
                                             <button
                                                 className={st(
                                                     'option-size',
-                                                    i === selectedSizeIndex && 'sizeOnClicked' // ✅ thêm class size đang chọn
+                                                    selectedSize.sizeId === size.sizeId && 'sizeOnClicked'
                                                 )}
                                                 onClick={() => {
-                                                    setSelectedSizeIndex(i);
+                                                    setSelectedSize(size);
                                                     setQuantity(1);
                                                 }}
                                                 disabled={size.stock === 0}
@@ -202,7 +172,7 @@ function Detail() {
                                                     opacity: size.stock === 0 ? 0.4 : 1,
                                                     cursor: size.stock === 0 ? 'not-allowed' : 'pointer',
                                                 }}>
-                                                <span className="fw-bold">Size {size.size}</span>
+                                                <span className="fw-bold">Size {size.sizeName}</span>
                                             </button>
 
                                             <div style={{ fontSize: 12, marginTop: 4 }}>
@@ -224,23 +194,12 @@ function Detail() {
                                                 border: '1px solid black',
                                             }}>
                                             <FontAwesomeIcon icon={faMinus} onClick={decrease} />
-
                                             <span className="fw-bold">{quantity}</span>
-
-                                            <FontAwesomeIcon
-                                                icon={faPlus}
-                                                onClick={increase}
-                                                style={{
-                                                    opacity:
-                                                        selectedSizeIndex !== null &&
-                                                        quantity >= currentColor.sizes[selectedSizeIndex].stock
-                                                            ? 0.4
-                                                            : 1,
-                                                }}
-                                            />
+                                            <FontAwesomeIcon icon={faPlus} onClick={increase} />
                                         </button>
                                     </div>
 
+                                    {/* ADD TO CART */}
                                     <div className="col-auto" style={{ flex: 1, height: 50 }}>
                                         <button
                                             className={st(
@@ -251,7 +210,6 @@ function Detail() {
                                                 'justify-content-center',
                                                 'align-items-center'
                                             )}
-                                            disabled={selectedSizeIndex === null}
                                             onClick={handleAddToCart}>
                                             <FontAwesomeIcon icon={faCartShopping} className="mx-2" />
                                             <span className="fw-bold">Thêm vào giỏ hàng</span>
