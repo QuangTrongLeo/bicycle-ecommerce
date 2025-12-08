@@ -1,6 +1,13 @@
 import { products, categories, productColors, productImages, productSizes } from '~/data/api';
 import { getColorsByProductId } from './colorService';
 
+export const getProductByColorId = (colorId) => {
+    const color = productColors.find((c) => c.id === colorId);
+    if (!color) return null;
+
+    return getProductById(color.productId);
+};
+
 export const getProductById = (productId) => {
     const product = products.find((p) => p.id === productId);
     if (!product) return null;
