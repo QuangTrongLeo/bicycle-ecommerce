@@ -56,10 +56,10 @@ function Home() {
                             {newProducts.map((product) => (
                                 <LargeProductCard
                                     key={product.id}
-                                    to={`${configs.routes.detail}/${formatSlugify(product.name)}`}
+                                    to={`${configs.routes.detail}/${product.id}`}
                                     name={product.name}
                                     desc={product.desc}
-                                    img={product.colors?.[0]?.images?.[0] || product.img}
+                                    img={product.colors[0].images[0].imageUrl}
                                     price={product.price}
                                     discount={product.discount}
                                 />
@@ -75,10 +75,10 @@ function Home() {
                             {accessories.map((product) => (
                                 <LargeProductCard
                                     key={product.id}
-                                    to={`${configs.routes.detail}/${formatSlugify(product.name)}`}
+                                    to={`${configs.routes.detail}/${product.id}`}
                                     name={product.name}
                                     desc={product.desc}
-                                    img={product.colors?.[0]?.images?.[0] || product.img}
+                                    img={product.colors[0].images[0].imageUrl}
                                     price={product.price}
                                     discount={product.discount}
                                 />

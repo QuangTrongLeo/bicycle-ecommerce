@@ -1,27 +1,17 @@
 import { products, categories, productColors, productImages, productSizes } from '~/data/api';
 import { getColorsByProductId } from './colorService';
-import { getCategoryIdBySlug } from './categoryService';
 
 export const getProductById = (productId) => {
-    const p = products.find((x) => x.id === productId);
-    if (!p) return null;
-
-    const colors = productColors.filter((c) => c.productId === productId);
-
+    const product = products.find((p) => p.id === productId);
+    if (!product) return null;
     return {
-        ...p,
-        colors: colors.map((color) => ({
-            ...color,
-            images: productImages.filter((img) => img.colorId === color.id).map((i) => i.imageUrl),
-            sizes: productSizes
-                .filter((s) => s.colorId === color.id)
-                .map((s) => ({
-                    id: s.id,
-                    size: s.size,
-                    stock: s.stock,
-                })),
-        })),
+        ...product,
+        colors: getColorsByProductId(productId),
     };
+};
+
+export const getProductsByCategoryId = (categoryId) => {
+    return products.filter((p) => p.categoryId === categoryId).map((p) => getProductById(p.id));
 };
 
 export const getProductsByCategoryType = (type, limit) => {
@@ -100,18 +90,4 @@ export const getProductBySizeId = (sizeId) => {
         price: product.price,
         discountPrice: product.discount || product.price,
     };
-};
-
-export const getProductsByCategorySlug = (slug) => {
-    return products
-        .filter((p) => p.categoryId === getCategoryIdBySlug(slug))
-        .map((p) => ({
-            id: p.id,
-            name: p.name,
-            desc: p.desc,
-            price: p.price,
-            discount: p.discount,
-            categoryId: p.categoryId,
-            colors: getColorsByProductId(p.id),
-        }));
 };
