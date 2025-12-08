@@ -18,6 +18,12 @@ export const users = [
         password: 'user123',
         role: 'user',
     },
+    {
+        id: 10,
+        username: 'quangtrong',
+        password: '123456',
+        role: 'user',
+    },
 ];
 
 // =====================
@@ -42,6 +48,15 @@ export const userProfiles = [
         address: '123, Đường 123, Quận 1, TP.HCM',
         email: 'huyvu10012003@gmail.com',
     },
+    {
+        userId: 10,
+        fullName: 'Phạm Quang Trọng',
+        phone: '0865417145',
+        gender: 'Nam',
+        birthday: '31/05/2004',
+        address: '123, Đường 123, Quận 1, TP.HCM',
+        email: '22130299@st.hcmuaf.edu.vn',
+    },
 ];
 
 // =====================
@@ -50,6 +65,7 @@ export const userProfiles = [
 export const userWallet = [
     { userId: 1, coolcash: 5000 },
     { userId: 2, coolcash: 3000 },
+    { userId: 10, coolcash: 10000 },
 ];
 
 // =====================
@@ -58,6 +74,7 @@ export const userWallet = [
 export const userRanks = [
     { userId: 1, rank: 'none', spendingToNextRank: 500000 },
     { userId: 2, rank: 'none', spendingToNextRank: 252000 },
+    { userId: 10, rank: 'none', spendingToNextRank: 252000 },
 ];
 
 // =====================

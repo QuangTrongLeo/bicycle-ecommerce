@@ -33,7 +33,7 @@ function Detail() {
 
     const { sizes: cartSizes } = useSelector((state) => state.shopping);
     const currentUser = useSelector((state) => state.user.currentUser);
-    const userId = currentUser.id;
+    const userId = currentUser?.id || null;
 
     // Load product
     useEffect(() => {
