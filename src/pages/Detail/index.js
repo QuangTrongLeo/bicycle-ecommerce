@@ -31,7 +31,6 @@ function Detail() {
     const [selectedSize, setSelectedSize] = useState(null);
     const [selectedImg, setSelectedImg] = useState('');
     const [quantity, setQuantity] = useState(1);
-    const [sizeID, setSizeID] = useState(null);
 
     const { sizes: cartSizes } = useSelector((state) => state.shopping);
     const currentUser = useSelector((state) => state.user.currentUser);

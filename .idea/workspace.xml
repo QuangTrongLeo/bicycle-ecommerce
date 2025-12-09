@@ -5,15 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9af4d39d-8031-48b2-bfce-ad01bda15495" name="Changes" comment="fix">
-      <change afterPath="$PROJECT_DIR$/src/components/CartNotification/CartNotification.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/CartNotification/NotificationManager.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/CartNotification/SingleNotification.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Card/MainProductCard/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Card/MainProductCard/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CartNotification/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CartNotification/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CartNotification/style.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CartNotification/style.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CartNotification/SingleNotification.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CartNotification/SingleNotification.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Cart/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Cart/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Detail/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Detail/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/DetailOrderHistory/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DetailOrderHistory/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/OrderHistory/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/OrderHistory/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/OrderHistory/style.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/OrderHistory/style.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/action/shoppingAction.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/action/shoppingAction.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/reducer/shoppingReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/reducer/shoppingReducer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +114,7 @@
       <workItem from="1765076672450" duration="7766000" />
       <workItem from="1765086860558" duration="6726000" />
       <workItem from="1765100032367" duration="11788000" />
-      <workItem from="1765302947452" duration="5599000" />
+      <workItem from="1765302947452" duration="8717000" />
     </task>
     <task id="LOCAL-00001" summary="design home">
       <option name="closed" value="true" />
@@ -220,7 +220,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765306747597</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="fix">
+      <option name="closed" value="true" />
+      <created>1765308864027</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1765308864027</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

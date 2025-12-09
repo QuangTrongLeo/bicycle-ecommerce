@@ -1,13 +1,14 @@
 .order-history-page {
     display: flex;
     flex-direction: column;
-    height: 570px;
+    min-height: 100vh;
     font-size: 14px;
+    padding: 20px 0;
 
     .container {
         display: flex;
         flex-direction: column;
-        flex: 1; /* chiếm toàn bộ khoảng trống */
+        flex: 1;
         max-width: 1400px;
         width: 100%;
         margin: 0 auto;
@@ -23,26 +24,116 @@
         .btn {
             font-size: 14px;
             padding: 6px 12px;
+            border-radius: 4px;
+            transition: 0.3s;
+
+            &:hover:not(:disabled) {
+                opacity: 0.85;
+            }
         }
     }
 
     .order-list {
-        flex: 1; /* chiếm khoảng trống giữa header và pagination */
+        flex: 1;
         display: flex;
         flex-direction: column;
+        gap: 15px;
+
+        .card {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            justify-content: space-between;
+            min-height: 200px;
+
+            .card-body {
+                padding: 15px;
+
+                .card-title {
+                    font-weight: 600;
+                    margin-bottom: 10px;
+                }
+
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-bottom: 10px;
+                    table-layout: fixed;
+
+                    colgroup {
+                        col:nth-child(1) {
+                            width: 30%;
+                        }
+
+                        // Tên sản phẩm
+                        col:nth-child(2) {
+                            width: 15%;
+                        }
+
+                        // Màu
+                        col:nth-child(3) {
+                            width: 15%;
+                        }
+
+                        // Kích thước
+                        col:nth-child(4) {
+                            width: 15%;
+                        }
+
+                        // Số lượng
+                        col:nth-child(5) {
+                            width: 25%;
+                        }
+
+                        // Giá
+                    }
+
+                    th,
+                    td {
+                        padding: 8px 10px;
+                        text-align: center;
+                        border: 1px solid #e0e0e0;
+                        overflow: hidden; // ✅ Ẩn nội dung tràn
+                        text-overflow: ellipsis; // ✅ Hiển thị ... khi text quá dài
+                        white-space: nowrap; // ✅ Không cho text xuống dòng
+                    }
+
+                    th {
+                        background-color: #f8f9fa;
+                        font-weight: 500;
+                    }
+
+                    tbody tr:hover {
+                        background-color: #f1f1f1;
+                    }
+                }
+
+                .text-end {
+                    text-align: right;
+                }
+
+                .btn {
+                    padding: 6px 12px;
+                    border-radius: 4px;
+                    font-size: 14px;
+                }
+            }
+        }
     }
 
     .pagination-wrapper {
         display: flex;
         justify-content: center;
         gap: 8px;
-        margin-top: auto; /* luôn nằm dưới cùng */
-        padding: 10px 0;
+        margin-top: 15px;
         flex-shrink: 0;
+        flex-wrap: wrap;
 
         .btn {
             padding: 0.375rem 0.75rem;
             border-radius: 4px;
+            transition: 0.3s;
 
             &.btn-primary {
                 background-color: #0d6efd;
@@ -54,13 +145,50 @@
                 cursor: not-allowed;
                 opacity: 0.5;
             }
+
+            &:hover:not(:disabled) {
+                opacity: 0.85;
+            }
         }
     }
 
     /* Responsive */
+    @media (max-width: 1024px) {
+        .order-list table th,
+        .order-list table td {
+            padding: 6px 8px;
+            font-size: 13px;
+        }
+    }
+
     @media (max-width: 768px) {
         .status-tabs {
             gap: 8px;
+        }
+        .order-list table {
+            font-size: 12px;
+
+            colgroup {
+                col:nth-child(1) {
+                    width: 25%;
+                }
+
+                col:nth-child(2) {
+                    width: 15%;
+                }
+
+                col:nth-child(3) {
+                    width: 15%;
+                }
+
+                col:nth-child(4) {
+                    width: 15%;
+                }
+
+                col:nth-child(5) {
+                    width: 30%;
+                }
+            }
         }
     }
 
@@ -68,6 +196,37 @@
         .status-tabs {
             flex-direction: column;
             gap: 5px;
+            align-items: center;
+        }
+        .order-list table {
+            font-size: 11px;
+
+            th,
+            td {
+                padding: 4px 6px;
+            }
+
+            colgroup {
+                col:nth-child(1) {
+                    width: 30%;
+                }
+
+                col:nth-child(2) {
+                    width: 12%;
+                }
+
+                col:nth-child(3) {
+                    width: 12%;
+                }
+
+                col:nth-child(4) {
+                    width: 12%;
+                }
+
+                col:nth-child(5) {
+                    width: 34%;
+                }
+            }
         }
     }
 }

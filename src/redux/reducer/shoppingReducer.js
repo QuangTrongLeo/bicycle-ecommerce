@@ -2,7 +2,7 @@ import { ADD_SIZE, UPDATE_SIZE_QUANTITY, REMOVE_SIZE, CONFIRM_ORDER } from '~/re
 
 // INITIAL STATE
 const INITIAL_STATE = {
-    sizes: [], // [{ sizeId: 1, quantity: 2 }, ...]
+    sizes: [], // [{ userId, sizeId, quantity }, ...]
     orderHistory: [], // Lưu các đơn hàng đã hoàn tất
 };
 
@@ -10,47 +10,64 @@ const INITIAL_STATE = {
 const shoppingReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case ADD_SIZE: {
-            const { sizeId, quantity } = action.payload;
-            const existingIndex = state.sizes.findIndex((item) => item.sizeId === sizeId);
+            const { userId, sizeId, quantity } = action.payload;
+            const existingIndex = state.sizes.findIndex((item) => item.sizeId === sizeId && item.userId === userId);
 
             if (existingIndex !== -1) {
-                // tạo item mới thay vì mutate trực tiếp
                 const updatedSizes = state.sizes.map((item, idx) =>
                     idx === existingIndex ? { ...item, quantity: item.quantity + quantity } : item
                 );
                 return { ...state, sizes: updatedSizes };
             } else {
-                return { ...state, sizes: [...state.sizes, { sizeId, quantity }] };
+                return { ...state, sizes: [...state.sizes, { userId, sizeId, quantity }] };
             }
         }
 
-        case UPDATE_SIZE_QUANTITY:
+        case UPDATE_SIZE_QUANTITY: {
+            const { userId, sizeId, quantity } = action.payload;
             return {
                 ...state,
                 sizes: state.sizes.map((item) =>
-                    item.sizeId === action.payload.sizeId ? { ...item, quantity: action.payload.quantity } : item
+                    item.userId === userId && item.sizeId === sizeId ? { ...item, quantity } : item
                 ),
             };
+        }
 
-        case REMOVE_SIZE:
+        case REMOVE_SIZE: {
+            const { userId, sizeId } = action.payload;
             return {
                 ...state,
-                sizes: state.sizes.filter((item) => item.sizeId !== action.payload.sizeId),
+                sizes: state.sizes.filter((item) => !(item.userId === userId && item.sizeId === sizeId)),
             };
+        }
 
-        case CONFIRM_ORDER:
-            const purchasedSizeIds = action.payload.items.map((item) => item.sizeId);
+        case CONFIRM_ORDER: {
+            const { userId, items, totalPrice, shippingFee, deliveryId, paymentId, date, orderStatusHistory } =
+                action.payload;
+            const purchasedSizeIds = items.map((item) => item.sizeId);
+
             return {
                 ...state,
                 orderHistory: [
                     ...(Array.isArray(state.orderHistory) ? state.orderHistory : []),
                     {
                         id: new Date().getTime(),
-                        ...action.payload,
+                        userId,
+                        items,
+                        totalPrice,
+                        shippingFee,
+                        deliveryId,
+                        paymentId,
+                        date,
+                        orderStatusHistory,
                     },
                 ],
-                sizes: state.sizes.filter((item) => !purchasedSizeIds.includes(item.sizeId)),
+                sizes: state.sizes.filter(
+                    (item) => !(item.userId === userId && purchasedSizeIds.includes(item.sizeId))
+                ),
             };
+        }
+
         default:
             return state;
     }

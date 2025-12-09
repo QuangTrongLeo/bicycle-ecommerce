@@ -10,7 +10,7 @@ const st = classNames.bind(styles);
 function DetailOrderHistory() {
     const { id } = useParams();
     const orderProducts = useSelector((state) => state.shopping.orderHistory.find((order) => order.id === Number(id)));
-
+    console.log(orderProducts);
     const deliveryMethods = getAllDeliveryMethods();
     const paymentMethods = getAllPaymentMethods();
 
@@ -21,10 +21,15 @@ function DetailOrderHistory() {
         return <div className="alert alert-info text-center mt-5">Không tìm thấy đơn hàng.</div>;
     }
 
+    const totalPrice = orderProducts.totalPrice || 0;
+    const shippingFee = orderProducts.shippingFee || 0;
+    const orderStatusHistory = orderProducts.orderStatusHistory || [];
+    const items = orderProducts.items || [];
+
     return (
         <div className={st('detail-order-history')}>
             <div className="container">
-                <h3 className="text-center mb-4">Order Detail #{orderProducts.id}</h3>
+                <h3 className="text-center mb-4">Order Detail {orderProducts.id}</h3>
 
                 <div className="row">
                     {/* Thông tin đơn hàng */}
@@ -35,10 +40,10 @@ function DetailOrderHistory() {
                                 <strong>Ngày đặt hàng:</strong> {new Date(orderProducts.date).toLocaleString()}
                             </p>
                             <p>
-                                <strong>Tổng số tiền:</strong> {orderProducts.totalPrice.toLocaleString()}₫
+                                <strong>Tổng số tiền:</strong> {totalPrice.toLocaleString()}₫
                             </p>
                             <p>
-                                <strong>Phí giao hàng:</strong> {orderProducts.shippingFee.toLocaleString()}₫
+                                <strong>Phí giao hàng:</strong> {shippingFee.toLocaleString()}₫
                             </p>
                             <p>
                                 <strong>Hình thức giao hàng:</strong> {getDeliveryName(orderProducts.deliveryId)}
@@ -52,7 +57,7 @@ function DetailOrderHistory() {
                     {/* Tiến độ đơn hàng */}
                     <div className="col-md-6 col-sm-12 mb-4">
                         <h4>Tiến độ đơn hàng</h4>
-                        {orderProducts.orderStatusHistory.map((status, idx) => (
+                        {orderStatusHistory.map((status, idx) => (
                             <div key={idx} className={st('order-status', 'd-flex', 'mb-3')}>
                                 <div className={st('timeLine', 'me-3')}>{new Date(status.time).toLocaleString()}</div>
                                 <div className={st('info')}>
@@ -78,7 +83,7 @@ function DetailOrderHistory() {
                             </tr>
                         </thead>
                         <tbody>
-                            {orderProducts.items.reverse().map((item, idx) => {
+                            {items.reverse().map((item, idx) => {
                                 const productInfo = getProductBySizeId(item.sizeId);
                                 console.log(productInfo);
                                 return (

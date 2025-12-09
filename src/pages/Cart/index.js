@@ -1,20 +1,20 @@
 import { useState, useEffect, useMemo } from 'react';
 import classNames from 'classnames/bind';
 import { useSelector, useDispatch } from 'react-redux';
-import { UPDATE_SIZE_QUANTITY, REMOVE_SIZE } from '~/redux/action/shoppingAction';
+import { UPDATE_SIZE_QUANTITY, REMOVE_SIZE, confirmOrder } from '~/redux/action/shoppingAction';
 import { getAllDeliveryMethods, getAllPaymentMethods, calculateDelivery, getProductBySizeId } from '~/data/services';
-import { confirmOrder } from '~/redux/action/shoppingAction';
-
 import styles from './style.module.scss';
+
 const st = classNames.bind(styles);
 
 function Cart() {
-    const { sizes } = useSelector((state) => state.shopping);
-    const { cartItems, userId } = useSelector((state) => state.cart);
-    useEffect(() => {
-        console.log('Cart:', { userId, cartItems });
-    }, [cartItems, userId]);
     const dispatch = useDispatch();
+    const currentUser = useSelector((state) => state.user.currentUser);
+    const userId = currentUser?.id;
+
+    // Lấy tất cả sizes từ shopping state và lọc theo userId
+    const sizes = useSelector((state) => state.shopping.sizes);
+    const userSizes = useMemo(() => sizes.filter((item) => item.userId === userId), [sizes, userId]);
 
     const [shoppingCartItems, setShoppingCartItems] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
@@ -23,20 +23,20 @@ function Cart() {
     const [selectedDeliveryId, setSelectedDeliveryId] = useState(1);
     const [selectedPaymentId, setSelectedPaymentId] = useState(1);
 
-    console.log();
-
+    // Load phương thức giao hàng và thanh toán
     useEffect(() => {
         setListDeliveries(getAllDeliveryMethods());
         setListPayments(getAllPaymentMethods());
     }, []);
 
+    // Ghép chi tiết sản phẩm vào giỏ hàng
     useEffect(() => {
-        if (!sizes || sizes.length === 0) {
+        if (!userSizes || userSizes.length === 0) {
             setShoppingCartItems([]);
             return;
         }
 
-        const fullItems = sizes
+        const fullItems = userSizes
             .map((item) => {
                 const productDetail = getProductBySizeId(item.sizeId);
                 if (!productDetail) return null;
@@ -45,8 +45,9 @@ function Cart() {
             .filter(Boolean);
 
         setShoppingCartItems(fullItems);
-    }, [sizes]);
+    }, [userSizes]);
 
+    // Tính tổng thanh toán
     const totalAmount = useMemo(() => {
         const productsTotal = selectedItems.reduce((acc, item) => acc + item.quantity * item.discountPrice, 0);
         const deliveryFee = calculateDelivery(selectedDeliveryId).shippingFee;
@@ -63,7 +64,7 @@ function Cart() {
         if (item.quantity < productDetail.stock) {
             dispatch({
                 type: UPDATE_SIZE_QUANTITY,
-                payload: { sizeId: item.sizeId, quantity: item.quantity + 1 },
+                payload: { userId, sizeId: item.sizeId, quantity: item.quantity + 1 },
             });
         } else {
             alert(`Không thể mua quá tồn kho (${productDetail.stock})`);
@@ -75,16 +76,17 @@ function Cart() {
         if (item.quantity > 1) {
             dispatch({
                 type: UPDATE_SIZE_QUANTITY,
-                payload: { sizeId: item.sizeId, quantity: item.quantity - 1 },
+                payload: { userId, sizeId: item.sizeId, quantity: item.quantity - 1 },
             });
         }
     };
 
     const handleDelete = (index) => {
         const item = shoppingCartItems[index];
-        dispatch({ type: REMOVE_SIZE, payload: { sizeId: item.sizeId } });
+        dispatch({ type: REMOVE_SIZE, payload: { userId, sizeId: item.sizeId } });
     };
 
+    // Chọn hoặc bỏ chọn item
     const toggleSelection = (item) => {
         if (selectedItems.some((i) => i.sizeId === item.sizeId)) {
             setSelectedItems(selectedItems.filter((i) => i.sizeId !== item.sizeId));
@@ -101,7 +103,7 @@ function Cart() {
     const handleCheckout = () => {
         if (selectedItems.length === 0) return;
 
-        // kiểm tra tồn kho trước khi checkout
+        // Kiểm tra tồn kho trước khi checkout
         for (const item of selectedItems) {
             const productDetail = getProductBySizeId(item.sizeId);
             if (item.quantity > productDetail.stock) {
@@ -118,6 +120,7 @@ function Cart() {
 
         dispatch(
             confirmOrder({
+                userId,
                 items: orderItems,
                 deliveryId: selectedDeliveryId,
                 paymentId: selectedPaymentId,

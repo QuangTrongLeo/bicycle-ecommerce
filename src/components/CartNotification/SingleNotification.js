@@ -20,7 +20,6 @@ function SingleNotification({ sizeId, index, notificationId, createdAt, onClose 
         const data = getProductBySizeId(sizeId);
         if (data) setProductData(data);
 
-        // Tính thời gian còn lại dựa trên createdAt
         const now = Date.now();
         const elapsed = now - createdAt;
         const showDelay = Math.max(50 - elapsed, 0);
