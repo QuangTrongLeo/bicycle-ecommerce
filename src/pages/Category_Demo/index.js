@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import { useSearchParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 
-import styles from './style.module.scss';
 import { SearchBox } from '~/components/Input';
+import { MainProductCard } from '~/components';
 
 import {
     getAllProductsFullPaginate,
@@ -12,7 +11,7 @@ import {
     getProductsByCategoryPaginate,
     getColors,
 } from '~/data/services';
-
+import styles from './style.module.scss';
 const st = classNames.bind(styles);
 
 function Category_Demo() {
@@ -27,8 +26,6 @@ function Category_Demo() {
     const [availableColors, setAvailableColors] = useState([]);
     const [data, setData] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
-
-    const [selectedColorByProduct, setSelectedColorByProduct] = useState({});
 
     useEffect(() => {
         setAvailableColors(getColors());
@@ -50,12 +47,10 @@ function Category_Demo() {
 
         let list = res.data;
 
-        // SEARCH
         if (query.trim() !== '') {
             list = list.filter((p) => p.name.toLowerCase().includes(query.toLowerCase()));
         }
 
-        // FILTER COLOR
         if (color.trim() !== '') {
             list = list.filter((p) => p.colors?.some((c) => String(c.colorHex).toLowerCase() === color.toLowerCase()));
         }
@@ -134,7 +129,6 @@ function Category_Demo() {
                                 ))}
                             </div>
 
-                            {/* COLOR FILTER */}
                             <p className={st('filter-title')}>Màu sắc</p>
 
                             <div className={st('filter-color')}>
@@ -151,69 +145,20 @@ function Category_Demo() {
                         </div>
                     </div>
 
-                    {/* ================= PRODUCT LIST ================= */}
                     <div className="col-md-10">
                         <div className={st('product-list')}>
                             <SearchBox value={query} onSearch={onSearch} placeholder="Tìm kiếm sản phẩm..." />
-
                             <div className="row">
-                                {data.map((p) => {
-                                    // lấy màu được chọn hoặc mặc định màu đầu tiên
-                                    const selectedId = selectedColorByProduct[p.id];
-                                    const selectedColor = p.colors.find((c) => c.id === selectedId) || p.colors[0];
-
-                                    return (
-                                        <div className="col-md-3" key={p.id}>
-                                            <div className={st('card')}>
-                                                <div className={st('card-img')}>
-                                                    <Link to={`/detail/${p.id}`}>
-                                                        <img src={selectedColor.images?.[0]} alt={p.name} />
-                                                    </Link>
-
-                                                    <div className={st('card-size')}>
-                                                        {selectedColor.sizes?.map((s) => (
-                                                            <button key={s.id}>{s.size}</button>
-                                                        ))}
-                                                    </div>
-                                                </div>
-
-                                                {/* COLOR BUTTONS */}
-                                                <div className={st('card-color')}>
-                                                    {p.colors?.map((c) => (
-                                                        <button
-                                                            key={c.id}
-                                                            style={{ background: c.colorHex }}
-                                                            onClick={() =>
-                                                                setSelectedColorByProduct((prev) => ({
-                                                                    ...prev,
-                                                                    [p.id]: c.id,
-                                                                }))
-                                                            }></button>
-                                                    ))}
-                                                </div>
-
-                                                <p className={st('card-name')}>{p.name}</p>
-
-                                                <div className={st('card-price')}>
-                                                    <span className={st('price')}>{p.price.toLocaleString()}đ</span>
-
-                                                    {p.discount > 0 && (
-                                                        <>
-                                                            <span className={st('discount')}>{p.discount}%</span>
-
-                                                            <span className={st('old')}>
-                                                                {(p.price * (1 + p.discount / 100)).toLocaleString()}đ
-                                                            </span>
-                                                        </>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
+                                {data.map((p, index) => (
+                                    <div
+                                        className="col-md-3"
+                                        key={p.id}
+                                        style={index >= 4 && index < 8 ? { marginTop: '20px' } : {}}>
+                                        <MainProductCard product={p} />
+                                    </div>
+                                ))}
                             </div>
 
-                            {/* PAGINATION */}
                             {data.length > 0 && totalPages > 1 && (
                                 <div className={st('pagination')}>
                                     {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (

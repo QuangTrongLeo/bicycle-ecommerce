@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9af4d39d-8031-48b2-bfce-ad01bda15495" name="Changes" comment="resolve conflict">
-      <change beforePath="$PROJECT_DIR$/src/pages/Profile/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Profile/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Category/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Category/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Category_Demo/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Category_Demo/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Category_Demo/style.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Category_Demo/style.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Home/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Home/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +50,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "orderHistoryAndDetailOrderHistory",
+    "git-widget-placeholder": "vu",
     "last_opened_file_path": "E:/LearnUniversity/BicycleEcommerce/src/pages/DetailOrderHistory",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -216,6 +219,7 @@
     <MESSAGE value="detail and cart" />
     <MESSAGE value="merger" />
     <MESSAGE value="add order-history and detail-order-history" />
+    <MESSAGE value="Impl update stock on product size when addToCart&#10;&#10;feat: impl update stock on product size when addToCart" />
     <MESSAGE value="resolve conflict" />
     <option name="LAST_COMMIT_MESSAGE" value="resolve conflict" />
   </component>

@@ -10,11 +10,9 @@ const st = classNames.bind(styles);
 
 function Category() {
     const { slug } = useParams();
-    const [cartItem, setCartItem] = useState(null);
     const [products] = useState(getProductsByCategoryId(getCategoryBySlug(slug).id));
+    const [cartItem, setCartItem] = useState(null);
     const [showCartNotification, setShowCartNotification] = useState(false);
-    console.log(getProductById(1));
-    console.log(products);
     const handleShowCartNotification = (data) => {
         setCartItem(data);
         setShowCartNotification(true);
@@ -38,6 +36,7 @@ function Category() {
             )}
             <GradientText text={getCategoryBySlug(slug).name} fullColorWord={true} />
             <div className={st('row', 'g-4')}>
+                ds
                 <LimitList>
                     {products.map((product) => (
                         <div key={product.id} className={st('col-12', 'col-md-4', 'col-lg-3')}>

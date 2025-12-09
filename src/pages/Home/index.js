@@ -36,7 +36,7 @@ function Home() {
                             {categories.map((category) => (
                                 <CategoryCard
                                     key={category.id}
-                                    to={`${configs.routes.category}/${formatSlugify(category.name)}`}
+                                    to={`${configs.routes.collection}?category=${category.id}`}
                                     name={category.name}
                                     img={category.img}
                                 />
