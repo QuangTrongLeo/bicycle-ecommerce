@@ -3,7 +3,7 @@ import styles from './style.module.scss';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { formatCurrency, formatRoundToThousand } from '~/utils';
-import { getProductById } from '~/data/services';
+import { getProductById, buildCartItem } from '~/data/services';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -18,6 +18,7 @@ import {
 
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '~/redux/action/cartAction';
+import { CartNotification } from '~/components';
 
 const st = classNames.bind(styles);
 
@@ -30,6 +31,8 @@ function Detail() {
     const [selectedSize, setSelectedSize] = useState(null);
     const [selectedImg, setSelectedImg] = useState('');
     const [quantity, setQuantity] = useState(1);
+    const [cartItem, setCartItem] = useState(null);
+    const [showCartNotification, setShowCartNotification] = useState(false);
 
     const { sizes: cartSizes } = useSelector((state) => state.shopping);
     const currentUser = useSelector((state) => state.user.currentUser);
@@ -66,16 +69,14 @@ function Detail() {
         setSelectedImg(color.images[0].imageUrl);
         setQuantity(1);
         console.log(
-            ` Bạn đã chọn màu: { colorId: ${selectedColor.colorId}, name: ${selectedColor.colorName}, colorHex: ${selectedColor.colorHex}}`
+            ` Bạn đã chọn màu: { colorId: ${color.colorId}, name: ${color.colorName}, colorHex: ${color.colorHex}}`
         );
     };
 
     const handleSelectSize = (size) => {
         setSelectedSize(size);
         setQuantity(1);
-        console.log(
-            `Bạn đã chọn size: { sizeId: ${selectedSize.sizeId}, sizeName: ${selectedSize.sizeName}, stock: ${selectedSize.stock} }`
-        );
+        console.log(`Bạn đã chọn size: { sizeId: ${size.sizeId}, sizeName: ${size.sizeName}, stock: ${size.stock} }`);
     };
 
     const handleIncreaseQuantity = () => {
@@ -87,6 +88,14 @@ function Detail() {
     const handleDecreaseQuantity = () => {
         setQuantity((q) => (q > 1 ? q - 1 : 1));
         console.log(`Số lượng: ${quantity - 1}`);
+    };
+
+    const handleShowCartNotification = (data) => {
+        setCartItem(data);
+        setShowCartNotification(true);
+    };
+    const handleCloseCartNotification = () => {
+        setShowCartNotification(false);
     };
 
     const handleAddToCart = () => {
@@ -108,14 +117,31 @@ function Detail() {
             quantity,
         };
 
-        console.log(payload);
+        const itemCartNotification = buildCartItem(payload.sizeId, payload.quantity);
+
         dispatch(addToCart(payload));
+        setCartItem(itemCartNotification);
+        handleShowCartNotification(itemCartNotification);
         setQuantity(1);
+        console.log(payload);
     };
 
     return (
         <div className={st('detail-page')}>
             <div className="container">
+                {/* NOTIFICATION */}
+                {showCartNotification && (
+                    <CartNotification
+                        name={cartItem.name}
+                        price={cartItem.price}
+                        color={cartItem.color.colorName}
+                        size={cartItem.size.sizeName}
+                        img={cartItem.image}
+                        quantity={cartItem.quantity}
+                        onClose={handleCloseCartNotification}
+                    />
+                )}
+
                 {/* TITLE */}
                 <div className={st('row')}>
                     <div className={st('col-md-1')}></div>
@@ -124,6 +150,7 @@ function Detail() {
                     </div>
                 </div>
 
+                {/* PRODUCT DETAIL */}
                 <div className={st('content-detail', 'container')}>
                     <div className={st('row')}>
                         {/* THUMBNAIL */}
