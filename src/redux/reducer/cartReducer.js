@@ -19,7 +19,9 @@ export default function cartReducer(state = INITIAL_STATE, action) {
             if (existingCartItem) {
                 // Nếu đã tồn tại thì cộng dồn số lượng
                 updatedCartItems = currentUserCart.map((cartItem) =>
-                    cartItem.size.sizeId === sizeId ? { ...cartItem, quantity: cartItem.quantity + quantity } : cartItem
+                    cartItem.size.sizeId === sizeId
+                        ? { ...cartItem, quantity: cartItem.quantity + quantity, size: newCartItem.size }
+                        : cartItem
                 );
             } else {
                 // Nếu tồn tại thì thêm cartItem mới
