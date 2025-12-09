@@ -78,7 +78,7 @@ function DetailOrderHistory() {
                             </tr>
                         </thead>
                         <tbody>
-                            {orderProducts.items.map((item, idx) => {
+                            {orderProducts.items.reverse().map((item, idx) => {
                                 const productInfo = getProductBySizeId(item.sizeId);
                                 console.log(productInfo);
                                 return (

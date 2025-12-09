@@ -12,22 +12,12 @@ function MainProductCard({ product }) {
 
     const [selectedColor, setSelectedColor] = useState(colors[0]);
     const [currentImg, setCurrentImg] = useState(colors[0].images[0].imageUrl);
-    const [quantity] = useState(1);
 
     const [showNotify, setShowNotify] = useState(false);
     const [cartItem, setCartItem] = useState(null);
 
     const finalPrice =
         discount > 0 ? formatRoundToThousand(price - (price * discount) / 100) : formatRoundToThousand(price);
-
-    const createItem = (size) => ({
-        name,
-        price: finalPrice,
-        color: selectedColor.colorName,
-        size: size.sizeName,
-        image: selectedColor.images[0].imageUrl,
-        quantity,
-    });
 
     const handleSelectColor = (e, color) => {
         e.preventDefault();
@@ -39,8 +29,7 @@ function MainProductCard({ product }) {
         e.preventDefault();
         if (size.stock <= 0) return;
 
-        const item = createItem(size);
-        setCartItem(item);
+        setCartItem(size.sizeId);
         setShowNotify(true);
     };
 
@@ -56,17 +45,7 @@ function MainProductCard({ product }) {
 
     return (
         <>
-            {showNotify && (
-                <CartNotification
-                    name={cartItem.name}
-                    price={cartItem.price}
-                    color={cartItem.color}
-                    size={cartItem.size}
-                    img={cartItem.image}
-                    quantity={cartItem.quantity}
-                    onClose={() => setShowNotify(false)}
-                />
-            )}
+            {showNotify && <CartNotification sizeId={cartItem} onClose={() => setShowNotify(false)} />}
 
             <Link to={`/detail/${id}`} className={st('link-wrapper')}>
                 <div className={st('card-product')}>

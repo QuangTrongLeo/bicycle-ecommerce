@@ -13,27 +13,3 @@ export const getSizesByColorId = (colorId) => {
             stock: s.stock,
         }));
 };
-
-export const decreaseSizeStock = (sizeId, quantity) => {
-    const sizeToUpdate = getSizeById(sizeId);
-
-    if (sizeToUpdate) {
-        const newStock = sizeToUpdate.stock - quantity;
-        sizeToUpdate.stock = newStock >= 0 ? newStock : 0;
-        return sizeToUpdate;
-    }
-
-    return null;
-};
-
-export const increaseSizeStock = (sizeId, quantity) => {
-    const sizeToUpdate = getSizeById(sizeId);
-
-    if (sizeToUpdate) {
-        const newStock = sizeToUpdate.stock + quantity;
-        sizeToUpdate.stock = newStock;
-        return sizeToUpdate;
-    }
-
-    return null;
-};

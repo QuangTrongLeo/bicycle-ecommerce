@@ -4,11 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9af4d39d-8031-48b2-bfce-ad01bda15495" name="Changes" comment="resolve conflict">
-      <change beforePath="$PROJECT_DIR$/src/pages/Category/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Category/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Category_Demo/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Category_Demo/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Category_Demo/style.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Category_Demo/style.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Home/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Home/index.js" afterDir="false" />
+    <list default="true" id="9af4d39d-8031-48b2-bfce-ad01bda15495" name="Changes" comment="fix">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Card/MainProductCard/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Card/MainProductCard/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Card/MainProductCard/style.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Card/MainProductCard/style.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CartNotification/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CartNotification/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CartNotification/style.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CartNotification/style.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/services/sizeService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/services/sizeService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Detail/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Detail/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/DetailOrderHistory/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DetailOrderHistory/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +54,9 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "git-widget-placeholder": "vu",
+    "junie.onboarding.icon.badge.shown": "true",
     "last_opened_file_path": "E:/LearnUniversity/BicycleEcommerce/src/pages/DetailOrderHistory",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -58,6 +64,7 @@
     "nodejs_package_manager_path": "npm",
     "prettierjs.PrettierConfiguration.Package": "E:\\LearnUniversity\\BicycleEcommerce\\node_modules\\prettier",
     "settings.editor.selected.configurable": "actions.on.save",
+    "to.speed.mode.migration.done": "true",
     "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2025.2.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
@@ -105,6 +112,7 @@
       <workItem from="1765076672450" duration="7766000" />
       <workItem from="1765086860558" duration="6726000" />
       <workItem from="1765100032367" duration="11788000" />
+      <workItem from="1765302947452" duration="3620000" />
     </task>
     <task id="LOCAL-00001" summary="design home">
       <option name="closed" value="true" />
@@ -194,7 +202,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765111696758</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="fix">
+      <option name="closed" value="true" />
+      <created>1765301536108</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1765301536108</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -221,6 +237,7 @@
     <MESSAGE value="add order-history and detail-order-history" />
     <MESSAGE value="Impl update stock on product size when addToCart&#10;&#10;feat: impl update stock on product size when addToCart" />
     <MESSAGE value="resolve conflict" />
-    <option name="LAST_COMMIT_MESSAGE" value="resolve conflict" />
+    <MESSAGE value="fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix" />
   </component>
 </project>

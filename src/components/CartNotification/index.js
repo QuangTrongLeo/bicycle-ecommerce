@@ -4,22 +4,25 @@ import configs from '~/config';
 import { Link } from 'react-router-dom';
 import { formatCurrency } from '~/utils';
 import { useEffect, useState } from 'react';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { getProductBySizeId } from '~/data/services/productService';
+
 const st = classNames.bind(styles);
 
-function CartNotification({ name, price, color, size, img, quantity, onClose }) {
+function CartNotification({ sizeId, onClose }) {
+    console.log(sizeId);
     const [isShow, setIsShow] = useState(false);
+    const [productData, setProductData] = useState(null);
 
     useEffect(() => {
-        const showTimer = setTimeout(() => {
-            setIsShow(true);
-        }, 50);
+        const data = getProductBySizeId(sizeId);
+        if (data) setProductData(data);
 
+        const showTimer = setTimeout(() => setIsShow(true), 50);
         const hideTimer = setTimeout(() => {
             setIsShow(false);
-            const cleanupTimer = setTimeout(() => {
-                onClose();
-            }, 500);
-
+            const cleanupTimer = setTimeout(() => onClose(), 500);
             return () => clearTimeout(cleanupTimer);
         }, 3000);
 
@@ -27,42 +30,42 @@ function CartNotification({ name, price, color, size, img, quantity, onClose }) 
             clearTimeout(showTimer);
             clearTimeout(hideTimer);
         };
-    }, [onClose]);
-    const dialogClasses = st('modal-dialog', 'show-modal-dialog', { 'hide-modal-dialog': !isShow });
+    }, [sizeId, onClose]);
+
+    if (!productData) return null;
+
+    const dialogClasses = st('dialog', 'dialog-show', { 'dialog-hide': !isShow });
 
     const handleClose = () => {
         setIsShow(false);
-        setTimeout(() => {
-            onClose();
-        }, 500);
+        setTimeout(() => onClose(), 500);
     };
+
     return (
-        <div className={st('modal', 'show-modal')}>
+        <div className={st('modal-show')}>
             <div className={dialogClasses}>
-                <div className={st('modal-content')}>
-                    <div className={st('modal-header-cus', 'mx-4')}>
-                        <h4 className={st('modal-title')}>Thêm vào giỏ hàng thành công</h4>
-                        <button type="button" className={st('button-close')} onClick={handleClose}>
-                            <i className={st('fa-solid', 'fa-xmark')}></i>
+                <div className={st('content')}>
+                    <div className={st('header', 'mx-4')}>
+                        <h4 className={st('title')}>Thêm vào giỏ hàng thành công</h4>
+                        <button type="button" className={st('close-btn')} onClick={handleClose}>
+                            <FontAwesomeIcon icon={faXmark} className={st('close-icon')} />
                         </button>
                     </div>
-                    <div className={st('modal-body', 'mx-2', 'row')}>
-                        <img src={img} className={st('modal-body-img', 'col-3')} alt={name} />
-                        <div className={st('modal-body-info', 'col-9')}>
-                            <div className={st('modal-body-info__name')}>{name}</div>
-                            <div className={st('modal-body-info__variant')}>
-                                <span>{color}</span>
+                    <div className={st('body', 'mx-4')}>
+                        <img src={productData.image} className={st('img', 'col-3')} alt={productData.nameProduct} />
+                        <div className={st('info', 'col-9')}>
+                            <div className={st('name')}>{productData.nameProduct}</div>
+                            <div className={st('variant')}>
+                                <span>{productData.nameColor}</span>
                                 <span>/</span>
-                                <span>{size}</span>
-                                <span>/</span>
-                                <span>{quantity}</span>
+                                <span>{productData.nameSize}</span>
                             </div>
-                            <div className={st('modal-body-info__price')}>{formatCurrency(price)}đ</div>
+                            <div className={st('price')}>{formatCurrency(productData.discountPrice)}đ</div>
                         </div>
                     </div>
-                    <div className={st('modal-footer')}>
+                    <div className={st('footer', 'mx-4')}>
                         <Link to={configs.routes.cart}>
-                            <button type="button" className={st('btn', 'btn-primary')}>
+                            <button type="button" className={st('btn')}>
                                 Xem giỏ hàng <i className={st('fa-solid', 'fa-arrow-right')}></i>
                             </button>
                         </Link>
