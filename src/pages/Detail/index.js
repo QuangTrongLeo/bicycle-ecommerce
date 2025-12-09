@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { formatCurrency, formatRoundToThousand } from '~/utils';
 import { getProductById, buildsizeID, decreaseSizeStock } from '~/data/services';
+import { showCartNotification } from '~/components/CartNotification';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -18,7 +19,6 @@ import {
 
 import { useDispatch, useSelector } from 'react-redux';
 import { addSize } from '~/redux/action/shoppingAction';
-import { CartNotification } from '~/components';
 
 const st = classNames.bind(styles);
 
@@ -32,7 +32,6 @@ function Detail() {
     const [selectedImg, setSelectedImg] = useState('');
     const [quantity, setQuantity] = useState(1);
     const [sizeID, setSizeID] = useState(null);
-    const [showCartNotification, setShowCartNotification] = useState(false);
 
     const { sizes: cartSizes } = useSelector((state) => state.shopping);
     const currentUser = useSelector((state) => state.user.currentUser);
@@ -114,18 +113,12 @@ function Detail() {
 
         dispatch(addSize(payload));
 
-        setSizeID(selectedSize.sizeId);
-        setShowCartNotification(true);
+        showCartNotification(selectedSize.sizeId);
     };
 
     return (
         <div className={st('detail-page')}>
             <div className="container">
-                {/* NOTIFICATION */}
-                {showCartNotification && (
-                    <CartNotification sizeId={sizeID} onClose={() => setShowCartNotification(false)} />
-                )}
-
                 {/* TITLE */}
                 <div className={st('row')}>
                     <div className={st('col-md-1')}></div>
