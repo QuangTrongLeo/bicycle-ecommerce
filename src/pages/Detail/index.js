@@ -33,6 +33,7 @@ function Detail() {
     const [quantity, setQuantity] = useState(1);
     const [cartItem, setCartItem] = useState(null);
     const [showCartNotification, setShowCartNotification] = useState(false);
+    const [notificationKey, setNotificationKey] = useState(0);
 
     const { sizes: cartSizes } = useSelector((state) => state.shopping);
     const currentUser = useSelector((state) => state.user.currentUser);
@@ -93,6 +94,7 @@ function Detail() {
     const handleShowCartNotification = (data) => {
         setCartItem(data);
         setShowCartNotification(true);
+        setNotificationKey((prevKey) => prevKey + 1);
     };
     const handleCloseCartNotification = () => {
         setShowCartNotification(false);
@@ -132,6 +134,7 @@ function Detail() {
                 {/* NOTIFICATION */}
                 {showCartNotification && (
                     <CartNotification
+                        key={notificationKey}
                         name={cartItem.name}
                         price={cartItem.price}
                         color={cartItem.color.colorName}

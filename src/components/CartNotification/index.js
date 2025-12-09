@@ -3,16 +3,46 @@ import styles from './style.module.scss';
 import configs from '~/config';
 import { Link } from 'react-router-dom';
 import { formatCurrency } from '~/utils';
+import { useEffect, useState } from 'react';
 const st = classNames.bind(styles);
 
 function CartNotification({ name, price, color, size, img, quantity, onClose }) {
+    const [isShow, setIsShow] = useState(false);
+
+    useEffect(() => {
+        const showTimer = setTimeout(() => {
+            setIsShow(true);
+        }, 50);
+
+        const hideTimer = setTimeout(() => {
+            setIsShow(false);
+            const cleanupTimer = setTimeout(() => {
+                onClose();
+            }, 500);
+
+            return () => clearTimeout(cleanupTimer);
+        }, 3000);
+
+        return () => {
+            clearTimeout(showTimer);
+            clearTimeout(hideTimer);
+        };
+    }, [onClose]);
+    const dialogClasses = st('modal-dialog', 'show-modal-dialog', { 'hide-modal-dialog': !isShow });
+
+    const handleClose = () => {
+        setIsShow(false);
+        setTimeout(() => {
+            onClose();
+        }, 500);
+    };
     return (
         <div className={st('modal', 'show-modal')}>
-            <div className={st('modal-dialog', 'show-modal-dialog')}>
+            <div className={dialogClasses}>
                 <div className={st('modal-content')}>
                     <div className={st('modal-header-cus', 'mx-4')}>
                         <h4 className={st('modal-title')}>Thêm vào giỏ hàng thành công</h4>
-                        <button type="button" className={st('button-close')} onClick={onClose}>
+                        <button type="button" className={st('button-close')} onClick={handleClose}>
                             <i className={st('fa-solid', 'fa-xmark')}></i>
                         </button>
                     </div>

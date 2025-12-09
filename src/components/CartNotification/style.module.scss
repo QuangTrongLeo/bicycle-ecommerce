@@ -11,12 +11,23 @@
     width: 100%;
     top: 8% !important;
     right: 1% !important;
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(0%);
+}
+
+.hide-modal-dialog {
+    transform: translateX(110%);
 }
 
 .modal-header-cus {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-top: 1%;
+
+    .modal-title {
+        font-weight: bold;
+    }
 }
 
 .button-close {
@@ -53,8 +64,4 @@
     &__price {
         font-weight: bold;
     }
-}
-
-.modal-title {
-    font-weight: bold;
 }
