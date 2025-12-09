@@ -10,6 +10,10 @@ const st = classNames.bind(styles);
 
 function Cart() {
     const { sizes } = useSelector((state) => state.shopping);
+    const { cartItems, userId } = useSelector((state) => state.cart);
+    useEffect(() => {
+        console.log('Cart:', { userId, cartItems });
+    }, [cartItems, userId]);
     const dispatch = useDispatch();
 
     const [shoppingCartItems, setShoppingCartItems] = useState([]);
@@ -18,6 +22,8 @@ function Cart() {
     const [listPayments, setListPayments] = useState([]);
     const [selectedDeliveryId, setSelectedDeliveryId] = useState(1);
     const [selectedPaymentId, setSelectedPaymentId] = useState(1);
+
+    console.log();
 
     useEffect(() => {
         setListDeliveries(getAllDeliveryMethods());

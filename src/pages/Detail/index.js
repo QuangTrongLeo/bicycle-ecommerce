@@ -3,7 +3,7 @@ import styles from './style.module.scss';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { formatCurrency, formatRoundToThousand } from '~/utils';
-import { getProductById, buildCartItem } from '~/data/services';
+import { getProductById, buildCartItem, decreaseSizeStock } from '~/data/services';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -42,7 +42,6 @@ function Detail() {
     // Load product
     useEffect(() => {
         const p = getProductById(Number(id));
-        console.log(p);
         if (!p) return;
 
         const firstColor = p.colors[0];
@@ -55,14 +54,18 @@ function Detail() {
         setSelectedImg(firstImg);
     }, [id]);
 
+    useEffect(() => {
+        if (product) {
+            console.log(product);
+        }
+    }, [product]);
+
     if (!product || !selectedColor || !selectedSize) return <h3>Đang tải dữ liệu sản phẩm...</h3>;
 
     const finalPrice =
         product.discount > 0
             ? formatRoundToThousand(product.price - (product.price * product.discount) / 100)
             : formatRoundToThousand(product.price);
-    const currentColor = selectedColor;
-    const currentSize = selectedSize;
 
     const handleSelectColor = (color) => {
         setSelectedColor(color);
@@ -81,7 +84,7 @@ function Detail() {
     };
 
     const handleIncreaseQuantity = () => {
-        const maxStock = currentSize.stock;
+        const maxStock = selectedSize.stock;
         setQuantity((q) => (q < maxStock ? q + 1 : q));
         console.log(`Số lượng: ${quantity + 1}`);
     };
@@ -101,15 +104,15 @@ function Detail() {
     };
 
     const handleAddToCart = () => {
-        const quantityInCart = cartSizes.find((item) => item.sizeId === currentSize.sizeId)?.quantity || 0;
+        const quantityInCart = cartSizes.find((item) => item.sizeId === selectedSize.sizeId)?.quantity || 0;
         const totalQuantity = quantityInCart + quantity;
 
         if (!userId) {
             alert('Bạn cần đăng nhập để thêm vào giỏ hàng!');
             return;
         }
-        if (totalQuantity > currentSize.stock) {
-            alert(`Bạn chỉ có thể mua tối đa ${currentSize.stock} sản phẩm cho Size ${currentSize.sizeName}`);
+        if (totalQuantity > selectedSize.stock) {
+            alert(`Bạn chỉ có thể mua tối đa ${selectedSize.stock} sản phẩm cho Size ${selectedSize.sizeName}`);
             return;
         }
 
@@ -119,9 +122,43 @@ function Detail() {
             quantity,
         };
 
+        const updatedSize = decreaseSizeStock(payload.sizeId, payload.quantity);
         const itemCartNotification = buildCartItem(payload.sizeId, payload.quantity);
+        const newStock = updatedSize.stock;
+        console.log(`Số lượng tồn kho mới: ${newStock}`);
 
         dispatch(addToCart(payload));
+
+        if (itemCartNotification) {
+            let newSelectedColor = null;
+
+            const updatedProduct = {
+                ...product,
+                colors: product.colors.map((color) => {
+                    if (color.colorId === selectedColor.colorId) {
+                        const newColor = {
+                            ...color,
+                            sizes: color.sizes.map((size) => {
+                                if (size.sizeId === selectedSize.sizeId) {
+                                    const newSize = { ...size, stock: newStock };
+                                    setSelectedSize(newSize);
+                                    return newSize;
+                                }
+                                return size;
+                            }),
+                        };
+                        newSelectedColor = newColor;
+                        return newColor;
+                    }
+                    return color;
+                }),
+            };
+            setProduct(updatedProduct);
+            if (newSelectedColor) {
+                setSelectedColor(newSelectedColor);
+            }
+        }
+
         setCartItem(itemCartNotification);
         handleShowCartNotification(itemCartNotification);
         setQuantity(1);
@@ -159,7 +196,7 @@ function Detail() {
                         {/* THUMBNAIL */}
                         <div className={st('col-12', 'col-md-1')}>
                             <div className={st('thumbnail-container', 'mt-5')}>
-                                {currentColor.images.map((img, i) => (
+                                {selectedColor.images.map((img, i) => (
                                     <div key={i} className={st('thumbnail-item')}>
                                         <img
                                             src={img.imageUrl}
@@ -231,7 +268,7 @@ function Detail() {
                                 {/* SIZES */}
                                 <h3 className={st('mt-4')}>Kích cỡ</h3>
                                 <div className={st('row', 'mb-4')}>
-                                    {currentColor.sizes.map((size) => (
+                                    {selectedColor.sizes.map((size) => (
                                         <div className={st('col-auto', 'text-center')} key={size.sizeId}>
                                             <button
                                                 className={st(
