@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { formatCurrency, formatRoundToThousand } from '~/utils';
 import styles from './style.module.scss';
-import { showCartNotification } from '~/components/CartNotification'; // Chỉ import function
+import { showCartNotification } from '~/components/CartNotification';
 import { addSize } from '~/redux/action/shoppingAction';
+import { showToast } from '~/components/Toast/Toast';
 
 const st = classNames.bind(styles);
 
@@ -20,10 +21,6 @@ function MainProductCard({ product }) {
     const [selectedColor, setSelectedColor] = useState(colors[0]);
     const [currentImg, setCurrentImg] = useState(colors[0].images[0].imageUrl);
 
-    // XÓA các state không cần thiết
-    // const [showNotify, setShowNotify] = useState(false);
-    // const [cartItem, setCartItem] = useState(null);
-
     const finalPrice =
         discount > 0 ? formatRoundToThousand(price - (price * discount) / 100) : formatRoundToThousand(price);
 
@@ -36,13 +33,13 @@ function MainProductCard({ product }) {
     const handleSelectSize = (e, size) => {
         e.preventDefault();
         if (!userId) {
-            alert('Bạn cần đăng nhập để thêm vào giỏ hàng!');
+            showToast('Bạn cần đăng nhập để thêm vào giỏ hàng!');
             return;
         }
         const quantityInCart = cartSizes.find((item) => item.sizeId === size.sizeId)?.quantity || 0;
         const totalQuantity = quantityInCart + 1; // mặc định mua 1
         if (totalQuantity > size.stock) {
-            alert(`Bạn chỉ có thể mua tối đa ${size.stock} sản phẩm cho Size ${size.sizeName}`);
+            showToast(`Bạn chỉ có thể mua tối đa ${size.stock} sản phẩm cho Size ${size.sizeName}`);
             return;
         }
 

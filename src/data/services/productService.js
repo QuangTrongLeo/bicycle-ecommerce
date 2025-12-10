@@ -1,4 +1,5 @@
-import { products, categories, productColors, productImages, productSizes } from '~/data/api';
+import { products, categories, productColors, productImages } from '~/data/api';
+import { store } from '~/redux/store';
 import { getColorsByProductId } from './colorService';
 
 export const getProductByColorId = (colorId) => {
@@ -74,6 +75,8 @@ export const getProductsByCategoryPaginate = (categoryId, page = 1, limit = 8) =
 };
 
 export const getProductBySizeId = (sizeId) => {
+    const state = store.getState();
+    const productSizes = state.productSize.items;
     const size = productSizes.find((s) => s.id === sizeId);
     if (!size) return null;
 

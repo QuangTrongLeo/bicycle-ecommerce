@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 // import { formatSlugify } from '~/utils';
 import { MainProductCard, LimitList, GradientText, CartNotification } from '../../components';
-import { getCategoryBySlug, getProductsByCategoryId, getProductById } from '~/data/services';
+import { getCategoryBySlug, getProductsByCategoryId } from '~/data/services';
 const st = classNames.bind(styles);
 
 function Category() {

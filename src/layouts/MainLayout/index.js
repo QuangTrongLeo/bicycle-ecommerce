@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import { Header, Footer, Navigation } from '../../components';
+import { Footer, Navigation } from '../../components';
 import styles from './style.module.scss';
 const st = classNames.bind(styles);
 

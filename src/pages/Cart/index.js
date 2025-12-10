@@ -2,8 +2,10 @@ import { useState, useEffect, useMemo } from 'react';
 import classNames from 'classnames/bind';
 import { useSelector, useDispatch } from 'react-redux';
 import { UPDATE_SIZE_QUANTITY, REMOVE_SIZE, confirmOrder } from '~/redux/action/shoppingAction';
+import { updateStock } from '~/redux/action/productSizesAction'; // THÊM IMPORT NÀY
 import { getAllDeliveryMethods, getAllPaymentMethods, calculateDelivery, getProductBySizeId } from '~/data/services';
 import styles from './style.module.scss';
+import { showToast } from '~/components/Toast/Toast';
 
 const st = classNames.bind(styles);
 
@@ -43,7 +45,6 @@ function Cart() {
                 return { ...item, ...productDetail };
             })
             .filter(Boolean);
-
         setShoppingCartItems(fullItems);
     }, [userSizes]);
 
@@ -54,9 +55,6 @@ function Cart() {
         return productsTotal + deliveryFee;
     }, [selectedItems, selectedDeliveryId]);
 
-    // --------------------------
-    // HANDLE QUANTITY
-    // --------------------------
     const increaseQuantity = (index) => {
         const item = shoppingCartItems[index];
         const productDetail = getProductBySizeId(item.sizeId);
@@ -67,7 +65,7 @@ function Cart() {
                 payload: { userId, sizeId: item.sizeId, quantity: item.quantity + 1 },
             });
         } else {
-            alert(`Không thể mua quá tồn kho (${productDetail.stock})`);
+            showToast(`Không thể mua quá tồn kho (${productDetail.stock})`);
         }
     };
 
@@ -98,16 +96,16 @@ function Cart() {
     const isSelected = (item) => selectedItems.some((i) => i.sizeId === item.sizeId);
 
     // --------------------------
-    // HANDLE CHECKOUT
+    // HANDLE CHECKOUT - ĐÃ CẬP NHẬT
     // --------------------------
     const handleCheckout = () => {
         if (selectedItems.length === 0) return;
 
-        // Kiểm tra tồn kho trước khi checkout
+        // Kiểm tra tồn kho trước khi đặt hàng
         for (const item of selectedItems) {
             const productDetail = getProductBySizeId(item.sizeId);
             if (item.quantity > productDetail.stock) {
-                alert(`Sản phẩm ${productDetail.nameProduct} vượt tồn kho. Vui lòng giảm số lượng.`);
+                showToast(`Sản phẩm ${productDetail.nameProduct} vượt tồn kho. Vui lòng giảm số lượng.`);
                 return;
             }
         }
@@ -118,6 +116,7 @@ function Cart() {
             price: item.discountPrice,
         }));
 
+        // Dispatch action xác nhận đơn hàng
         dispatch(
             confirmOrder({
                 userId,
@@ -127,8 +126,30 @@ function Cart() {
             })
         );
 
+        // CẬP NHẬT TỒN KHO SAU KHI ĐẶT HÀNG THÀNH CÔNG
+        selectedItems.forEach((item) => {
+            const productDetail = getProductBySizeId(item.sizeId);
+            const newStock = productDetail.stock - item.quantity;
+
+            // Dispatch action cập nhật stock
+            dispatch(
+                updateStock({
+                    id: item.sizeId,
+                    stock: newStock,
+                })
+            );
+        });
+
+        // Xóa các items đã mua khỏi giỏ hàng
+        selectedItems.forEach((item) => {
+            dispatch({
+                type: REMOVE_SIZE,
+                payload: { userId, sizeId: item.sizeId },
+            });
+        });
+
         setSelectedItems([]);
-        alert('Đơn hàng đã được lưu vào lịch sử!');
+        showToast('Bạn đã đặt hàng thành công');
     };
 
     return (

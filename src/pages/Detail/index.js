@@ -3,7 +3,7 @@ import styles from './style.module.scss';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { formatCurrency, formatRoundToThousand } from '~/utils';
-import { getProductById, buildsizeID, decreaseSizeStock } from '~/data/services';
+import { getProductById } from '~/data/services';
 import { showCartNotification } from '~/components/CartNotification';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,6 +19,7 @@ import {
 
 import { useDispatch, useSelector } from 'react-redux';
 import { addSize } from '~/redux/action/shoppingAction';
+import { showToast } from '~/components/Toast/Toast';
 
 const st = classNames.bind(styles);
 
@@ -69,26 +70,20 @@ function Detail() {
         setSelectedSize(color.sizes[0]);
         setSelectedImg(color.images[0].imageUrl);
         setQuantity(1);
-        console.log(
-            ` Bạn đã chọn màu: { colorId: ${color.colorId}, name: ${color.colorName}, colorHex: ${color.colorHex}}`
-        );
     };
 
     const handleSelectSize = (size) => {
         setSelectedSize(size);
         setQuantity(1);
-        console.log(`Bạn đã chọn size: { sizeId: ${size.sizeId}, sizeName: ${size.sizeName}, stock: ${size.stock} }`);
     };
 
     const handleIncreaseQuantity = () => {
         const maxStock = selectedSize.stock;
         setQuantity((q) => (q < maxStock ? q + 1 : q));
-        console.log(`Số lượng: ${quantity + 1}`);
     };
 
     const handleDecreaseQuantity = () => {
         setQuantity((q) => (q > 1 ? q - 1 : 1));
-        console.log(`Số lượng: ${quantity - 1}`);
     };
 
     const handledSize = () => {
@@ -96,11 +91,11 @@ function Detail() {
         const totalQuantity = quantityInCart + quantity;
 
         if (!userId) {
-            alert('Bạn cần đăng nhập để thêm vào giỏ hàng!');
+            showToast('Bạn cần đăng nhập để thêm vào giỏ hàng!');
             return;
         }
         if (totalQuantity > selectedSize.stock) {
-            alert(`Bạn chỉ có thể mua tối đa ${selectedSize.stock} sản phẩm cho Size ${selectedSize.sizeName}`);
+            showToast(`Bạn chỉ có thể mua tối đa ${selectedSize.stock} sản phẩm cho Size ${selectedSize.sizeName}`);
             return;
         }
 

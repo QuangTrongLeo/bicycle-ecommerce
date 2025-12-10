@@ -10,6 +10,7 @@ const INITIAL_STATE = {
 const shoppingReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case ADD_SIZE: {
+            console.log('ADD_SIZE', action.payload);
             const { userId, sizeId, quantity } = action.payload;
             const existingIndex = state.sizes.findIndex((item) => item.sizeId === sizeId && item.userId === userId);
 

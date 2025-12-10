@@ -2,7 +2,6 @@ import classNames from 'classnames/bind';
 import configs from '../../config';
 import styles from './style.module.scss';
 import GradientText from '../../components/GradientText';
-import { formatSlugify } from '~/utils';
 import { LargeProductCard, MainHorizontalScroll, CategoryCard } from '../../components';
 import { getCategories, getNewestProducts, accessoryProducts } from '~/data/services';
 
