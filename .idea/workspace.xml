@@ -4,27 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9af4d39d-8031-48b2-bfce-ad01bda15495" name="Changes" comment="fix">
-      <change afterPath="$PROJECT_DIR$/src/components/Toast/Toast.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Toast/style.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/redux/action/productSizesAction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/redux/reducer/productSizes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Card/MainProductCard/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Card/MainProductCard/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/services/cartService.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/services/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/services/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/services/orderService.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/services/productService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/services/productService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/services/sizeService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/services/sizeService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Cart/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Cart/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Detail/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Detail/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/action/cartAction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/reducer/cartReducer.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/reducer/rootReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/reducer/rootReducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/reducer/shoppingReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/reducer/shoppingReducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/store.js" afterDir="false" />
-    </list>
+    <list default="true" id="9af4d39d-8031-48b2-bfce-ad01bda15495" name="Changes" comment="fix" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -125,7 +105,7 @@
       <workItem from="1765086860558" duration="6726000" />
       <workItem from="1765100032367" duration="11788000" />
       <workItem from="1765302947452" duration="9518000" />
-      <workItem from="1765338705075" duration="2812000" />
+      <workItem from="1765338705075" duration="3054000" />
     </task>
     <task id="LOCAL-00001" summary="design home">
       <option name="closed" value="true" />
@@ -247,7 +227,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765311737724</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="fix">
+      <option name="closed" value="true" />
+      <created>1765341772665</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1765341772665</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

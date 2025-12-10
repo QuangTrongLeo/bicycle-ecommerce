@@ -5,7 +5,6 @@ const routes = {
     detail: '/detail',
     profile: '/profile',
     searched: '/searched',
-    collection: '/collection',
     category: '/category',
     cart: '/cart',
     orderHistory: '/order-history',

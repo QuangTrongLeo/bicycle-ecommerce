@@ -122,7 +122,7 @@ function Navigation() {
                             </span>
 
                             <span onMouseEnter={() => openDropdown('store')}>
-                                <Link to="/collection">Cửa hàng</Link>
+                                <Link to="/category">Cửa hàng</Link>
                             </span>
 
                             <span onMouseEnter={() => openDropdown('shoes')}>

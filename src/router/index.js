@@ -7,7 +7,6 @@ import {
     Searched,
     Profile,
     Category,
-    Collection,
     Cart,
     OrderHistory,
     DetailOrderHistory,
@@ -22,8 +21,8 @@ const publishRoutes = [
     { path: configs.routes.register, page: Register },
     { path: `${configs.routes.detail}/:id`, page: Detail },
     { path: configs.routes.searched, page: Searched },
-    { path: `${configs.routes.collection}`, page: Collection },
-    { path: `${configs.routes.category}/:slug`, page: Category, layout: SecondLayout },
+    { path: `${configs.routes.category}`, page: Category },
+    // { path: `${configs.routes.category}/:slug`, page: Category, layout: SecondLayout },
 ];
 
 const userRoutes = [
