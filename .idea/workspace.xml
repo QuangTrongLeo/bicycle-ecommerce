@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9af4d39d-8031-48b2-bfce-ad01bda15495" name="Changes" comment="fix" />
+    <list default="true" id="9af4d39d-8031-48b2-bfce-ad01bda15495" name="Changes" comment="fix">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CartNotification/NotificationManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CartNotification/NotificationManager.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CartNotification/SingleNotification.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CartNotification/SingleNotification.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/services/productService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/services/productService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Category/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Category/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Home/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Home/index.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,7 +30,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="detailAndCart" />
+        <entry key="$PROJECT_DIR$" value="leo" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />

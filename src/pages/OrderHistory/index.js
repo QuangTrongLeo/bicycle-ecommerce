@@ -98,7 +98,7 @@ function OrderHistory() {
                             const totalPrice =
                                 order.items?.reduce((sum, item) => {
                                     const sizeInfo = getProductBySizeId(item.sizeId);
-                                    return sum + (sizeInfo?.discountPrice || 0) * item.quantity;
+                                    return sum + (sizeInfo?.finalPrice || 0) * item.quantity;
                                 }, 0) || 0;
 
                             const lastStatus = order.orderStatusHistory?.[order.orderStatusHistory.length - 1];
@@ -160,7 +160,7 @@ function OrderHistory() {
                                                             <td>{sizeInfo.nameColor}</td>
                                                             <td>{sizeInfo.nameSize}</td>
                                                             <td>{item.quantity}</td>
-                                                            <td>{sizeInfo.discountPrice.toLocaleString()}₫</td>
+                                                            <td>{sizeInfo.finalPrice}₫</td>
                                                         </tr>
                                                     );
                                                 })}

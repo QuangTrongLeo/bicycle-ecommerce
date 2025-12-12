@@ -71,7 +71,7 @@ function SingleNotification({ sizeId, index, notificationId, createdAt, onClose 
                                 <span>/</span>
                                 <span>{productData.nameSize}</span>
                             </div>
-                            <div className={st('price')}>{formatCurrency(productData.discountPrice)}đ</div>
+                            <div className={st('price')}>{formatCurrency(productData.finalPrice)}đ</div>
                         </div>
                     </div>
                     <div className={st('footer', 'mx-4')}>

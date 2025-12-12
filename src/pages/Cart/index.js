@@ -50,7 +50,7 @@ function Cart() {
 
     // Tính tổng thanh toán
     const totalAmount = useMemo(() => {
-        const productsTotal = selectedItems.reduce((acc, item) => acc + item.quantity * item.discountPrice, 0);
+        const productsTotal = selectedItems.reduce((acc, item) => acc + item.quantity * item.finalPrice, 0);
         const deliveryFee = calculateDelivery(selectedDeliveryId).shippingFee;
         return productsTotal + deliveryFee;
     }, [selectedItems, selectedDeliveryId]);
@@ -113,7 +113,7 @@ function Cart() {
         const orderItems = selectedItems.map((item) => ({
             sizeId: item.sizeId,
             quantity: item.quantity,
-            price: item.discountPrice,
+            price: item.finalPrice,
         }));
 
         // Dispatch action xác nhận đơn hàng
@@ -196,7 +196,7 @@ function Cart() {
                                         </button>
                                     </div>
                                     <div className="col-3">
-                                        <h6 className="text-end">{item.discountPrice.toLocaleString()}đ</h6>
+                                        <h6 className="text-end">{item.finalPrice.toLocaleString()}đ</h6>
                                     </div>
                                     <div className="col-1 text-end">
                                         <button
@@ -259,7 +259,7 @@ function Cart() {
                                 <h5>Chi phí sản phẩm</h5>
                                 <div>
                                     {selectedItems
-                                        .reduce((acc, item) => acc + item.quantity * item.discountPrice, 0)
+                                        .reduce((acc, item) => acc + item.quantity * item.finalPrice, 0)
                                         .toLocaleString()}
                                     đ
                                 </div>

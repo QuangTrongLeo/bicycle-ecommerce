@@ -100,9 +100,9 @@ function DetailOrderHistory() {
                                         <td>{productInfo?.nameProduct || 'Không xác định'}</td>
                                         <td>{productInfo?.nameColor || 'Không xác định'}</td>
                                         <td>{productInfo?.nameSize || 'Không xác định'}</td>
-                                        <td>{(productInfo?.discountPrice || 0).toLocaleString()}₫</td>
+                                        <td>{(productInfo?.finalPrice || 0).toLocaleString()}₫</td>
                                         <td>{item.quantity}</td>
-                                        <td>{((productInfo?.discountPrice || 0) * item.quantity).toLocaleString()}₫</td>
+                                        <td>{((productInfo?.finalPrice || 0) * item.quantity).toLocaleString()}₫</td>
                                     </tr>
                                 );
                             })}

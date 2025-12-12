@@ -1,4 +1,3 @@
-// NotificationManager.js
 class NotificationManager {
     constructor() {
         this.notifications = [];
