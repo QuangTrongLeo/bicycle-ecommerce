@@ -88,7 +88,8 @@ export const getProductBySizeId = (sizeId) => {
 
     const images = productImages.filter((img) => img.colorId === color.id).map((i) => i.imageUrl);
 
-    const finalPrice = product.discount > 0 ? product.price - (product.price * product.discount) / 100 : product.price;
+    let finalPrice = product.discount > 0 ? product.price - (product.price * product.discount) / 100 : product.price;
+    finalPrice = Math.floor(finalPrice / 1000) * 1000;
     return {
         productId: product.id,
         nameProduct: product.name,
@@ -99,6 +100,6 @@ export const getProductBySizeId = (sizeId) => {
         colorCode: color.colorHex,
         image: images[0] || '',
         price: product.price,
-        finalPrice: finalPrice,
+        finalPrice: Math.floor(finalPrice),
     };
 };
