@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { publishRoutes, userRoutes, adminRoutes } from './router';
 import { MainLayout } from './layouts';
 import { useSelector } from 'react-redux';
+import { CartNotification } from '~/components';
+import Toast from '~/components/Toast/Toast';
 
 function App() {
     const { currentUser, isAuthenticated } = useSelector((state) => state.user);
@@ -18,6 +20,8 @@ function App() {
 
     return (
         <Router>
+            <CartNotification />
+            <Toast />
             <Routes>
                 {routes.map((route, idx) => {
                     const Page = route.page;

@@ -1,4 +1,5 @@
-import { products, categories, productColors, productImages, productSizes } from '~/data/api';
+import { products, categories, productColors, productImages } from '~/data/api';
+import { store } from '~/redux/store';
 import { getColorsByProductId } from './colorService';
 
 export const getProductByColorId = (colorId) => {
@@ -74,6 +75,8 @@ export const getProductsByCategoryPaginate = (categoryId, page = 1, limit = 8) =
 };
 
 export const getProductBySizeId = (sizeId) => {
+    const state = store.getState();
+    const productSizes = state.productSize.items;
     const size = productSizes.find((s) => s.id === sizeId);
     if (!size) return null;
 
@@ -85,6 +88,7 @@ export const getProductBySizeId = (sizeId) => {
 
     const images = productImages.filter((img) => img.colorId === color.id).map((i) => i.imageUrl);
 
+    const finalPrice = product.discount > 0 ? product.price - (product.price * product.discount) / 100 : product.price;
     return {
         productId: product.id,
         nameProduct: product.name,
@@ -95,6 +99,6 @@ export const getProductBySizeId = (sizeId) => {
         colorCode: color.colorHex,
         image: images[0] || '',
         price: product.price,
-        discountPrice: product.discount || product.price,
+        finalPrice: finalPrice,
     };
 };

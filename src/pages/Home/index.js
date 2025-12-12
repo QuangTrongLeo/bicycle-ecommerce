@@ -2,7 +2,6 @@ import classNames from 'classnames/bind';
 import configs from '../../config';
 import styles from './style.module.scss';
 import GradientText from '../../components/GradientText';
-import { formatSlugify } from '~/utils';
 import { LargeProductCard, MainHorizontalScroll, CategoryCard } from '../../components';
 import { getCategories, getNewestProducts, accessoryProducts } from '~/data/services';
 
@@ -36,7 +35,7 @@ function Home() {
                             {categories.map((category) => (
                                 <CategoryCard
                                     key={category.id}
-                                    to={`${configs.routes.category}/${formatSlugify(category.name)}`}
+                                    to={`${configs.routes.category}?category=${category.id}`}
                                     name={category.name}
                                     img={category.img}
                                 />

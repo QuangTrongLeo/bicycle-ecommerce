@@ -1,10 +1,14 @@
-import { productSizes } from '../api';
+import { store } from '~/redux/store';
 
 export const getSizeById = (sizeId) => {
+    const state = store.getState();
+    const productSizes = state.productSize.items;
     return productSizes.find((s) => s.id === sizeId) || null;
 };
 
 export const getSizesByColorId = (colorId) => {
+    const state = store.getState();
+    const productSizes = state.productSize.items;
     return productSizes
         .filter((s) => s.colorId === colorId)
         .map((s) => ({
@@ -12,28 +16,4 @@ export const getSizesByColorId = (colorId) => {
             sizeName: s.size,
             stock: s.stock,
         }));
-};
-
-export const decreaseSizeStock = (sizeId, quantity) => {
-    const sizeToUpdate = getSizeById(sizeId);
-
-    if (sizeToUpdate) {
-        const newStock = sizeToUpdate.stock - quantity;
-        sizeToUpdate.stock = newStock >= 0 ? newStock : 0;
-        return sizeToUpdate;
-    }
-
-    return null;
-};
-
-export const increaseSizeStock = (sizeId, quantity) => {
-    const sizeToUpdate = getSizeById(sizeId);
-
-    if (sizeToUpdate) {
-        const newStock = sizeToUpdate.stock + quantity;
-        sizeToUpdate.stock = newStock;
-        return sizeToUpdate;
-    }
-
-    return null;
 };

@@ -1,20 +1,22 @@
 import { useState, useEffect, useMemo } from 'react';
 import classNames from 'classnames/bind';
 import { useSelector, useDispatch } from 'react-redux';
-import { UPDATE_SIZE_QUANTITY, REMOVE_SIZE } from '~/redux/action/shoppingAction';
+import { UPDATE_SIZE_QUANTITY, REMOVE_SIZE, confirmOrder } from '~/redux/action/shoppingAction';
+import { updateStock } from '~/redux/action/productSizesAction'; // THÊM IMPORT NÀY
 import { getAllDeliveryMethods, getAllPaymentMethods, calculateDelivery, getProductBySizeId } from '~/data/services';
-import { confirmOrder } from '~/redux/action/shoppingAction';
-
 import styles from './style.module.scss';
+import { showToast } from '~/components/Toast/Toast';
+
 const st = classNames.bind(styles);
 
 function Cart() {
-    const { sizes } = useSelector((state) => state.shopping);
-    const { cartItems, userId } = useSelector((state) => state.cart);
-    useEffect(() => {
-        console.log('Cart:', { userId, cartItems });
-    }, [cartItems, userId]);
     const dispatch = useDispatch();
+    const currentUser = useSelector((state) => state.user.currentUser);
+    const userId = currentUser?.id;
+
+    // Lấy tất cả sizes từ shopping state và lọc theo userId
+    const sizes = useSelector((state) => state.shopping.sizes);
+    const userSizes = useMemo(() => sizes.filter((item) => item.userId === userId), [sizes, userId]);
 
     const [shoppingCartItems, setShoppingCartItems] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
@@ -23,39 +25,36 @@ function Cart() {
     const [selectedDeliveryId, setSelectedDeliveryId] = useState(1);
     const [selectedPaymentId, setSelectedPaymentId] = useState(1);
 
-    console.log();
-
+    // Load phương thức giao hàng và thanh toán
     useEffect(() => {
         setListDeliveries(getAllDeliveryMethods());
         setListPayments(getAllPaymentMethods());
     }, []);
 
+    // Ghép chi tiết sản phẩm vào giỏ hàng
     useEffect(() => {
-        if (!sizes || sizes.length === 0) {
+        if (!userSizes || userSizes.length === 0) {
             setShoppingCartItems([]);
             return;
         }
 
-        const fullItems = sizes
+        const fullItems = userSizes
             .map((item) => {
                 const productDetail = getProductBySizeId(item.sizeId);
                 if (!productDetail) return null;
                 return { ...item, ...productDetail };
             })
             .filter(Boolean);
-
         setShoppingCartItems(fullItems);
-    }, [sizes]);
+    }, [userSizes]);
 
+    // Tính tổng thanh toán
     const totalAmount = useMemo(() => {
-        const productsTotal = selectedItems.reduce((acc, item) => acc + item.quantity * item.discountPrice, 0);
+        const productsTotal = selectedItems.reduce((acc, item) => acc + item.quantity * item.finalPrice, 0);
         const deliveryFee = calculateDelivery(selectedDeliveryId).shippingFee;
         return productsTotal + deliveryFee;
     }, [selectedItems, selectedDeliveryId]);
 
-    // --------------------------
-    // HANDLE QUANTITY
-    // --------------------------
     const increaseQuantity = (index) => {
         const item = shoppingCartItems[index];
         const productDetail = getProductBySizeId(item.sizeId);
@@ -63,10 +62,10 @@ function Cart() {
         if (item.quantity < productDetail.stock) {
             dispatch({
                 type: UPDATE_SIZE_QUANTITY,
-                payload: { sizeId: item.sizeId, quantity: item.quantity + 1 },
+                payload: { userId, sizeId: item.sizeId, quantity: item.quantity + 1 },
             });
         } else {
-            alert(`Không thể mua quá tồn kho (${productDetail.stock})`);
+            showToast(`Không thể mua quá tồn kho (${productDetail.stock})`);
         }
     };
 
@@ -75,16 +74,17 @@ function Cart() {
         if (item.quantity > 1) {
             dispatch({
                 type: UPDATE_SIZE_QUANTITY,
-                payload: { sizeId: item.sizeId, quantity: item.quantity - 1 },
+                payload: { userId, sizeId: item.sizeId, quantity: item.quantity - 1 },
             });
         }
     };
 
     const handleDelete = (index) => {
         const item = shoppingCartItems[index];
-        dispatch({ type: REMOVE_SIZE, payload: { sizeId: item.sizeId } });
+        dispatch({ type: REMOVE_SIZE, payload: { userId, sizeId: item.sizeId } });
     };
 
+    // Chọn hoặc bỏ chọn item
     const toggleSelection = (item) => {
         if (selectedItems.some((i) => i.sizeId === item.sizeId)) {
             setSelectedItems(selectedItems.filter((i) => i.sizeId !== item.sizeId));
@@ -96,16 +96,16 @@ function Cart() {
     const isSelected = (item) => selectedItems.some((i) => i.sizeId === item.sizeId);
 
     // --------------------------
-    // HANDLE CHECKOUT
+    // HANDLE CHECKOUT - ĐÃ CẬP NHẬT
     // --------------------------
     const handleCheckout = () => {
         if (selectedItems.length === 0) return;
 
-        // kiểm tra tồn kho trước khi checkout
+        // Kiểm tra tồn kho trước khi đặt hàng
         for (const item of selectedItems) {
             const productDetail = getProductBySizeId(item.sizeId);
             if (item.quantity > productDetail.stock) {
-                alert(`Sản phẩm ${productDetail.nameProduct} vượt tồn kho. Vui lòng giảm số lượng.`);
+                showToast(`Sản phẩm ${productDetail.nameProduct} vượt tồn kho. Vui lòng giảm số lượng.`);
                 return;
             }
         }
@@ -113,19 +113,43 @@ function Cart() {
         const orderItems = selectedItems.map((item) => ({
             sizeId: item.sizeId,
             quantity: item.quantity,
-            price: item.discountPrice,
+            price: item.finalPrice,
         }));
 
+        // Dispatch action xác nhận đơn hàng
         dispatch(
             confirmOrder({
+                userId,
                 items: orderItems,
                 deliveryId: selectedDeliveryId,
                 paymentId: selectedPaymentId,
             })
         );
 
+        // CẬP NHẬT TỒN KHO SAU KHI ĐẶT HÀNG THÀNH CÔNG
+        selectedItems.forEach((item) => {
+            const productDetail = getProductBySizeId(item.sizeId);
+            const newStock = productDetail.stock - item.quantity;
+
+            // Dispatch action cập nhật stock
+            dispatch(
+                updateStock({
+                    id: item.sizeId,
+                    stock: newStock,
+                })
+            );
+        });
+
+        // Xóa các items đã mua khỏi giỏ hàng
+        selectedItems.forEach((item) => {
+            dispatch({
+                type: REMOVE_SIZE,
+                payload: { userId, sizeId: item.sizeId },
+            });
+        });
+
         setSelectedItems([]);
-        alert('Đơn hàng đã được lưu vào lịch sử!');
+        showToast('Bạn đã đặt hàng thành công');
     };
 
     return (
@@ -172,7 +196,7 @@ function Cart() {
                                         </button>
                                     </div>
                                     <div className="col-3">
-                                        <h6 className="text-end">{item.discountPrice.toLocaleString()}đ</h6>
+                                        <h6 className="text-end">{item.finalPrice.toLocaleString()}đ</h6>
                                     </div>
                                     <div className="col-1 text-end">
                                         <button
@@ -235,7 +259,7 @@ function Cart() {
                                 <h5>Chi phí sản phẩm</h5>
                                 <div>
                                     {selectedItems
-                                        .reduce((acc, item) => acc + item.quantity * item.discountPrice, 0)
+                                        .reduce((acc, item) => acc + item.quantity * item.finalPrice, 0)
                                         .toLocaleString()}
                                     đ
                                 </div>

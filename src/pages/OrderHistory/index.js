@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+// OrderHistory.jsx
+import React, { useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 
-import { getAllDeliveryMethods, getAllPaymentMethods } from '~/data/services';
-import { paginateData } from '~/utils/paginate';
-
 import styles from './style.module.scss';
+import { getProductBySizeId, getAllDeliveryMethods, getAllPaymentMethods } from '~/data/services';
 const st = classNames.bind(styles);
 
 function OrderHistory() {
-    const orderHistory = useSelector((state) => state.shopping.orderHistory);
+    const currentUser = useSelector((state) => state.user.currentUser);
+    const userId = currentUser?.id;
+
+    const allOrderHistory = useSelector((state) => state.shopping.orderHistory);
     const deliveryMethods = getAllDeliveryMethods();
     const paymentMethods = getAllPaymentMethods();
 
@@ -21,14 +23,38 @@ function OrderHistory() {
     const getDeliveryName = (id) => deliveryMethods.find((d) => d.id === id)?.name || 'Không xác định';
     const getPaymentName = (id) => paymentMethods.find((p) => p.id === id)?.name || 'Không xác định';
 
-    const filteredOrders =
-        filterStatus === 'all'
-            ? orderHistory
-            : orderHistory.filter(
-                  (order) => order.orderStatusHistory?.[order.orderStatusHistory.length - 1]?.status === filterStatus
-              );
-    const sortByDateDesc = (a, b) => new Date(b.date) - new Date(a.date);
-    const { paginatedData, totalPages } = paginateData(filteredOrders, currentPage, itemsPerPage, sortByDateDesc);
+    // Lọc đơn hàng của user hiện tại
+    const userOrders = allOrderHistory.filter((order) => order.userId === userId);
+
+    // Filter theo trạng thái
+    const filteredOrders = useMemo(() => {
+        if (filterStatus === 'all') {
+            return userOrders;
+        }
+        return userOrders.filter((order) => {
+            const lastStatus = order.orderStatusHistory?.[order.orderStatusHistory.length - 1]?.status;
+            return lastStatus === filterStatus;
+        });
+    }, [userOrders, filterStatus]);
+
+    // Sort theo ngày mới nhất trước
+    const sortedOrders = useMemo(() => {
+        return [...filteredOrders].sort((a, b) => {
+            // Sort theo date nếu có, nếu không thì sort theo id
+            if (a.date && b.date) {
+                return new Date(b.date) - new Date(a.date);
+            }
+            return b.id - a.id;
+        });
+    }, [filteredOrders]);
+
+    // Phân trang
+    const paginatedData = useMemo(() => {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        return sortedOrders.slice(startIndex, startIndex + itemsPerPage);
+    }, [sortedOrders, currentPage]);
+
+    const totalPages = Math.ceil(sortedOrders.length / itemsPerPage);
 
     const statusTabs = [
         { label: 'Tất cả', value: 'all' },
@@ -69,36 +95,82 @@ function OrderHistory() {
                         <div className="alert alert-info text-center">Chưa có đơn hàng nào.</div>
                     ) : (
                         paginatedData.map((order) => {
+                            const totalPrice =
+                                order.items?.reduce((sum, item) => {
+                                    const sizeInfo = getProductBySizeId(item.sizeId);
+                                    return sum + (sizeInfo?.finalPrice || 0) * item.quantity;
+                                }, 0) || 0;
+
                             const lastStatus = order.orderStatusHistory?.[order.orderStatusHistory.length - 1];
+
                             return (
                                 <div key={order.id} className="card mb-4">
                                     <div className="card-body">
-                                        <div className="row align-items-center">
-                                            <div className="col-md-2 text-center">
-                                                <div className="text-muted">Ngày mua</div>
-                                                <div>{new Date(order.date).toLocaleString()}</div>
+                                        <div className="d-flex justify-content-between align-items-center mb-3">
+                                            <h5 className="card-title mb-0">Order ID: {order.id}</h5>
+                                            <span className="badge bg-info">
+                                                {lastStatus?.status || 'Không xác định'}
+                                            </span>
+                                        </div>
+
+                                        <div className="row mb-3">
+                                            <div className="col-md-3">
+                                                <div className="text-muted small">Ngày đặt hàng</div>
+                                                <div>{order.date ? new Date(order.date).toLocaleString() : 'N/A'}</div>
                                             </div>
-                                            <div className="col-md-3 text-center">
-                                                <div className="text-muted">Phương thức</div>
+                                            <div className="col-md-3">
+                                                <div className="text-muted small">Phương thức giao hàng</div>
                                                 <div>{getDeliveryName(order.deliveryId)}</div>
                                             </div>
-                                            <div className="col-md-3 text-center">
-                                                <div className="text-muted">Thanh toán</div>
-                                                <div className="text-success">{getPaymentName(order.paymentId)}</div>
+                                            <div className="col-md-3">
+                                                <div className="text-muted small">Phương thức thanh toán</div>
+                                                <div>{getPaymentName(order.paymentId)}</div>
                                             </div>
-                                            <div className="col-md-1 text-center">
-                                                <div className="text-muted">Tổng tiền</div>
-                                                <div>{order.totalPrice.toLocaleString()}₫</div>
+                                            <div className="col-md-3">
+                                                <div className="text-muted small">Tổng tiền</div>
+                                                <div className="fw-bold">{totalPrice.toLocaleString()}₫</div>
                                             </div>
-                                            <div className="col-md-1 text-center">
-                                                <div className="text-muted">Trạng thái</div>
-                                                <div>{lastStatus?.status}</div>
-                                            </div>
-                                            <div className="col-md-2 text-center">
-                                                <Link to={`/detail-order-history/${order.id}`}>
-                                                    <button className="btn btn-primary">Xem chi tiết đơn hàng</button>
-                                                </Link>
-                                            </div>
+                                        </div>
+
+                                        <table className="table">
+                                            <colgroup>
+                                                <col />
+                                                <col />
+                                                <col />
+                                                <col />
+                                                <col />
+                                            </colgroup>
+                                            <thead>
+                                                <tr>
+                                                    <th>Tên sản phẩm</th>
+                                                    <th>Màu</th>
+                                                    <th>Kích thước</th>
+                                                    <th>Số lượng</th>
+                                                    <th>Giá</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {order.items?.map((item, index) => {
+                                                    const sizeInfo = getProductBySizeId(item.sizeId);
+                                                    if (!sizeInfo) return null;
+
+                                                    return (
+                                                        <tr key={index}>
+                                                            <td title={sizeInfo.nameProduct}>{sizeInfo.nameProduct}</td>
+                                                            <td>{sizeInfo.nameColor}</td>
+                                                            <td>{sizeInfo.nameSize}</td>
+                                                            <td>{item.quantity}</td>
+                                                            <td>{sizeInfo.finalPrice}₫</td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+
+                                        <div className="mt-2 text-end">
+                                            <Link to={`/detail-order-history/${order.id}`}>
+                                                <button className="btn btn-primary">Xem chi tiết đơn hàng</button>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>

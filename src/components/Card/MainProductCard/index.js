@@ -1,50 +1,58 @@
 import { useState } from 'react';
 import classNames from 'classnames/bind';
-import styles from './style.module.scss';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { formatCurrency, formatRoundToThousand } from '~/utils';
+import styles from './style.module.scss';
+import { showCartNotification } from '~/components/CartNotification';
+import { addSize } from '~/redux/action/shoppingAction';
+import { showToast } from '~/components/Toast/Toast';
+
 const st = classNames.bind(styles);
 
-function MainProductCard({ to = '#', name, price, discount, colors, onShow }) {
-    const [selectedSize, setSelectedSize] = useState(null);
+function MainProductCard({ product }) {
+    const { id, name, price, discount, colors } = product;
+
+    const dispatch = useDispatch();
+    const { sizes: cartSizes } = useSelector((state) => state.shopping);
+    const currentUser = useSelector((state) => state.user.currentUser);
+    const userId = currentUser?.id || null;
+
     const [selectedColor, setSelectedColor] = useState(colors[0]);
     const [currentImg, setCurrentImg] = useState(colors[0].images[0].imageUrl);
-    const [quantity] = useState(1);
 
     const finalPrice =
         discount > 0 ? formatRoundToThousand(price - (price * discount) / 100) : formatRoundToThousand(price);
-
-    const createItem = (size) => ({
-        name: name,
-        price: finalPrice,
-        color: selectedColor.colorName,
-        size: size.sizeName,
-        image: selectedColor.images[0].imageUrl,
-        quantity: quantity,
-    });
 
     const handleSelectColor = (e, color) => {
         e.preventDefault();
         setSelectedColor(color);
         setCurrentImg(color.images[0].imageUrl);
-        setSelectedSize(null);
     };
 
     const handleSelectSize = (e, size) => {
         e.preventDefault();
-        if (size.stock > 0) {
-            setSelectedSize(size);
-            setSelectedSize(null);
-            const item = createItem(size);
-            if (onShow) {
-                onShow(item);
-            }
-            console.log(
-                `Đã thêm vào giỏ hàng: Sản phẩm ${name}, Giá ${finalPrice}, Màu: ${selectedColor.colorName}, Size: ${size.sizeName}, Số lượng: ${quantity}`
-            );
-        } else {
-            console.log(`Size ${size.sizeName} đã hết hàng.`);
+        if (!userId) {
+            showToast('Bạn cần đăng nhập để thêm vào giỏ hàng!');
+            return;
         }
+        const quantityInCart = cartSizes.find((item) => item.sizeId === size.sizeId)?.quantity || 0;
+        const totalQuantity = quantityInCart + 1; // mặc định mua 1
+        if (totalQuantity > size.stock) {
+            showToast(`Bạn chỉ có thể mua tối đa ${size.stock} sản phẩm cho Size ${size.sizeName}`);
+            return;
+        }
+
+        const payload = {
+            userId: currentUser.id,
+            sizeId: size.sizeId,
+            quantity: 1,
+        };
+
+        dispatch(addSize(payload));
+
+        // Gọi notification đơn giản
+        showCartNotification(size.sizeId);
     };
 
     const handleMouseEnter = () => {
@@ -58,11 +66,11 @@ function MainProductCard({ to = '#', name, price, discount, colors, onShow }) {
     };
 
     return (
-        <Link to={to} className={st('link-wrapper')}>
-            <div className={st('card', 'card-product')}>
+        <Link to={`/detail/${id}`} className={st('link-wrapper')}>
+            <div className={st('card-product')}>
                 <div className={st('card-img-wrapper')} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                     <img src={currentImg} className={st('card-img-top')} alt={name} />
-                    {/* SIZES */}
+
                     <div className={st('add-to-cart-overlay')}>
                         <div className={st('overlay-content')}>
                             <div className={st('size-buttons-title')}>Thêm nhanh vào giỏ hàng +</div>
@@ -73,7 +81,6 @@ function MainProductCard({ to = '#', name, price, discount, colors, onShow }) {
                                         key={size.sizeId}
                                         className={st('size-button', {
                                             'size-disabled': size.stock <= 0,
-                                            'size-selected': selectedSize && selectedSize.sizeId === size.sizeId,
                                         })}
                                         onClick={(e) => handleSelectSize(e, size)}
                                         disabled={size.stock <= 0}>
@@ -86,7 +93,6 @@ function MainProductCard({ to = '#', name, price, discount, colors, onShow }) {
                 </div>
 
                 <div className={st('card-body')}>
-                    {/* COLORS */}
                     <div className={st('card-color')}>
                         {colors.map((color) => (
                             <button
@@ -95,16 +101,12 @@ function MainProductCard({ to = '#', name, price, discount, colors, onShow }) {
                                 onClick={(e) => handleSelectColor(e, color)}
                                 className={st('color-btn', {
                                     selected: selectedColor.colorId === color.colorId,
-                                })}>
-                                {color.colorName}
-                            </button>
+                                })}></button>
                         ))}
                     </div>
 
-                    {/* NAME */}
                     <h5 className={st('card-name')}>{name}</h5>
 
-                    {/* PRICE */}
                     <div className={st('card-price')}>
                         {discount > 0 ? (
                             <>

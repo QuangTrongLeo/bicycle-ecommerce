@@ -23,13 +23,14 @@ export const removeSize = (sizeId) => ({
 });
 
 // Thêm hàm xác nhận đơn hàng
-export const confirmOrder = ({ items, deliveryId, paymentId }) => {
+export const confirmOrder = ({ userId, items, deliveryId, paymentId }) => {
     const shippingFee = calculateDelivery(deliveryId).shippingFee;
     const totalPrice = items.reduce((acc, item) => acc + item.quantity * item.price, 0) + shippingFee;
 
     return {
         type: CONFIRM_ORDER,
         payload: {
+            userId, // lưu userId
             items, // [{ sizeId, quantity, price }]
             totalPrice, // tổng tiền sản phẩm + phí ship
             shippingFee, // phí vận chuyển

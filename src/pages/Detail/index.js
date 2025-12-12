@@ -3,7 +3,8 @@ import styles from './style.module.scss';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { formatCurrency, formatRoundToThousand } from '~/utils';
-import { getProductById, buildCartItem, decreaseSizeStock } from '~/data/services';
+import { getProductById } from '~/data/services';
+import { showCartNotification } from '~/components/CartNotification';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -17,8 +18,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart } from '~/redux/action/cartAction';
-import { CartNotification } from '~/components';
+import { addSize } from '~/redux/action/shoppingAction';
+import { showToast } from '~/components/Toast/Toast';
 
 const st = classNames.bind(styles);
 
@@ -31,9 +32,6 @@ function Detail() {
     const [selectedSize, setSelectedSize] = useState(null);
     const [selectedImg, setSelectedImg] = useState('');
     const [quantity, setQuantity] = useState(1);
-    const [cartItem, setCartItem] = useState(null);
-    const [showCartNotification, setShowCartNotification] = useState(false);
-    const [notificationKey, setNotificationKey] = useState(0);
 
     const { sizes: cartSizes } = useSelector((state) => state.shopping);
     const currentUser = useSelector((state) => state.user.currentUser);
@@ -72,47 +70,32 @@ function Detail() {
         setSelectedSize(color.sizes[0]);
         setSelectedImg(color.images[0].imageUrl);
         setQuantity(1);
-        console.log(
-            ` Bạn đã chọn màu: { colorId: ${color.colorId}, name: ${color.colorName}, colorHex: ${color.colorHex}}`
-        );
     };
 
     const handleSelectSize = (size) => {
         setSelectedSize(size);
         setQuantity(1);
-        console.log(`Bạn đã chọn size: { sizeId: ${size.sizeId}, sizeName: ${size.sizeName}, stock: ${size.stock} }`);
     };
 
     const handleIncreaseQuantity = () => {
         const maxStock = selectedSize.stock;
         setQuantity((q) => (q < maxStock ? q + 1 : q));
-        console.log(`Số lượng: ${quantity + 1}`);
     };
 
     const handleDecreaseQuantity = () => {
         setQuantity((q) => (q > 1 ? q - 1 : 1));
-        console.log(`Số lượng: ${quantity - 1}`);
     };
 
-    const handleShowCartNotification = (data) => {
-        setCartItem(data);
-        setShowCartNotification(true);
-        setNotificationKey((prevKey) => prevKey + 1);
-    };
-    const handleCloseCartNotification = () => {
-        setShowCartNotification(false);
-    };
-
-    const handleAddToCart = () => {
+    const handledSize = () => {
         const quantityInCart = cartSizes.find((item) => item.sizeId === selectedSize.sizeId)?.quantity || 0;
         const totalQuantity = quantityInCart + quantity;
 
         if (!userId) {
-            alert('Bạn cần đăng nhập để thêm vào giỏ hàng!');
+            showToast('Bạn cần đăng nhập để thêm vào giỏ hàng!');
             return;
         }
         if (totalQuantity > selectedSize.stock) {
-            alert(`Bạn chỉ có thể mua tối đa ${selectedSize.stock} sản phẩm cho Size ${selectedSize.sizeName}`);
+            showToast(`Bạn chỉ có thể mua tối đa ${selectedSize.stock} sản phẩm cho Size ${selectedSize.sizeName}`);
             return;
         }
 
@@ -122,66 +105,14 @@ function Detail() {
             quantity,
         };
 
-        const updatedSize = decreaseSizeStock(payload.sizeId, payload.quantity);
-        const itemCartNotification = buildCartItem(payload.sizeId, payload.quantity);
-        const newStock = updatedSize.stock;
-        console.log(`Số lượng tồn kho mới: ${newStock}`);
+        dispatch(addSize(payload));
 
-        dispatch(addToCart(payload));
-
-        if (itemCartNotification) {
-            let newSelectedColor = null;
-
-            const updatedProduct = {
-                ...product,
-                colors: product.colors.map((color) => {
-                    if (color.colorId === selectedColor.colorId) {
-                        const newColor = {
-                            ...color,
-                            sizes: color.sizes.map((size) => {
-                                if (size.sizeId === selectedSize.sizeId) {
-                                    const newSize = { ...size, stock: newStock };
-                                    setSelectedSize(newSize);
-                                    return newSize;
-                                }
-                                return size;
-                            }),
-                        };
-                        newSelectedColor = newColor;
-                        return newColor;
-                    }
-                    return color;
-                }),
-            };
-            setProduct(updatedProduct);
-            if (newSelectedColor) {
-                setSelectedColor(newSelectedColor);
-            }
-        }
-
-        setCartItem(itemCartNotification);
-        handleShowCartNotification(itemCartNotification);
-        setQuantity(1);
-        console.log(payload);
+        showCartNotification(selectedSize.sizeId);
     };
 
     return (
         <div className={st('detail-page')}>
             <div className="container">
-                {/* NOTIFICATION */}
-                {showCartNotification && (
-                    <CartNotification
-                        key={notificationKey}
-                        name={cartItem.name}
-                        price={cartItem.price}
-                        color={cartItem.color.colorName}
-                        size={cartItem.size.sizeName}
-                        img={cartItem.image}
-                        quantity={cartItem.quantity}
-                        onClose={handleCloseCartNotification}
-                    />
-                )}
-
                 {/* TITLE */}
                 <div className={st('row')}>
                     <div className={st('col-md-1')}></div>
@@ -319,7 +250,7 @@ function Detail() {
                                                 'justify-content-center',
                                                 'align-items-center'
                                             )}
-                                            onClick={handleAddToCart}>
+                                            onClick={handledSize}>
                                             <FontAwesomeIcon icon={faCartShopping} className={st('mx-2')} />
                                             <span className={st('fw-bold')}>Thêm vào giỏ hàng</span>
                                         </button>
