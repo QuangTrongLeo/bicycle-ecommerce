@@ -12,10 +12,8 @@
         position: relative;
         width: 100%;
 
-
         &:hover {
             .card-img-top {
-
                 transform: scale(1.03);
             }
 
@@ -150,6 +148,8 @@
             }
         }
     }
+}
 
-
+.add-to-cart-overlay {
+    pointer-events: none;
 }

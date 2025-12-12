@@ -4,7 +4,6 @@ import styles from './style.module.scss';
 import GradientText from '../../components/GradientText';
 import { LargeProductCard, MainHorizontalScroll, CategoryCard } from '../../components';
 import { getCategories, getNewestProducts, accessoryProducts } from '~/data/services';
-
 const st = classNames.bind(styles);
 
 function Home() {

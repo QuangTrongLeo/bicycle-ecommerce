@@ -1,11 +1,11 @@
 import classNames from 'classnames/bind';
 import styles from './style.module.scss';
+import configs from '~/config';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { formatCurrency, formatRoundToThousand } from '~/utils';
-import { getProductById } from '~/data/services';
+import { getProductById, getProductsByCategoryId } from '~/data/services';
 import { showCartNotification } from '~/components/CartNotification';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faMinus,
@@ -20,14 +20,15 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { addSize } from '~/redux/action/shoppingAction';
 import { showToast } from '~/components/Toast/Toast';
+import { MainHorizontalScroll, LargeProductCard, GradientText } from '~/components';
 
 const st = classNames.bind(styles);
 
 function Detail() {
     const { id } = useParams();
     const dispatch = useDispatch();
-
     const [product, setProduct] = useState(null);
+    const [relatedProducts, setRelatedProducts] = useState([]);
     const [selectedColor, setSelectedColor] = useState(null);
     const [selectedSize, setSelectedSize] = useState(null);
     const [selectedImg, setSelectedImg] = useState('');
@@ -53,8 +54,16 @@ function Detail() {
     }, [id]);
 
     useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [id]);
+
+    useEffect(() => {
         if (product) {
+            const data = getProductsByCategoryId(product.categoryId);
+            const filtered = data.filter((item) => item.id !== product.id);
+            setRelatedProducts(filtered);
             console.log(product);
+            console.log(filtered);
         }
     }, [product]);
 
@@ -117,7 +126,7 @@ function Detail() {
                 <div className={st('row')}>
                     <div className={st('col-md-1')}></div>
                     <div className={st('col-md-10', 'py-3')}>
-                        <h3 className={st('fw-bold')}>Chi tiết sản phẩm</h3>
+                        <GradientText text="Chi tiết sản phẩm" fontSize={24} fullColorWord={true} />
                     </div>
                 </div>
 
@@ -284,6 +293,25 @@ function Detail() {
                             </div>
                         </div>
                     </div>
+                </div>
+
+                {/* RELATED PRODUCTS */}
+                <div style={{ marginTop: '4%' }}>
+                    <GradientText text="Các sản phẩm liên quan" fontSize={32} fullColorWord={true} />
+
+                    <MainHorizontalScroll>
+                        {relatedProducts.map((product) => (
+                            <LargeProductCard
+                                key={product.id}
+                                to={`${configs.routes.detail}/${product.id}`}
+                                name={product.name}
+                                desc={product.desc}
+                                img={product.colors[0].images[0].imageUrl}
+                                price={product.price}
+                                discount={product.discount}
+                            />
+                        ))}
+                    </MainHorizontalScroll>
                 </div>
             </div>
         </div>

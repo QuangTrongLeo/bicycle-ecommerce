@@ -11,7 +11,6 @@ import {
     OrderHistory,
     DetailOrderHistory,
 } from '../pages';
-import { SecondLayout } from '../layouts';
 
 const excludeForUser = [configs.routes.login, configs.routes.register];
 
@@ -22,7 +21,6 @@ const publishRoutes = [
     { path: `${configs.routes.detail}/:id`, page: Detail },
     { path: configs.routes.searched, page: Searched },
     { path: `${configs.routes.category}`, page: Category },
-    // { path: `${configs.routes.category}/:slug`, page: Category, layout: SecondLayout },
 ];
 
 const userRoutes = [
