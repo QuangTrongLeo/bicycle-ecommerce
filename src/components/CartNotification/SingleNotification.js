@@ -23,8 +23,8 @@ function SingleNotification({ sizeId, index, notificationId, createdAt, onClose 
         const now = Date.now();
         const elapsed = now - createdAt;
         const showDelay = Math.max(50 - elapsed, 0);
-        const hideDelay = Math.max(3500 - elapsed, 0);
-        const cleanupDelay = Math.max(4000 - elapsed, 0);
+        const hideDelay = Math.max(2500 - elapsed, 0);
+        const cleanupDelay = Math.max(3000 - elapsed, 0);
 
         const showTimer = setTimeout(() => setIsShow(true), showDelay);
         const hideTimer = setTimeout(() => setIsShow(false), hideDelay);

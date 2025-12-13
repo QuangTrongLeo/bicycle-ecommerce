@@ -6,6 +6,8 @@ import { updateStock } from '~/redux/action/productSizesAction'; // THÊM IMPORT
 import { getAllDeliveryMethods, getAllPaymentMethods, calculateDelivery, getProductBySizeId } from '~/data/services';
 import styles from './style.module.scss';
 import { showToast } from '~/components/Toast/Toast';
+import { getVouchers } from '~/data/services';
+import { VoucherModal } from '~/components';
 
 const st = classNames.bind(styles);
 
@@ -24,6 +26,13 @@ function Cart() {
     const [listPayments, setListPayments] = useState([]);
     const [selectedDeliveryId, setSelectedDeliveryId] = useState(1);
     const [selectedPaymentId, setSelectedPaymentId] = useState(1);
+    const [vouchers, setVouchers] = useState([]);
+
+    useEffect(() => {
+        const data = getVouchers();
+        setVouchers(data);
+        console.log(data);
+    }, []);
 
     // Load phương thức giao hàng và thanh toán
     useEffect(() => {
@@ -95,9 +104,6 @@ function Cart() {
 
     const isSelected = (item) => selectedItems.some((i) => i.sizeId === item.sizeId);
 
-    // --------------------------
-    // HANDLE CHECKOUT - ĐÃ CẬP NHẬT
-    // --------------------------
     const handleCheckout = () => {
         if (selectedItems.length === 0) return;
 
@@ -152,9 +158,11 @@ function Cart() {
         showToast('Bạn đã đặt hàng thành công');
     };
 
+    const totalProductAmount = selectedItems.reduce((acc, item) => acc + item.quantity * item.finalPrice, 0);
+
     return (
         <div className={st('cart-page')}>
-            <main className="container py-5">
+            <main className="container">
                 <div className="row">
                     {/* LEFT - Cart items */}
                     <div className={`${st('right')} col-lg-8`}>
@@ -215,15 +223,15 @@ function Cart() {
 
                     {/* RIGHT - Summary */}
                     <div className="col-lg-4">
-                        <div className="card p-4">
-                            <h3 className="mb-4 fw-bold">Tóm tắt đơn hàng</h3>
+                        <div className="card p-3">
+                            <h3 className="mb-2 fw-bold">Tóm tắt đơn hàng</h3>
 
-                            <div className="mb-3">
+                            <div className="mb-2 d-flex justify-content-between align-items-center">
                                 <h5>Tổng số sản phẩm</h5>
                                 <div id={st('totalSelectedItems')}>{selectedItems.length} món</div>
                             </div>
 
-                            <div className="mb-3">
+                            <div className="mb-2">
                                 <h5>Phương thức giao hàng</h5>
                                 <select
                                     id={st('deliverySelect')}
@@ -238,7 +246,7 @@ function Cart() {
                                 </select>
                             </div>
 
-                            <div className="mb-3">
+                            <div className="mb-2">
                                 <h5>Hình thức thanh toán</h5>
                                 <select
                                     id={st('paymentId')}
@@ -253,26 +261,44 @@ function Cart() {
                                 </select>
                             </div>
 
-                            <hr />
-
-                            <div className="mb-3 d-flex align-items-center justify-content-between">
-                                <h5>Chi phí sản phẩm</h5>
-                                <div>
-                                    {selectedItems
-                                        .reduce((acc, item) => acc + item.quantity * item.finalPrice, 0)
-                                        .toLocaleString()}
-                                    đ
+                            <div className="mb-2">
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <h5>Voucher giảm giá</h5>
+                                    <button
+                                        className="btn btn-primary"
+                                        data-bs-toggle={selectedItems.length > 0 ? 'modal' : undefined}
+                                        data-bs-target={selectedItems.length > 0 ? '#voucherModal' : undefined}
+                                        disabled={selectedItems.length === 0}>
+                                        Chọn Voucher
+                                    </button>
                                 </div>
+                                <div>
+                                    <h5>Voucher được áp dụng</h5>
+                                </div>
+                                <VoucherModal
+                                    vouchers={vouchers}
+                                    totalProductAmount={totalProductAmount}
+                                    onConfirm={({ voucher, discountAmount }) => {
+                                        console.log(voucher, discountAmount);
+                                    }}
+                                />
                             </div>
 
-                            <div className="mb-3 d-flex align-items-center justify-content-between">
+                            <hr />
+
+                            <div className="mb-2 d-flex align-items-center justify-content-between">
+                                <h5>Chi phí sản phẩm</h5>
+                                <div>{totalProductAmount.toLocaleString()}đ</div>
+                            </div>
+
+                            <div className="mb-2 d-flex align-items-center justify-content-between">
                                 <h5>Phí vận chuyển</h5>
                                 <div>{calculateDelivery(selectedDeliveryId).shippingFee.toLocaleString()}đ</div>
                             </div>
 
                             <hr />
 
-                            <div className="mb-3 d-flex align-items-center justify-content-between">
+                            <div className="mb-2 d-flex align-items-center justify-content-between">
                                 <h5>Tổng thanh toán</h5>
                                 <div className="text-danger fw-bold">{totalAmount.toLocaleString()}đ</div>
                             </div>

@@ -46,6 +46,10 @@ body {
     font-size: 2.6rem;
 }
 
+body.modal-open {
+    padding-right: 0 !important;
+}
+
 /* KHÔNG container nào được phép tạo scrollbar phụ */
 #root,
 main,
