@@ -1,10 +1,11 @@
-import { useState, useEffect, useMemo } from 'react';
 import classNames from 'classnames/bind';
+import styles from './style.module.scss';
+import configs from '~/config';
+import { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { UPDATE_SIZE_QUANTITY, REMOVE_SIZE, confirmOrder } from '~/redux/action/shoppingAction';
-import { updateStock } from '~/redux/action/productSizesAction'; // THÊM IMPORT NÀY
+import { updateStock } from '~/redux/action/productSizesAction';
 import { getAllDeliveryMethods, getAllPaymentMethods, calculateDelivery, getProductBySizeId } from '~/data/services';
-import styles from './style.module.scss';
 import { showToast } from '~/components/Toast/Toast';
 import { getVouchers } from '~/data/services';
 import { VoucherModal } from '~/components';
@@ -104,6 +105,11 @@ function Cart() {
 
     const isSelected = (item) => selectedItems.some((i) => i.sizeId === item.sizeId);
 
+    const handlePayVnpay = () => {
+        const orderId = Date.now();
+        window.location.href = `${configs.routes.vnpayCreateOrder}?orderId=${orderId}&amount=${totalAmount}`;
+    };
+
     const handleCheckout = () => {
         if (selectedItems.length === 0) return;
 
@@ -114,6 +120,11 @@ function Cart() {
                 showToast(`Sản phẩm ${productDetail.nameProduct} vượt tồn kho. Vui lòng giảm số lượng.`);
                 return;
             }
+        }
+
+        if (selectedPaymentId === 2) {
+            handlePayVnpay();
+            return;
         }
 
         const orderItems = selectedItems.map((item) => ({

@@ -4,3 +4,4 @@ export * from './colorService';
 export * from './sizeService';
 export * from './deliveryService';
 export * from './voucherService';
+export * from './vnpayService';

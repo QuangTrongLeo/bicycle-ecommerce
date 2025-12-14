@@ -8,3 +8,5 @@ export { default as Category } from './Category';
 export { default as Cart } from './Cart';
 export { default as OrderHistory } from './OrderHistory';
 export { default as DetailOrderHistory } from './DetailOrderHistory';
+export { default as PaymentResult } from './PaymentResult';
+export * from './Vnpay';
