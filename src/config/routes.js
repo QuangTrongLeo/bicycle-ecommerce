@@ -9,6 +9,10 @@ const routes = {
     cart: '/cart',
     orderHistory: '/order-history',
     detailOrderHistory: '/detail-order-history',
+    vnpayCreateOrder: '/vnpay-create-order',
+    vnpayTransaction: '/vnpay-transaction',
+    vnpayTransactionConfirm: '/vnpay-transaction-confirm',
+    paymentResult: '/payment-result',
 };
 
 export default routes;

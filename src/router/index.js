@@ -10,6 +10,10 @@ import {
     Cart,
     OrderHistory,
     DetailOrderHistory,
+    VnpayCreateOrder,
+    VnpayTransaction,
+    VnpayTransactionConfirm,
+    PaymentResult,
 } from '../pages';
 
 const excludeForUser = [configs.routes.login, configs.routes.register];
@@ -28,6 +32,10 @@ const userRoutes = [
     { path: configs.routes.cart, page: Cart },
     { path: configs.routes.orderHistory, page: OrderHistory },
     { path: `${configs.routes.detailOrderHistory}/:id`, page: DetailOrderHistory },
+    { path: configs.routes.vnpayCreateOrder, page: VnpayCreateOrder },
+    { path: configs.routes.vnpayTransaction, page: VnpayTransaction },
+    { path: configs.routes.vnpayTransactionConfirm, page: VnpayTransactionConfirm },
+    { path: configs.routes.paymentResult, page: PaymentResult },
     ...publishRoutes.filter((route) => !excludeForUser.includes(route.path)),
 ];
 
