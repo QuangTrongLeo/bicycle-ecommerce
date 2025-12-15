@@ -210,6 +210,16 @@ function Cart() {
         showToast('Bạn đã đặt hàng thành công');
     };
 
+    useEffect(() => {
+        if (selectedItems.length === 0) return;
+
+        setSelectedItems((prevSelected) =>
+            prevSelected.map(
+                (selected) => shoppingCartItems.find((item) => item.sizeId === selected.sizeId) || selected
+            )
+        );
+    }, [selectedItems.length, shoppingCartItems]);
+
     return (
         <div className={st('cart-page')}>
             <main className="container">
@@ -311,7 +321,7 @@ function Cart() {
                                 </select>
                             </div>
 
-                            <div className="mb-2">
+                            <div className="mt-3 mb-2 ">
                                 <div className="d-flex justify-content-between align-items-center">
                                     <h5>Voucher giảm giá</h5>
                                     <button

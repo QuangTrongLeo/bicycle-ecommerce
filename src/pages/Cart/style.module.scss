@@ -25,9 +25,8 @@
         border: 2px solid transparent;
         border-radius: 8px;
         padding: 20px;
-        transition:
-            border 0.3s ease,
-            background-color 0.3s ease;
+        transition: border 0.3s ease,
+        background-color 0.3s ease;
         display: flex;
         align-items: center;
         cursor: pointer;
@@ -65,6 +64,8 @@
         border: none;
         background-color: transparent;
         text-align: center;
+        pointer-events: none;
+        user-select: none;
     }
 
     #paymentId,

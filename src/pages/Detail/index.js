@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addSize } from '~/redux/action/shoppingAction';
 import { showToast } from '~/components/Toast/Toast';
 import { MainHorizontalScroll, LargeProductCard, GradientText } from '~/components';
+import SmallRectangleCard from '../../components/Card/SmallRectangleCard';
 
 const st = classNames.bind(styles);
 
@@ -295,13 +296,12 @@ function Detail() {
                     </div>
                 </div>
 
-                {/* RELATED PRODUCTS */}
-                <div style={{ marginTop: '4%' }}>
+                <div className="mt-5">
                     <GradientText text="Các sản phẩm liên quan" fontSize={32} fullColorWord={true} />
 
                     <MainHorizontalScroll>
                         {relatedProducts.map((product) => (
-                            <LargeProductCard
+                            <SmallRectangleCard
                                 key={product.id}
                                 to={`${configs.routes.detail}/${product.id}`}
                                 name={product.name}
