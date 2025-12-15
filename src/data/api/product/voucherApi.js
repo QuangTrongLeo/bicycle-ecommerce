@@ -12,7 +12,7 @@ export const vouchers = [
         discountPercent: 15,
         maxDiscount: 70000,
         quantity: 80,
-        startDate: '2026-01-01',
+        startDate: '2025-12-14',
         endDate: '2026-01-31',
     },
     {

@@ -2,14 +2,15 @@ import classNames from 'classnames/bind';
 import styles from './style.module.scss';
 import { useState } from 'react';
 import { formatDateVN } from '~/utils';
+import { getVoucherById } from '~/data/services';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faCircle } from '@fortawesome/free-solid-svg-icons';
 
 const st = classNames.bind(styles);
 
 function VoucherModal({ vouchers = [], totalProductAmount = 0, onConfirm }) {
-    const [selectedVoucher, setSelectedVoucher] = useState(null);
-
+    const [selectedVoucherId, setSelectedVoucherId] = useState(null);
+    const selectedVoucher = selectedVoucherId ? getVoucherById(selectedVoucherId) : null;
     const today = new Date();
 
     const isVoucherValid = (voucher) => {
@@ -26,7 +27,7 @@ function VoucherModal({ vouchers = [], totalProductAmount = 0, onConfirm }) {
 
     const handleConfirm = () => {
         onConfirm({
-            voucher: selectedVoucher,
+            voucherId: selectedVoucherId,
             discountAmount: calculateDiscount(),
         });
     };
@@ -47,7 +48,7 @@ function VoucherModal({ vouchers = [], totalProductAmount = 0, onConfirm }) {
 
                         {vouchers.map((voucher) => {
                             const valid = isVoucherValid(voucher);
-                            const isSelected = selectedVoucher?.id === voucher.id;
+                            const isSelected = selectedVoucherId === voucher.id;
 
                             return (
                                 <div
@@ -61,7 +62,7 @@ function VoucherModal({ vouchers = [], totalProductAmount = 0, onConfirm }) {
                                         }
                                     )}
                                     style={{ cursor: valid ? 'pointer' : 'not-allowed' }}
-                                    onClick={() => valid && setSelectedVoucher(isSelected ? null : voucher)}>
+                                    onClick={() => valid && setSelectedVoucherId(isSelected ? null : voucher.id)}>
                                     {/* RADIO */}
                                     <input
                                         type="radio"
@@ -119,7 +120,7 @@ function VoucherModal({ vouchers = [], totalProductAmount = 0, onConfirm }) {
                         <button
                             className={st('btn', 'btn-primary')}
                             data-bs-dismiss="modal"
-                            disabled={!selectedVoucher}
+                            disabled={!selectedVoucherId}
                             onClick={handleConfirm}>
                             Xác nhận
                         </button>

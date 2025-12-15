@@ -7,8 +7,11 @@ import { UPDATE_SIZE_QUANTITY, REMOVE_SIZE, confirmOrder } from '~/redux/action/
 import { updateStock } from '~/redux/action/productSizesAction';
 import { getAllDeliveryMethods, getAllPaymentMethods, calculateDelivery, getProductBySizeId } from '~/data/services';
 import { showToast } from '~/components/Toast/Toast';
-import { getVouchers } from '~/data/services';
+import { getVouchers, getVoucherById } from '~/data/services';
 import { VoucherModal } from '~/components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircle, faArrowRight, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { formatDateVN } from '~/utils';
 
 const st = classNames.bind(styles);
 
@@ -28,11 +31,18 @@ function Cart() {
     const [selectedDeliveryId, setSelectedDeliveryId] = useState(1);
     const [selectedPaymentId, setSelectedPaymentId] = useState(1);
     const [vouchers, setVouchers] = useState([]);
+    const [appliedVoucherId, setAppliedVoucherId] = useState(null);
+    const [appliedVoucher, setAppliedVoucher] = useState(null);
+    const [voucherDiscount, setVoucherDiscount] = useState(0);
+
+    useEffect(() => {
+        const voucher = getVoucherById(appliedVoucherId);
+        setAppliedVoucher(voucher);
+    }, [appliedVoucherId]);
 
     useEffect(() => {
         const data = getVouchers();
         setVouchers(data);
-        console.log(data);
     }, []);
 
     // Load phương thức giao hàng và thanh toán
@@ -58,12 +68,16 @@ function Cart() {
         setShoppingCartItems(fullItems);
     }, [userSizes]);
 
-    // Tính tổng thanh toán
+    // Tính giá đơn hàng
+    const totalProductAmount =
+        selectedItems.reduce((acc, item) => acc + item.quantity * item.finalPrice, 0) - voucherDiscount;
+
     const totalAmount = useMemo(() => {
-        const productsTotal = selectedItems.reduce((acc, item) => acc + item.quantity * item.finalPrice, 0);
         const deliveryFee = calculateDelivery(selectedDeliveryId).shippingFee;
-        return productsTotal + deliveryFee;
-    }, [selectedItems, selectedDeliveryId]);
+        return totalProductAmount + deliveryFee;
+    }, [totalProductAmount, selectedDeliveryId]);
+
+    const canOpenVoucherModal = selectedItems.length > 0 && !appliedVoucherId;
 
     const increaseQuantity = (index) => {
         const item = shoppingCartItems[index];
@@ -87,6 +101,17 @@ function Cart() {
                 payload: { userId, sizeId: item.sizeId, quantity: item.quantity - 1 },
             });
         }
+    };
+
+    const handleApplyVoucher = ({ voucherId, discountAmount }) => {
+        setAppliedVoucherId(voucherId);
+        setVoucherDiscount(discountAmount);
+    };
+
+    const handleRemoveVoucher = () => {
+        setAppliedVoucher(null);
+        setAppliedVoucherId(null);
+        setVoucherDiscount(0);
     };
 
     const handleDelete = (index) => {
@@ -168,8 +193,6 @@ function Cart() {
         setSelectedItems([]);
         showToast('Bạn đã đặt hàng thành công');
     };
-
-    const totalProductAmount = selectedItems.reduce((acc, item) => acc + item.quantity * item.finalPrice, 0);
 
     return (
         <div className={st('cart-page')}>
@@ -277,21 +300,48 @@ function Cart() {
                                     <h5>Voucher giảm giá</h5>
                                     <button
                                         className="btn btn-primary"
-                                        data-bs-toggle={selectedItems.length > 0 ? 'modal' : undefined}
-                                        data-bs-target={selectedItems.length > 0 ? '#voucherModal' : undefined}
-                                        disabled={selectedItems.length === 0}>
-                                        Chọn Voucher
+                                        data-bs-toggle={canOpenVoucherModal ? 'modal' : undefined}
+                                        data-bs-target={canOpenVoucherModal ? '#voucherModal' : undefined}
+                                        disabled={!canOpenVoucherModal}>
+                                        {appliedVoucherId ? 'Đã áp dụng Voucher' : 'Chọn Voucher'}
                                     </button>
                                 </div>
-                                <div>
-                                    <h5>Voucher được áp dụng</h5>
-                                </div>
+
+                                {appliedVoucher && (
+                                    <div
+                                        className={st(
+                                            'd-flex',
+                                            'justify-content-between',
+                                            'align-items-center',
+                                            'border',
+                                            'rounded',
+                                            'p-2',
+                                            'mt-2'
+                                        )}>
+                                        <div>
+                                            <div className={st('fw-bold', 'd-flex', 'align-items-center')}>
+                                                <span>Giảm {appliedVoucher.discountPercent}%</span>
+                                                <FontAwesomeIcon icon={faCircle} className={st('dot')} />
+                                                <span>Tối đa {appliedVoucher.maxDiscount.toLocaleString()}đ</span>
+                                            </div>
+
+                                            <div className={st('text-muted', 'small', 'd-flex', 'align-items-center')}>
+                                                <span>
+                                                    {formatDateVN(appliedVoucher.startDate)}
+                                                    <FontAwesomeIcon icon={faArrowRight} className={st('mx-1')} />
+                                                    {formatDateVN(appliedVoucher.endDate)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <button className={st('btn-remove-voucher')} onClick={handleRemoveVoucher}>
+                                            <FontAwesomeIcon icon={faXmark} />
+                                        </button>
+                                    </div>
+                                )}
                                 <VoucherModal
                                     vouchers={vouchers}
                                     totalProductAmount={totalProductAmount}
-                                    onConfirm={({ voucher, discountAmount }) => {
-                                        console.log(voucher, discountAmount);
-                                    }}
+                                    onConfirm={handleApplyVoucher}
                                 />
                             </div>
 

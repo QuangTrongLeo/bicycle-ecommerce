@@ -5,7 +5,7 @@
         font-size: 16px;
     }
 
-    input[type="number"] {
+    input[type='number'] {
         text-align: center;
 
         &::-webkit-inner-spin-button,
@@ -25,7 +25,9 @@
         border: 2px solid transparent;
         border-radius: 8px;
         padding: 20px;
-        transition: border 0.3s ease, background-color 0.3s ease;
+        transition:
+            border 0.3s ease,
+            background-color 0.3s ease;
         display: flex;
         align-items: center;
         cursor: pointer;
@@ -40,7 +42,7 @@
             background-color: #f0f8ff;
         }
 
-        input[type="checkbox"] {
+        input[type='checkbox'] {
             display: none;
         }
     }
@@ -106,5 +108,23 @@
 
     .quantityShoppingCart {
         background-color: transparent !important;
+    }
+}
+
+.dot {
+    font-size: 4px;
+    color: #999;
+    margin: 0 6px;
+}
+
+.btn-remove-voucher {
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:hover {
+        color: red;
     }
 }
