@@ -25,6 +25,7 @@ function OrderHistory() {
 
     // Lọc đơn hàng của user hiện tại
     const userOrders = allOrderHistory.filter((order) => order.userId === userId);
+    console.log(userOrders);
 
     // Filter theo trạng thái
     const filteredOrders = useMemo(() => {

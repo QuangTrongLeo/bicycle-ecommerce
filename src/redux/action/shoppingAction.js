@@ -1,6 +1,3 @@
-// ACTION TYPES
-import { calculateDelivery } from '~/data/services/deliveryService';
-
 export const ADD_SIZE = 'ADD_SIZE';
 export const UPDATE_SIZE_QUANTITY = 'UPDATE_SIZE_QUANTITY';
 export const REMOVE_SIZE = 'REMOVE_SIZE';
@@ -23,19 +20,27 @@ export const removeSize = (sizeId) => ({
 });
 
 // Thêm hàm xác nhận đơn hàng
-export const confirmOrder = ({ userId, items, deliveryId, paymentId }) => {
-    const shippingFee = calculateDelivery(deliveryId).shippingFee;
-    const totalPrice = items.reduce((acc, item) => acc + item.quantity * item.price, 0) + shippingFee;
-
+export const confirmOrder = ({
+    userId,
+    items,
+    deliveryId,
+    paymentId,
+    shippingFee,
+    productsTotalFee,
+    discountFee,
+    totalPrice,
+}) => {
     return {
         type: CONFIRM_ORDER,
         payload: {
-            userId, // lưu userId
-            items, // [{ sizeId, quantity, price }]
-            totalPrice, // tổng tiền sản phẩm + phí ship
-            shippingFee, // phí vận chuyển
-            deliveryId, // hình thức giao hàng
-            paymentId, // hình thức thanh toán
+            userId,
+            items,
+            deliveryId,
+            paymentId,
+            shippingFee,
+            productsTotalFee,
+            discountFee,
+            totalPrice,
             date: new Date().toISOString(), // thời gian mua
             orderStatusHistory: [
                 {
