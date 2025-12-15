@@ -43,8 +43,18 @@ const shoppingReducer = (state = INITIAL_STATE, action) => {
         }
 
         case CONFIRM_ORDER: {
-            const { userId, items, totalPrice, shippingFee, deliveryId, paymentId, date, orderStatusHistory } =
-                action.payload;
+            const {
+                userId,
+                items,
+                deliveryId,
+                paymentId,
+                shippingFee,
+                productsTotalFee,
+                discountFee,
+                totalPrice,
+                date,
+                orderStatusHistory,
+            } = action.payload;
             const purchasedSizeIds = items.map((item) => item.sizeId);
 
             return {
@@ -55,10 +65,12 @@ const shoppingReducer = (state = INITIAL_STATE, action) => {
                         id: new Date().getTime(),
                         userId,
                         items,
-                        totalPrice,
-                        shippingFee,
                         deliveryId,
                         paymentId,
+                        shippingFee,
+                        productsTotalFee,
+                        discountFee,
+                        totalPrice,
                         date,
                         orderStatusHistory,
                     },

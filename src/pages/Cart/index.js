@@ -1,9 +1,11 @@
 import classNames from 'classnames/bind';
 import styles from './style.module.scss';
 import configs from '~/config';
+import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { UPDATE_SIZE_QUANTITY, REMOVE_SIZE, confirmOrder } from '~/redux/action/shoppingAction';
+import { decreaseVoucherQuantity } from '~/redux/action/voucherAction';
 import { updateStock } from '~/redux/action/productSizesAction';
 import { getAllDeliveryMethods, getAllPaymentMethods, calculateDelivery, getProductBySizeId } from '~/data/services';
 import { showToast } from '~/components/Toast/Toast';
@@ -17,6 +19,7 @@ const st = classNames.bind(styles);
 
 function Cart() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const currentUser = useSelector((state) => state.user.currentUser);
     const userId = currentUser?.id;
 
@@ -69,13 +72,16 @@ function Cart() {
     }, [userSizes]);
 
     // Tính giá đơn hàng
-    const totalProductAmount =
-        selectedItems.reduce((acc, item) => acc + item.quantity * item.finalPrice, 0) - voucherDiscount;
-
-    const totalAmount = useMemo(() => {
-        const deliveryFee = calculateDelivery(selectedDeliveryId).shippingFee;
-        return totalProductAmount + deliveryFee;
-    }, [totalProductAmount, selectedDeliveryId]);
+    const deliveryFee = useMemo(() => calculateDelivery(selectedDeliveryId).shippingFee, [selectedDeliveryId]);
+    const productsTotal = useMemo(
+        () => selectedItems.reduce((sum, item) => sum + item.quantity * item.finalPrice, 0),
+        [selectedItems]
+    );
+    const discountedProductsTotal = useMemo(
+        () => Math.max(productsTotal - voucherDiscount, 0),
+        [productsTotal, voucherDiscount]
+    );
+    const totalAmount = useMemo(() => discountedProductsTotal + deliveryFee, [discountedProductsTotal, deliveryFee]);
 
     const canOpenVoucherModal = selectedItems.length > 0 && !appliedVoucherId;
 
@@ -132,7 +138,7 @@ function Cart() {
 
     const handlePayVnpay = () => {
         const orderId = Date.now();
-        window.location.href = `${configs.routes.vnpayCreateOrder}?orderId=${orderId}&amount=${totalAmount}`;
+        navigate(`${configs.routes.vnpayCreateOrder}?orderId=${orderId}&amount=${totalAmount}`);
     };
 
     const handleCheckout = () => {
@@ -165,6 +171,10 @@ function Cart() {
                 items: orderItems,
                 deliveryId: selectedDeliveryId,
                 paymentId: selectedPaymentId,
+                shippingFee: deliveryFee,
+                productsTotalFee: productsTotal,
+                discountFee: voucherDiscount,
+                totalPrice: totalAmount,
             })
         );
 
@@ -190,6 +200,12 @@ function Cart() {
             });
         });
 
+        // Giảm số lượng của voucher
+        if (appliedVoucherId) {
+            dispatch(decreaseVoucherQuantity(appliedVoucherId));
+        }
+
+        handleRemoveVoucher();
         setSelectedItems([]);
         showToast('Bạn đã đặt hàng thành công');
     };
@@ -340,7 +356,7 @@ function Cart() {
                                 )}
                                 <VoucherModal
                                     vouchers={vouchers}
-                                    totalProductAmount={totalProductAmount}
+                                    totalProductAmount={productsTotal}
                                     onConfirm={handleApplyVoucher}
                                 />
                             </div>
@@ -349,7 +365,7 @@ function Cart() {
 
                             <div className="mb-2 d-flex align-items-center justify-content-between">
                                 <h5>Chi phí sản phẩm</h5>
-                                <div>{totalProductAmount.toLocaleString()}đ</div>
+                                <div>{productsTotal.toLocaleString()}đ</div>
                             </div>
 
                             <div className="mb-2 d-flex align-items-center justify-content-between">

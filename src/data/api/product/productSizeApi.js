@@ -5,7 +5,7 @@ export const productSizes = [
 
     { id: 10, colorId: 10, size: 'S', stock: 10 },
     { id: 11, colorId: 10, size: 'M', stock: 8 },
-    { id: 12, colorId: 10, size: 'L', stock: 5 },
+    { id: 12, colorId: 10, size: 'L', stock: 100 },
 
     { id: 4, colorId: 2, size: 'S', stock: 6 },
     { id: 5, colorId: 2, size: 'M', stock: 12 },
