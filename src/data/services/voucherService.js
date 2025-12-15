@@ -4,6 +4,6 @@ export const getVouchers = () => {
     return vouchers;
 };
 
-export const getVoucherById = (voucherId) => {
-    return vouchers.find((voucher) => voucher.id === voucherId) || null;
+export const getVoucherById = (vouchers, voucherId) => {
+    return vouchers.find((v) => v.id === voucherId) || null;
 };

@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import styles from './style.module.scss';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { formatDateVN } from '~/utils';
 import { getVoucherById } from '~/data/services';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,7 +10,11 @@ const st = classNames.bind(styles);
 
 function VoucherModal({ vouchers = [], totalProductAmount = 0, onConfirm }) {
     const [selectedVoucherId, setSelectedVoucherId] = useState(null);
-    const selectedVoucher = selectedVoucherId ? getVoucherById(selectedVoucherId) : null;
+    const selectedVoucher = useMemo(() => {
+        if (!selectedVoucherId) return null;
+        return getVoucherById(vouchers, selectedVoucherId);
+    }, [vouchers, selectedVoucherId]);
+
     const today = new Date();
 
     const isVoucherValid = (voucher) => {
