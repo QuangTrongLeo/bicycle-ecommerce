@@ -1,9 +1,16 @@
-import { DECREASE_VOUCHER_QUANTITY } from '../action/voucherAction';
+import { GET_VOUCHERS, DECREASE_VOUCHER_QUANTITY } from '../action/voucherAction';
+import { vouchers } from '~/data/api';
 
-const INITIAL_STATE = { vouchers: [] };
+const INITIAL_STATE = { vouchers: vouchers };
 
 const voucherReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
+        case GET_VOUCHERS:
+            return {
+                ...state,
+                vouchers: action.payload,
+            };
+
         case DECREASE_VOUCHER_QUANTITY: {
             const { voucherId } = action.payload;
 

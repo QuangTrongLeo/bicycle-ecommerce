@@ -7,14 +7,18 @@ import { useSelector, useDispatch } from 'react-redux';
 import { UPDATE_SIZE_QUANTITY, REMOVE_SIZE, confirmOrder } from '~/redux/action/shoppingAction';
 import { decreaseVoucherQuantity } from '~/redux/action/voucherAction';
 import { updateStock } from '~/redux/action/productSizesAction';
-import { getAllDeliveryMethods, getAllPaymentMethods, calculateDelivery, getProductBySizeId } from '~/data/services';
 import { showToast } from '~/components/Toast/Toast';
-import { getVouchers, getVoucherById } from '~/data/services';
 import { VoucherModal } from '~/components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faArrowRight, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { formatDateVN } from '~/utils';
-
+import {
+    getAllDeliveryMethods,
+    getAllPaymentMethods,
+    calculateDelivery,
+    getProductBySizeId,
+    getVoucherById,
+} from '~/data/services';
 const st = classNames.bind(styles);
 
 function Cart() {
@@ -26,6 +30,7 @@ function Cart() {
     // Lấy tất cả sizes từ shopping state và lọc theo userId
     const sizes = useSelector((state) => state.shopping.sizes);
     const userSizes = useMemo(() => sizes.filter((item) => item.userId === userId), [sizes, userId]);
+    const vouchers = useSelector((state) => state.voucher.vouchers);
 
     const [shoppingCartItems, setShoppingCartItems] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
@@ -33,20 +38,8 @@ function Cart() {
     const [listPayments, setListPayments] = useState([]);
     const [selectedDeliveryId, setSelectedDeliveryId] = useState(1);
     const [selectedPaymentId, setSelectedPaymentId] = useState(1);
-    const [vouchers, setVouchers] = useState([]);
     const [appliedVoucherId, setAppliedVoucherId] = useState(null);
-    const [appliedVoucher, setAppliedVoucher] = useState(null);
     const [voucherDiscount, setVoucherDiscount] = useState(0);
-
-    useEffect(() => {
-        const voucher = getVoucherById(appliedVoucherId);
-        setAppliedVoucher(voucher);
-    }, [appliedVoucherId]);
-
-    useEffect(() => {
-        const data = getVouchers();
-        setVouchers(data);
-    }, []);
 
     // Load phương thức giao hàng và thanh toán
     useEffect(() => {
@@ -71,6 +64,12 @@ function Cart() {
         setShoppingCartItems(fullItems);
     }, [userSizes]);
 
+    const appliedVoucher = useMemo(() => {
+        return getVoucherById(vouchers, appliedVoucherId);
+    }, [vouchers, appliedVoucherId]);
+
+    const canOpenVoucherModal = selectedItems.length > 0 && !appliedVoucherId;
+
     // Tính giá đơn hàng
     const deliveryFee = useMemo(() => calculateDelivery(selectedDeliveryId).shippingFee, [selectedDeliveryId]);
     const productsTotal = useMemo(
@@ -82,8 +81,6 @@ function Cart() {
         [productsTotal, voucherDiscount]
     );
     const totalAmount = useMemo(() => discountedProductsTotal + deliveryFee, [discountedProductsTotal, deliveryFee]);
-
-    const canOpenVoucherModal = selectedItems.length > 0 && !appliedVoucherId;
 
     const increaseQuantity = (index) => {
         const item = shoppingCartItems[index];
@@ -115,7 +112,6 @@ function Cart() {
     };
 
     const handleRemoveVoucher = () => {
-        setAppliedVoucher(null);
         setAppliedVoucherId(null);
         setVoucherDiscount(0);
     };
