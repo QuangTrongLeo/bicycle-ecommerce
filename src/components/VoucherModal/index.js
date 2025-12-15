@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { formatDateVN } from '~/utils';
 import { getVoucherById } from '~/data/services';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight, faCircle } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 const st = classNames.bind(styles);
 
@@ -38,7 +38,7 @@ function VoucherModal({ vouchers = [], totalProductAmount = 0, onConfirm }) {
                 <div className={st('modal-content')}>
                     {/* HEADER */}
                     <div className={st('modal-header')}>
-                        <h5 className={st('modal-title', 'fw-bold')}>Voucher giảm giá sản phẩm</h5>
+                        <h3 className={st('modal-title', 'fw-bold')}>Voucher giảm giá sản phẩm</h3>
                         <button type="button" className={st('btn-close')} data-bs-dismiss="modal" />
                     </div>
 
@@ -53,47 +53,33 @@ function VoucherModal({ vouchers = [], totalProductAmount = 0, onConfirm }) {
                             return (
                                 <div
                                     key={voucher.id}
-                                    className={classNames(
-                                        st('voucher-item'),
-                                        'border rounded p-2 mb-2 d-flex align-items-center',
-                                        {
-                                            'border-primary': isSelected,
-                                            'opacity-50': !valid,
-                                        }
-                                    )}
-                                    style={{ cursor: valid ? 'pointer' : 'not-allowed' }}
+                                    className={classNames(st('voucher-item'), {
+                                        [st('selected')]: isSelected,
+                                        [st('disabled')]: !valid,
+                                    })}
                                     onClick={() => valid && setSelectedVoucherId(isSelected ? null : voucher.id)}>
+                                    {/* LEFT – DISCOUNT */}
+                                    <div className={st('voucher-left')}>
+                                        <div className={st('percent')}>-{voucher.discountPercent}%</div>
+                                        <div className={st('max')}>Max {voucher.maxDiscount.toLocaleString()}đ</div>
+                                    </div>
+
+                                    {/* RIGHT – INFO */}
+                                    <div className={st('voucher-right')}>
+                                        <div className={st('date')}>
+                                            {formatDateVN(voucher.startDate)}
+                                            <FontAwesomeIcon icon={faArrowRight} className={st('mx-1')} />
+                                            {formatDateVN(voucher.endDate)}
+                                        </div>
+
+                                        <div className={st('quantity')}>Còn lại: {voucher.quantity}</div>
+
+                                        {!valid && <div className={st('invalid')}>Không khả dụng</div>}
+                                    </div>
+
                                     {/* RADIO */}
-                                    <input
-                                        type="radio"
-                                        className={st('form-check-input', 'me-2')}
-                                        checked={isSelected}
-                                        readOnly
-                                    />
-
-                                    {/* CONTENT */}
-                                    <div className={st('flex-grow-1')}>
-                                        <div className={st('fw-bold', 'd-flex', 'align-items-center')}>
-                                            <span>Giảm {voucher.discountPercent}% </span>
-                                            <FontAwesomeIcon icon={faCircle} className={st('dot')} />
-                                            <span>Tối đa {voucher.maxDiscount.toLocaleString()}đ</span>
-                                        </div>
-                                        <div className={st('text-muted', 'small', 'd-flex', 'align-items-center')}>
-                                            <span>SL: {voucher.quantity}</span>
-                                            <FontAwesomeIcon icon={faCircle} className={st('dot')} />
-                                            <span>
-                                                {formatDateVN(voucher.startDate)}
-                                                <FontAwesomeIcon icon={faArrowRight} className={st('mx-1')} />
-                                                {formatDateVN(voucher.endDate)}
-                                            </span>
-                                        </div>
-
-                                        {/* KHÔNG KHẢ DỤNG */}
-                                        {!valid && (
-                                            <div className={st('text-danger', 'small', 'mt-1')}>
-                                                Voucher không khả dụng
-                                            </div>
-                                        )}
+                                    <div className={st('voucher-radio')}>
+                                        <input type="radio" checked={isSelected} readOnly />
                                     </div>
                                 </div>
                             );
