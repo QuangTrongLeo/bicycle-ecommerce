@@ -20,7 +20,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { addSize } from '~/redux/action/shoppingAction';
 import { showToast } from '~/components/Toast/Toast';
-import { MainHorizontalScroll, LargeProductCard, GradientText } from '~/components';
+import { MainHorizontalScroll, GradientText } from '~/components';
 import SmallRectangleCard from '../../components/Card/SmallRectangleCard';
 
 const st = classNames.bind(styles);
