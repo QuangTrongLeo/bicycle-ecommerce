@@ -1,18 +1,24 @@
 import configs from '~/config';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getCardById } from '~/data/services';
+import { useSelector, useDispatch } from 'react-redux';
+import { confirmOrder } from '~/redux/action/shoppingAction';
+import { updateStock } from '~/redux/action/productSizesAction';
+import { decreaseVoucherQuantity } from '~/redux/action/voucherAction';
+import { getBankById, getCardByNumber, getProductBySizeId } from '~/data/services';
 
 function VnpayTransactionConfirm() {
     const { search } = useLocation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const params = new URLSearchParams(search);
 
-    const orderId = params.get('orderId');
     const amount = params.get('amount');
-    const cardId = Number(params.get('cardId'));
-
-    const card = getCardById(cardId);
+    const orderId = params.get('order');
+    const cardNumber = params.get('card');
+    const processingOrder = useSelector((state) => state.shopping.processingOrder);
+    const card = getCardByNumber(cardNumber);
+    const bank = getBankById(Number(card.bankId));
     const [otp, setOtp] = useState('');
     const [timeLeft, setTimeLeft] = useState(5 * 60);
 
@@ -32,11 +38,32 @@ function VnpayTransactionConfirm() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (otp === card.otp) {
-            navigate(`${configs.routes.paymentResult}?status=success&orderId=${orderId}&amount=${amount}`);
-        } else {
+
+        if (otp !== card.otp) {
             alert('OTP không đúng, vui lòng thử lại.');
+            return;
         }
+
+        const order = processingOrder;
+
+        dispatch(confirmOrder(order));
+
+        order.items.forEach((item) => {
+            const productDetail = getProductBySizeId(item.sizeId);
+            const newStock = productDetail.stock - item.quantity;
+
+            dispatch(
+                updateStock({
+                    id: item.sizeId,
+                    stock: newStock,
+                })
+            );
+        });
+
+        if (order.appliedVoucherId) {
+            dispatch(decreaseVoucherQuantity(order.appliedVoucherId));
+        }
+        navigate(`${configs.routes.paymentResult}?status=success&amount=${amount}&bank=${bank.name}&order=${orderId}`);
     };
 
     return (

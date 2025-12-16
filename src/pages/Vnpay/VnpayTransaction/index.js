@@ -1,18 +1,18 @@
 import configs from '~/config';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getBankById, getCardByInfo } from '~/data/services';
+import { getBankByName, getCardByInfo } from '~/data/services';
 
 function VnpayTransaction() {
     const { search } = useLocation();
     const navigate = useNavigate();
     const params = new URLSearchParams(search);
 
-    const orderId = params.get('orderId');
     const amount = params.get('amount');
-    const bankId = Number(params.get('bankId'));
+    const bankName = params.get('bank');
+    const orderId = params.get('order');
 
-    const bank = getBankById(bankId);
+    const bank = getBankByName(bankName);
     const [timeLeft, setTimeLeft] = useState(15 * 60);
 
     const [form, setForm] = useState({
@@ -39,7 +39,7 @@ function VnpayTransaction() {
         e.preventDefault();
 
         const card = getCardByInfo({
-            bankId,
+            bankId: bank.id,
             cardNumber: form.cardNumber,
             cardHolder: form.cardHolder,
             issueDate: form.issueDate,
@@ -56,7 +56,7 @@ function VnpayTransaction() {
         }
 
         navigate(
-            `${configs.routes.vnpayTransactionConfirm}?status=otp&orderId=${orderId}&amount=${amount}&cardId=${card.id}`
+            `${configs.routes.vnpayTransactionConfirm}?amount=${amount}&bank=${bank.name}&order=${orderId}&card=${card.number}`
         );
     };
 

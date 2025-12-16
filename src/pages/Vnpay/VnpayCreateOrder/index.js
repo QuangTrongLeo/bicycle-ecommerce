@@ -3,7 +3,7 @@ import styles from './style.module.scss';
 import configs from '~/config';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { getBanks } from '~/data/services';
+import { getBanks, getBankById } from '~/data/services';
 
 const st = classNames.bind(styles);
 
@@ -12,16 +12,18 @@ function VnpayCreateOrder() {
     const navigate = useNavigate();
     const params = new URLSearchParams(search);
 
-    const orderId = params.get('orderId');
     const amount = params.get('amount');
+    const orderId = params.get('order');
 
     const banks = getBanks();
 
     const [form, setForm] = useState({
         amount,
-        orderDescription: `Thanh toán đơn hàng ${orderId}`,
+        orderDesc: `Thanh toán đơn hàng ${orderId}`,
         bankId: 0,
     });
+
+    const bank = getBankById(Number(form.bankId));
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -33,7 +35,7 @@ function VnpayCreateOrder() {
             alert('Vui lòng chọn ngân hàng');
             return;
         }
-        navigate(`${configs.routes.vnpayTransaction}?orderId=${orderId}&amount=${form.amount}&bankId=${form.bankId}`);
+        navigate(`${configs.routes.vnpayTransaction}?amount=${form.amount}&bank=${bank.name}&order=${orderId}`);
     };
 
     return (
@@ -52,8 +54,8 @@ function VnpayCreateOrder() {
                         <textarea
                             className={st('textarea')}
                             rows="2"
-                            name="orderDescription"
-                            value={form.orderDescription}
+                            name="orderDesc"
+                            value={form.orderDesc}
                             onChange={handleChange}
                         />
                     </div>

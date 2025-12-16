@@ -6,7 +6,7 @@ export default function PaymentResult() {
     const params = new URLSearchParams(search);
 
     const status = params.get('status');
-    const orderId = params.get('orderId');
+    const orderId = params.get('order');
     const amount = params.get('amount');
 
     return (
@@ -52,7 +52,7 @@ export default function PaymentResult() {
                     <h3 style={{ fontWeight: 'bold', color: '#dc3545' }}>Đơn hàng giao dịch thất bại!</h3>
                     <p style={{ fontSize: 18, marginTop: 15 }}>Cảm ơn quý khách đã dùng dịch vụ của chúng tôi.</p>
                     <p style={{ fontSize: 18 }}>Liên hệ tổng đài để được tư vấn:</p>
-                    <strong style={{ color: 'red', fontSize: 24 }}>0383456xxx</strong>
+                    <strong style={{ color: 'red', fontSize: 24 }}>024 38 291 291</strong>
                     <p style={{ marginTop: 15 }}>
                         <b>Mã đơn hàng:</b> {orderId}
                     </p>
@@ -79,7 +79,7 @@ export default function PaymentResult() {
                         Chúng tôi đã tiếp nhận đơn hàng, xin chờ quá trình xử lý!
                     </h3>
                     <p style={{ fontSize: 18, marginTop: 15 }}>Vui lòng để ý số điện thoại của nhân viên tư vấn:</p>
-                    <strong style={{ color: 'red', fontSize: 24 }}>0383456xxx</strong>
+                    <strong style={{ color: 'red', fontSize: 24 }}>024 38 291 291</strong>
                     <p style={{ marginTop: 15 }}>
                         <b>Mã đơn hàng:</b> {orderId}
                     </p>

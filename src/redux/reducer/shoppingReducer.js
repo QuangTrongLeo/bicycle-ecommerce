@@ -1,9 +1,16 @@
-import { ADD_SIZE, UPDATE_SIZE_QUANTITY, REMOVE_SIZE, CONFIRM_ORDER } from '~/redux/action/shoppingAction';
+import {
+    ADD_SIZE,
+    UPDATE_SIZE_QUANTITY,
+    REMOVE_SIZE,
+    PROCESSING_ORDER,
+    CONFIRM_ORDER,
+} from '~/redux/action/shoppingAction';
 
 // INITIAL STATE
 const INITIAL_STATE = {
     sizes: [], // [{ userId, sizeId, quantity }, ...]
     orderHistory: [], // Lưu các đơn hàng đã hoàn tất
+    processingOrder: null,
 };
 
 // REDUCER
@@ -42,8 +49,19 @@ const shoppingReducer = (state = INITIAL_STATE, action) => {
             };
         }
 
+        case PROCESSING_ORDER: {
+            return {
+                ...state,
+                processingOrder: {
+                    ...action.payload,
+                    createdAt: Date.now(),
+                },
+            };
+        }
+
         case CONFIRM_ORDER: {
             const {
+                id,
                 userId,
                 items,
                 deliveryId,
@@ -62,7 +80,7 @@ const shoppingReducer = (state = INITIAL_STATE, action) => {
                 orderHistory: [
                     ...(Array.isArray(state.orderHistory) ? state.orderHistory : []),
                     {
-                        id: new Date().getTime(),
+                        id,
                         userId,
                         items,
                         deliveryId,
@@ -78,6 +96,7 @@ const shoppingReducer = (state = INITIAL_STATE, action) => {
                 sizes: state.sizes.filter(
                     (item) => !(item.userId === userId && purchasedSizeIds.includes(item.sizeId))
                 ),
+                processingOrder: null,
             };
         }
 

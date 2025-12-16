@@ -1,6 +1,7 @@
 export const ADD_SIZE = 'ADD_SIZE';
 export const UPDATE_SIZE_QUANTITY = 'UPDATE_SIZE_QUANTITY';
 export const REMOVE_SIZE = 'REMOVE_SIZE';
+export const PROCESSING_ORDER = 'PROCESSING_ORDER';
 export const CONFIRM_ORDER = 'CONFIRM_ORDER'; //
 
 // ACTION CREATORS
@@ -19,8 +20,36 @@ export const removeSize = (sizeId) => ({
     payload: { sizeId },
 });
 
+export const processingOrder = ({
+    id,
+    userId,
+    items,
+    deliveryId,
+    paymentId,
+    voucherId = null,
+    shippingFee,
+    productsTotalFee,
+    discountFee,
+    totalPrice,
+}) => ({
+    type: PROCESSING_ORDER,
+    payload: {
+        id,
+        userId,
+        items,
+        deliveryId,
+        paymentId,
+        voucherId,
+        shippingFee,
+        productsTotalFee,
+        discountFee,
+        totalPrice,
+    },
+});
+
 // Thêm hàm xác nhận đơn hàng
 export const confirmOrder = ({
+    id,
     userId,
     items,
     deliveryId,
@@ -33,6 +62,7 @@ export const confirmOrder = ({
     return {
         type: CONFIRM_ORDER,
         payload: {
+            id,
             userId,
             items,
             deliveryId,

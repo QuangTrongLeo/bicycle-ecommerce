@@ -4,7 +4,7 @@ import configs from '~/config';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { UPDATE_SIZE_QUANTITY, REMOVE_SIZE, confirmOrder } from '~/redux/action/shoppingAction';
+import { UPDATE_SIZE_QUANTITY, REMOVE_SIZE, confirmOrder, processingOrder } from '~/redux/action/shoppingAction';
 import { decreaseVoucherQuantity } from '~/redux/action/voucherAction';
 import { updateStock } from '~/redux/action/productSizesAction';
 import { showToast } from '~/components/Toast/Toast';
@@ -132,11 +132,6 @@ function Cart() {
 
     const isSelected = (item) => selectedItems.some((i) => i.sizeId === item.sizeId);
 
-    const handlePayVnpay = () => {
-        const orderId = Date.now();
-        navigate(`${configs.routes.vnpayCreateOrder}?orderId=${orderId}&amount=${totalAmount}`);
-    };
-
     const handleCheckout = () => {
         if (selectedItems.length === 0) return;
 
@@ -149,30 +144,34 @@ function Cart() {
             }
         }
 
-        if (selectedPaymentId === 2) {
-            handlePayVnpay();
-            return;
-        }
-
         const orderItems = selectedItems.map((item) => ({
             sizeId: item.sizeId,
             quantity: item.quantity,
             price: item.finalPrice,
         }));
 
+        const order = {
+            id: Date.now(),
+            userId,
+            items: orderItems,
+            deliveryId: selectedDeliveryId,
+            paymentId: selectedPaymentId,
+            voucherId: appliedVoucherId,
+            shippingFee: deliveryFee,
+            productsTotalFee: productsTotal,
+            discountFee: voucherDiscount,
+            totalPrice: totalAmount,
+        };
+
+        dispatch(processingOrder(order));
+
+        if (selectedPaymentId === 2) {
+            navigate(`${configs.routes.vnpayCreateOrder}?amount=${totalAmount}&order=${order.id}`);
+            return;
+        }
+
         // Dispatch action xác nhận đơn hàng
-        dispatch(
-            confirmOrder({
-                userId,
-                items: orderItems,
-                deliveryId: selectedDeliveryId,
-                paymentId: selectedPaymentId,
-                shippingFee: deliveryFee,
-                productsTotalFee: productsTotal,
-                discountFee: voucherDiscount,
-                totalPrice: totalAmount,
-            })
-        );
+        dispatch(confirmOrder(order));
 
         // CẬP NHẬT TỒN KHO SAU KHI ĐẶT HÀNG THÀNH CÔNG
         selectedItems.forEach((item) => {
