@@ -44,11 +44,9 @@ function VnpayTransactionConfirm() {
             return;
         }
 
-        const order = processingOrder;
+        dispatch(confirmOrder(processingOrder));
 
-        dispatch(confirmOrder(order));
-
-        order.items.forEach((item) => {
+        processingOrder.items.forEach((item) => {
             const productDetail = getProductBySizeId(item.sizeId);
             const newStock = productDetail.stock - item.quantity;
 
@@ -60,8 +58,8 @@ function VnpayTransactionConfirm() {
             );
         });
 
-        if (order.appliedVoucherId) {
-            dispatch(decreaseVoucherQuantity(order.appliedVoucherId));
+        if (processingOrder.voucherId) {
+            dispatch(decreaseVoucherQuantity(processingOrder.voucherId));
         }
         navigate(`${configs.routes.paymentResult}?status=success&amount=${amount}&bank=${bank.name}&order=${orderId}`);
     };
