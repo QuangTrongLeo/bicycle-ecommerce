@@ -2,14 +2,59 @@ import { useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './style.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight, faShieldHalved, faCircleQuestion, faHeadset } from '@fortawesome/free-solid-svg-icons';
-
+import { faChevronRight, faShieldHalved, faCircleQuestion, faHeadset, faSpinner, 
+    faCheckCircle, faTimesCircle,faExclamationTriangle} from '@fortawesome/free-solid-svg-icons';
+import { sendContactRequest } from '~/data/api/support/chatApi';
 const st = classNames.bind(styles);
 
 function Support() {
-    // State để điều khiển tab nội dung bên phải
-    const [activeTab, setActiveTab] = useState('policy');
 
+const [activeTab, setActiveTab] = useState('policy'); 
+    const [isLoading, setIsLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        content: ''
+    });
+    const [popup, setPopup] = useState({
+        show: false,
+        type: 'success', // 'success', 'error', 'warning'
+        message: ''
+    });
+
+    const closePopup = () => setPopup(prev => ({ ...prev, show: false }));
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSendContact = async () => {
+        if (!formData.name || !formData.email || !formData.content) {
+            setPopup({
+                show: true,
+                type: 'warning',
+                message: 'Vui lòng nhập đầy đủ thông tin trước khi gửi!'
+            });
+            return;
+        }
+
+        setIsLoading(true); // Bật loading
+
+        try {
+            const res = await sendContactRequest(formData);
+            setPopup({
+                show: true,
+                type: 'success',
+                message: res.message || 'Gửi yêu cầu thành công! Chúng tôi sẽ sớm liên hệ.'
+            });            
+            setFormData({ name: '', email: '', content: '' }); 
+        } catch (err) {
+            alert(err.message); // Thông báo lỗi
+        } finally {
+            setIsLoading(false); // Tắt loading
+        }
+    };
     // Dữ liệu nội dung (Giả lập)
     const renderContent = () => {
         switch (activeTab) {
@@ -65,17 +110,66 @@ function Support() {
                             <p>Thời gian làm việc</p>
                             <p>8:00 - 21:00 (Tất cả các ngày trong tuần)</p>
                         </div>
-                        <button className={st('btn-contact')}>Gửi yêu cầu hỗ trợ ngay</button>
-                    </div>
+{/* --- FORM LIÊN HỆ MỚI --- */}
+                        <div className={st('contact-form')}>
+                            <h4>Gửi thắc mắc cho chúng tôi</h4>
+                            
+                            <div className={st('form-group')}>
+                                <input 
+                                    type="text" 
+                                    name="name"
+                                    placeholder="Họ tên của bạn" 
+                                    value={formData.name}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            
+                            <div className={st('form-group')}>
+                                <input 
+                                    type="email" 
+                                    name="email"
+                                    placeholder="Email liên hệ"
+                                    value={formData.email}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+
+                            <div className={st('form-group')}>
+                                <textarea 
+                                    name="content"
+                                    rows="4" 
+                                    placeholder="Nội dung cần hỗ trợ..."
+                                    value={formData.content}
+                                    onChange={handleInputChange}
+                                ></textarea>
+                            </div>
+
+                            <button 
+                                className={st('btn-contact', { disabled: isLoading })} 
+                                onClick={handleSendContact}
+                                disabled={isLoading}
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <FontAwesomeIcon icon={faSpinner} spin style={{ marginRight: 8 }} />
+                                        Đang gửi...
+                                    </>
+                                ) : (
+                                    'Gửi yêu cầu hỗ trợ ngay'
+                                )}
+                            </button>
+                        </div>
+                        {/* ------------------------- */}
+                    </div>                    
                 );
             default:
                 return null;
         }
     };
 
-    return (
+return (
         <div className="container" style={{ marginTop: 20, marginBottom: 40 }}>
-            {/* Header trang Support - Giống header Profile nhưng đơn giản hơn */}
+            {/* Giữ nguyên phần Header */}
             <div className="row">
                 <div className="col-md-12">
                     <div className={st('support-header')}>
@@ -85,9 +179,8 @@ function Support() {
                 </div>
             </div>
 
-            {/* Main Content: Chia cột giống Profile */}
+            {/* Giữ nguyên phần Layout chia cột */}
             <div className="row" style={{ marginTop: 20 }}>
-                {/* Cột trái: Menu */}
                 <div className="col-md-3">
                     <div className={st('support-menu')}>
                         <div 
@@ -125,14 +218,40 @@ function Support() {
                     </div>
                 </div>
 
-                {/* Cột phải: Nội dung tương ứng */}
                 <div className="col-md-9" style={{ paddingRight: 0 }}>
                     <div className={st('support-content')}>
                         {renderContent()}
                     </div>
                 </div>
             </div>
+            {popup.show && (
+            <div className={st('modal-overlay')} onClick={closePopup}>
+                <div className={st('modal-box', popup.type)} onClick={(e) => e.stopPropagation()}>
+                    <button className={st('modal-close')} onClick={closePopup}>
+                        <FontAwesomeIcon icon={faTimesCircle} />
+                    </button>
+                    
+                    <div className={st('modal-icon')}>
+                        {popup.type === 'success' && <FontAwesomeIcon icon={faCheckCircle} />}
+                        {popup.type === 'error' && <FontAwesomeIcon icon={faTimesCircle} />}
+                        {popup.type === 'warning' && <FontAwesomeIcon icon={faExclamationTriangle} />}
+                    </div>
+
+                    <h4 className={st('modal-title')}>
+                        {popup.type === 'success' ? 'Thành công' : 
+                         popup.type === 'error' ? 'Thất bại' : 'Lưu ý'}
+                    </h4>
+                    
+                    <p className={st('modal-msg')}>{popup.message}</p>
+
+                    <button className={st('btn-modal-ok')} onClick={closePopup}>
+                        Đã hiểu
+                    </button>
+                </div>
+            </div>
+        )}
         </div>
+        
     );
 }
 
