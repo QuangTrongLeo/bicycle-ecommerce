@@ -1,26 +1,27 @@
-import React, { useContext } from 'react';
-import { ThemeContext } from '../../contexts/ThemeContext';
-import styles from './style.module.scss';
+import React, { createContext, useState, useEffect } from 'react';
 
-const ThemeToggle = () => {
-  const { theme, toggleTheme } = useContext(ThemeContext);
+export const ThemeContext = createContext(null);
+
+export const ThemeProvider = ({ children }) => {
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('app-theme') || 'light';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('app-theme', theme);
+    document.body.classList.remove('light', 'dark');
+    document.body.classList.add(theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
+  };
 
   return (
-    <button
-      className={[
-        styles.toggleBtn,
-        theme === 'dark' && styles.dark
-      ].filter(Boolean).join(' ')}
-      onClick={toggleTheme}
-    >
-      <span className={styles.icon}>
-        {theme === 'light' ? '🌘' : '🌕'}
-      </span>
-      <span className={styles.text}>
-        {theme === 'light' ? 'Dark mode' : 'Light mode'}
-      </span>
-    </button>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      <div className={`app-container theme-${theme}`}>
+        {children}
+      </div>
+    </ThemeContext.Provider>
   );
 };
-
-export default ThemeToggle;
