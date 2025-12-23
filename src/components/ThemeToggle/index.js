@@ -6,16 +6,18 @@ const ThemeToggle = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
 
   return (
-    <button 
-      className={`${styles.toggleBtn} ${theme === 'dark' ? styles.dark : ''}`} 
+    <button
+      className={[
+        styles.toggleBtn,
+        theme === 'dark' && styles.dark
+      ].filter(Boolean).join(' ')}
       onClick={toggleTheme}
-      aria-label="Toggle Dark Mode"
     >
       <span className={styles.icon}>
-        {theme === 'light' ? '🌙' : '☀️'}
+        {theme === 'light' ? '🌘' : '🌕'}
       </span>
       <span className={styles.text}>
-        Switch to {theme === 'light' ? 'Dark' : 'Light'} Mode
+        {theme === 'light' ? 'Dark mode' : 'Light mode'}
       </span>
     </button>
   );
