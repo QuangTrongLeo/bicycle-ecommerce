@@ -1,30 +1,44 @@
 const STORAGE_KEY = 'SUPPORT_REQUESTS';
 
+const validateContactData = (data) => {
+  if (!data?.name || !data?.email || !data?.content) {
+    return 'Vui lòng nhập đầy đủ thông tin!';
+  }
+  return null;
+};
+
 export const sendContactRequest = (data) => {
-    return new Promise((resolve, reject) => {
-        // Giả lập mạng chậm 1.5 giây
-        setTimeout(() => {
-            if (!data.name || !data.email || !data.content) {
-                reject({ status: 400, message: "Vui lòng nhập đầy đủ thông tin!" });
-                return;
-            }
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const error = validateContactData(data);
+      if (error) {
+        reject({ status: 400, message: error });
+        return;
+      }
 
-            try {
-                // Lưu vào LocalStorage
-                const currentData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-                const newRequest = {
-                    id: Date.now(),
-                    ...data,
-                    createdAt: new Date().toISOString(),
-                    status: 'pending'
-                };
-                currentData.push(newRequest);
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
+      try {
+        const requests =
+          JSON.parse(localStorage.getItem(STORAGE_KEY)) ?? [];
 
-                resolve({ status: 200, message: "Gửi yêu cầu thành công! Chúng tôi sẽ sớm liên hệ lại." });
-            } catch (error) {
-                reject({ status: 500, message: "Lỗi hệ thống!" });
-            }
-        }, 1500); 
-    });
+        const newRequest = {
+          id: crypto.randomUUID(),
+          ...data,
+          status: 'pending',
+          createdAt: new Date().toISOString()
+        };
+
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify([...requests, newRequest])
+        );
+
+        resolve({
+          status: 200,
+          message: 'Gửi yêu cầu thành công! Nhân viên sẽ liên hệ với bạn sớm nhất.'
+        });
+      } catch {
+        reject({ status: 500, message: 'Có lỗi xảy ra, vui lòng thử lại sau.' });
+      }
+    }, 1500);
+  });
 };

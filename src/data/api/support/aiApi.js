@@ -1,72 +1,104 @@
 import { products } from '../product/productApi';
 import { productColors } from '../product/productColorApi';
 import { productImages } from '../product/productImageApi';
+
+const normalizeText = (text = '') =>
+  text.toLowerCase().trim();
+
+const hasKeyword = (input, keywords = []) =>
+  keywords.some(k => input.includes(k));
+
+const buildProductResponseByColor = (colorName) => {
+  const matchingColors = productColors.filter(
+    c => c.colorName.toLowerCase() === colorName.toLowerCase()
+  );
+
+  const items = matchingColors.map(colorItem => {
+    const productBase = products.find(p => p.id === colorItem.productId);
+    if (!productBase) return null;
+
+    const imageObj = productImages.find(img => img.colorId === colorItem.id);
+    return {
+      ...productBase,
+      image: imageObj?.imageUrl || 'https://via.placeholder.com/150',
+      colorName: colorItem.colorName,
+      link: `category?color=${encodeURIComponent(colorItem.colorHex)}&page=1`
+    };
+  }).filter(Boolean);
+
+  return items.length
+    ? {
+        status: 200,
+        type: 'product_list',
+        message: `Dạ, đây là các mẫu xe màu ${colorName} bạn đang tìm nè 👇`,
+        data: items,
+        createdAt: new Date().toISOString()
+      }
+    : null;
+};
+
+const FAQ_RESPONSES = [
+  {
+    keywords: ['size', 'kích cỡ'],
+    message: 'Shop có size từ 36 đến 44, bạn tham khảo bảng size ở mục FAQ giúp mình nha 👟'
+  },
+  {
+    keywords: ['đổi trả', 'hoàn tiền'],
+    message: 'Shop hỗ trợ đổi trả trong 30 ngày, miễn là sản phẩm còn mới và chưa qua sử dụng nha.'
+  },
+  {
+    keywords: ['ship', 'vận chuyển'],
+    message: 'Đơn hàng trên 1 triệu được freeship toàn quốc đó bạn 🚚'
+  },
+  {
+    keywords: ['xem hàng', 'kiểm tra', 'thử giày'],
+    message: 'Bạn được quyền kiểm tra giày khi shipper giao đến, ưng thì nhận nha!'
+  },
+  {
+    keywords: ['giá', 'nhiêu', 'sale', 'rẻ'],
+    message: 'Giá luôn đi kèm chất lượng. Bạn nhớ săn voucher ở trang chủ để được giá tốt hơn nha!'
+  },
+  {
+    keywords: ['real', 'auth', 'chính hãng', 'fake'],
+    message: 'Shop cam kết 100% hàng chính hãng, phát hiện fake đền x10 giá trị đơn hàng!'
+  },
+  {
+    keywords: ['hi', 'chào', 'hello'],
+    message: 'Chào bạn 👋 Mình là trợ lý ảo của Shop Giày, mình có thể hỗ trợ gì cho bạn nè?'
+  }
+];
+
 export const getAiResponse = (userMessage) => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            const input = userMessage.toLowerCase();
-            const foundColor = productColors.find(c => input.includes(c.colorName.toLowerCase()));
-        if (foundColor && (input.includes("xe") || input.includes("mẫu") || input.includes("tìm"))) {
-                    const matchingColors = productColors.filter(
-                    c => c.colorName.toLowerCase() === foundColor.colorName.toLowerCase()
-                );
+  return new Promise(resolve => {
+    setTimeout(() => {
+      const input = normalizeText(userMessage);
 
-            const matchProducts = matchingColors.map(colorItem => {
-                    // Tìm thông tin chung của sản phẩm (tên, giá...)
-                    const productBase = products.find(p => p.id === colorItem.productId);                   
-                    const imageObj = productImages.find(img => img.colorId === colorItem.id);
-                    if (productBase) {
-                        const encodedColor = encodeURIComponent(colorItem.colorHex); 
-                        const productLink = `category?color=${encodedColor}&page=1`; 
-                        return {
-                            ...productBase,
-                            image: imageObj ? imageObj.imageUrl : 'https://via.placeholder.com/150',
-                            colorName: colorItem.colorName,
-                            link: productLink 
-                        };
-                    }
-                    return null;
-                }).filter(p => p !== null); 
+      // 👉 Ưu tiên tìm sản phẩm theo màu
+      const foundColor = productColors.find(c =>
+        input.includes(c.colorName.toLowerCase())
+      );
 
-                if (matchProducts.length > 0) {
-                    return resolve({
-                        status: 200,
-                        type: 'product_list', 
-                        message: `Dạ, đây là danh sách xe màu ${foundColor.colorName} mà bạn cần tìm:`,
-                        data: matchProducts,
-                        createdAt: new Date().toISOString()
-                    });
-                }
-            }
+      if (
+        foundColor &&
+        hasKeyword(input, ['xe', 'mẫu', 'tìm'])
+      ) {
+        const productResponse = buildProductResponseByColor(foundColor.colorName);
+        if (productResponse) return resolve(productResponse);
+      }
 
-            let response = "";
-            if (input.includes("size") || input.includes("kích cỡ")) {
-                response = "Bên mình có bảng size chuẩn từ 36-44. Bạn có thể xem chi tiết ở phần 'Câu hỏi thường gặp' nhé!";
-            } else if (input.includes("đổi trả") || input.includes("hoàn tiền")) {
-                response = "Chính sách đổi trả của chúng mình là 30 ngày kể từ khi nhận hàng, miễn là giày còn mới ạ.";
-            } else if (input.includes("ship") || input.includes("vận chuyển")) {
-                response = "Đơn trên 1 triệu là được miễn phí ship toàn quốc luôn bạn nhé!";
-            } else if (input.includes("hi") || input.includes("chào") || input.includes("hello"))  {
-                response = "Chào bạn! Mình là trợ lý ảo của Shop Giày. Bạn cần mình giúp gì nào?";
-            }
-              else if (input.includes("xem hàng") || input.includes("kiểm tra") || input.includes("thử giày")) {
-                response = "Tất nhiên rồi bạn! Khi shipper giao đến, bạn hoàn toàn được quyền mở hộp kiểm tra giày trước khi thanh toán. Ưng ý mới nhận bạn nhé!";
-            }
-              else if (input.includes("giá") || input.includes("nhiêu") || input.includes("sale") || input.includes("rẻ")) {
-                response = "Giá sản phẩm bên mình luôn đi đôi với chất lượng (cam kết hàng chính hãng). Bạn có thể săn thêm voucher ở banner trang chủ để được giá tốt hơn nhé!";
-            }
-              else if (input.includes("real") || input.includes("auth") || input.includes("chính hãng") || input.includes("fake")) {
-                response = "Shop cam kết 100% sản phẩm là hàng chính hãng, full box và tem mác. Nếu phát hiện hàng giả, shop đền gấp 10 lần giá trị đơn hàng nên bạn yên tâm tuyệt đối nha!";
-            }
-             else {
-                response = "Câu hỏi này hơi khó với mình, nhưng bạn có thể để lại tin nhắn trong phần 'Liên hệ', nhân viên sẽ gọi lại ngay!";
-            }
+      // 👉 FAQ
+      const faq = FAQ_RESPONSES.find(f =>
+        hasKeyword(input, f.keywords)
+      );
 
-            resolve({
-                status: 200,
-                message: response,
-                createdAt: new Date().toISOString()
-            });
-        }, 1200);
-    });
+      resolve({
+        status: 200,
+        type: 'text',
+        message: faq
+          ? faq.message
+          : 'Câu hỏi này hơi ngoài khả năng của mình 😥 Bạn để lại tin nhắn ở mục Liên hệ nhé!',
+        createdAt: new Date().toISOString()
+      });
+    }, 1200);
+  });
 };
