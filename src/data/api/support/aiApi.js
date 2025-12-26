@@ -4,138 +4,126 @@ import { productImages } from '../product/productImageApi';
 
 const RESPONSE_DELAY = 1200;
 
-const INTENTS = {
+const INTENTS = Object.freeze({
   PRODUCT_BY_COLOR: 'PRODUCT_BY_COLOR',
   FAQ: 'FAQ',
   GREETING: 'GREETING',
+  PRICE: 'PRICE',
   UNKNOWN: 'UNKNOWN'
-};
+});
 
-const normalizeText = (text = '') =>
-  text.toLowerCase().replace(/\s+/g, ' ').trim();
+const nowISO = () => new Date().toISOString();
 
-const hasKeyword = (input, keywords = []) =>
-  keywords.some(k => input.includes(k));
+const normalizeText = (value = '') =>
+  value
+    .toLowerCase()
+    .replace(/[^\w\sàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹ]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 
-const findMentionedColor = (input) =>
-  productColors.find(c =>
-    input.includes(c.colorName.toLowerCase())
+const containsAny = (input, words = []) =>
+  words.some(word => input.includes(word));
+
+const findColorInMessage = (input) =>
+  productColors.find(color =>
+    input.includes(color.colorName.toLowerCase())
   );
 
-const FAQ_RESPONSES = [
+const FAQ_DATA = [
   {
-    keywords: ['size', 'kích cỡ'],
-    message:
-      'Shop có size từ 36 đến 44, bạn có thể xem bảng size chi tiết ở mục FAQ nha 👟'
+    keys: ['size', 'kích cỡ'],
+    reply:
+      'Shop hiện có đầy đủ size từ 36 đến 44, bạn tham khảo bảng size ở trang chi tiết sản phẩm nha 👟'
   },
   {
-    keywords: ['đổi trả', 'hoàn tiền'],
-    message:
-      'Shop hỗ trợ đổi trả trong vòng 30 ngày kể từ khi nhận hàng, miễn là sản phẩm còn mới nha.'
+    keys: ['đổi', 'trả', 'hoàn tiền'],
+    reply:
+      'Shop hỗ trợ đổi trả trong vòng 30 ngày nếu sản phẩm còn nguyên vẹn và chưa qua sử dụng.'
   },
   {
-    keywords: ['ship', 'vận chuyển'],
-    message:
-      'Đơn hàng trên 1 triệu sẽ được freeship toàn quốc 🚚'
+    keys: ['ship', 'vận chuyển', 'giao hàng'],
+    reply:
+      'Đơn hàng từ 1.000.000đ sẽ được miễn phí vận chuyển toàn quốc 🚚'
   },
   {
-    keywords: ['xem hàng', 'kiểm tra', 'thử giày'],
-    message:
-      'Bạn được quyền mở hộp và kiểm tra giày khi shipper giao tới, ưng ý thì nhận nha!'
-  },
-  {
-    keywords: ['giá', 'nhiêu', 'sale', 'rẻ'],
-    message:
-      'Giá sản phẩm luôn đi kèm chất lượng. Bạn nhớ săn voucher ở trang chủ để có giá tốt hơn nha!'
-  },
-  {
-    keywords: ['real', 'auth', 'chính hãng', 'fake'],
-    message:
-      'Shop cam kết 100% sản phẩm chính hãng. Nếu phát hiện hàng fake, shop đền x10 giá trị đơn hàng.'
-  },
-  {
-    keywords: ['hi', 'hello', 'chào'],
-    message:
-      'Chào bạn 👋 Mình là trợ lý ảo của Shop Giày. Mình có thể hỗ trợ bạn tìm sản phẩm hoặc giải đáp thắc mắc nè!'
+    keys: ['real', 'auth', 'chính hãng', 'fake'],
+    reply:
+      'Shop cam kết 100% chính hãng. Nếu phát hiện hàng giả, shop hoàn tiền và đền bù gấp 10 lần.'
   }
 ];
 
 const detectIntent = (input) => {
-  const hasColor = !!findMentionedColor(input);
+  if (containsAny(input, ['hi', 'hello', 'chào', 'alo'])) {
+    return INTENTS.GREETING;
+  }
 
-  if (hasColor && hasKeyword(input, ['xe', 'mẫu', 'tìm', 'có'])) {
+  if (containsAny(input, ['giá', 'bao nhiêu', 'rẻ', 'sale'])) {
+    return INTENTS.PRICE;
+  }
+
+  if (findColorInMessage(input)) {
     return INTENTS.PRODUCT_BY_COLOR;
   }
 
-  if (FAQ_RESPONSES.some(f => hasKeyword(input, f.keywords))) {
+  if (FAQ_DATA.some(f => containsAny(input, f.keys))) {
     return INTENTS.FAQ;
-  }
-
-  if (hasKeyword(input, ['hi', 'hello', 'chào'])) {
-    return INTENTS.GREETING;
   }
 
   return INTENTS.UNKNOWN;
 };
 
 const buildProductItem = (colorItem) => {
-  const productBase = products.find(
-    p => p.id === colorItem.productId
-  );
+  const baseProduct = products.find(p => p.id === colorItem.productId);
+  if (!baseProduct) return null;
 
-  if (!productBase) return null;
-
-  const imageObj = productImages.find(
+  const image = productImages.find(
     img => img.colorId === colorItem.id
   );
 
   return {
-    ...productBase,
-    colorName: colorItem.colorName,
-    image:
-      imageObj?.imageUrl || 'https://via.placeholder.com/150',
-    link: `category?color=${encodeURIComponent(
+    ...baseProduct,
+    color: colorItem.colorName,
+    thumbnail: image?.imageUrl ?? 'https://via.placeholder.com/200',
+    url: `category?color=${encodeURIComponent(
       colorItem.colorHex
     )}&page=1`
   };
 };
 
-const buildProductResponseByColor = (colorName) => {
-  const matchedColors = productColors.filter(
+const buildProductListResponse = (colorName) => {
+  const colors = productColors.filter(
     c => c.colorName.toLowerCase() === colorName.toLowerCase()
   );
 
-  const items = matchedColors
-    .map(buildProductItem)
-    .filter(Boolean);
+  const items = colors.map(buildProductItem).filter(Boolean);
 
   if (!items.length) return null;
 
   return {
     status: 200,
     type: 'product_list',
-    message: `Dạ, đây là các mẫu xe màu ${colorName} bạn đang tìm nè 👇`,
+    message: `Mình tìm được ${items.length} mẫu xe màu ${colorName} cho bạn nè 👇`,
     data: items,
     meta: {
-      total: items.length,
-      color: colorName
+      color: colorName,
+      total: items.length
     },
-    createdAt: new Date().toISOString()
+    createdAt: nowISO()
   };
 };
 
 const buildFaqResponse = (input) => {
-  const matched = FAQ_RESPONSES.find(f =>
-    hasKeyword(input, f.keywords)
+  const faq = FAQ_DATA.find(f =>
+    containsAny(input, f.keys)
   );
 
-  if (!matched) return null;
+  if (!faq) return null;
 
   return {
     status: 200,
     type: 'text',
-    message: matched.message,
-    createdAt: new Date().toISOString()
+    message: faq.reply,
+    createdAt: nowISO()
   };
 };
 
@@ -143,43 +131,53 @@ const buildGreetingResponse = () => ({
   status: 200,
   type: 'text',
   message:
-    'Chào bạn 👋 Mình là trợ lý AI của Shop Giày. Bạn có thể hỏi mình về sản phẩm, size, giá hoặc chính sách nha!',
-  createdAt: new Date().toISOString()
+    'Chào bạn 👋 Mình là trợ lý AI của Shop Giày. Bạn có thể hỏi mình về sản phẩm, màu sắc, giá cả hoặc chính sách nha!',
+  createdAt: nowISO()
+});
+
+const buildPriceResponse = () => ({
+  status: 200,
+  type: 'text',
+  message:
+    'Giá mỗi sản phẩm sẽ khác nhau tuỳ mẫu và màu sắc. Bạn cho mình biết mẫu giày bạn quan tâm nha 👀',
+  createdAt: nowISO()
 });
 
 const buildFallbackResponse = () => ({
   status: 200,
   type: 'text',
   message:
-    'Câu hỏi này hơi ngoài khả năng của mình 😥 Bạn để lại tin nhắn ở mục Liên hệ, nhân viên shop sẽ hỗ trợ bạn sớm nhất nha!',
-  createdAt: new Date().toISOString()
+    'Mình chưa hiểu rõ câu hỏi này 😥 Bạn có thể hỏi lại chi tiết hơn hoặc liên hệ trực tiếp với shop để được hỗ trợ nhanh nhất nha!',
+  createdAt: nowISO()
 });
 
-export const getAiResponse = (userMessage) => {
-  return new Promise(resolve => {
+export const getAiResponse = (userMessage) =>
+  new Promise(resolve => {
     setTimeout(() => {
       const input = normalizeText(userMessage);
       const intent = detectIntent(input);
 
       if (intent === INTENTS.PRODUCT_BY_COLOR) {
-        const color = findMentionedColor(input);
+        const color = findColorInMessage(input);
         if (color) {
-          const productResponse =
-            buildProductResponseByColor(color.colorName);
-          if (productResponse) return resolve(productResponse);
+          const response = buildProductListResponse(color.colorName);
+          if (response) return resolve(response);
         }
       }
 
       if (intent === INTENTS.FAQ) {
-        const faqResponse = buildFaqResponse(input);
-        if (faqResponse) return resolve(faqResponse);
+        const response = buildFaqResponse(input);
+        if (response) return resolve(response);
       }
 
       if (intent === INTENTS.GREETING) {
         return resolve(buildGreetingResponse());
       }
 
+      if (intent === INTENTS.PRICE) {
+        return resolve(buildPriceResponse());
+      }
+
       resolve(buildFallbackResponse());
     }, RESPONSE_DELAY);
   });
-};

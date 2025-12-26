@@ -1,90 +1,108 @@
+$bg-light: #f5f5f7;
+$bg-dark: #000;
+$text-dark: #333;
+$text-muted: #666;
+$radius-lg: 12px;
+$radius-md: 8px;
+$radius-sm: 5px;
+$transition-fast: 0.2s ease;
+$shadow-modal: 0 10px 25px rgba(0, 0, 0, 0.3);
+
 .support-header {
-    background-color: #f5f5f7;
+    background: $bg-light;
     padding: 30px 40px;
-    border-radius: 10px;
-    
+    border-radius: $radius-lg;
+
     h3 {
         font-size: 2rem;
         font-weight: 700;
-        margin-bottom: 5px;
+        margin-bottom: 6px;
+        color: $text-dark;
     }
 
     p {
         margin: 0;
-        color: #666;
         font-size: 1.1rem;
+        color: $text-muted;
     }
 }
 
 .support-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
     .menu-item {
-        padding: 15px 20px;
-        background-color: #f5f5f7;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        border-radius: 5px;
-        margin-bottom: 10px;
-        transition: 0.2s;
+        padding: 15px 20px;
+        background: $bg-light;
+        border-radius: $radius-sm;
         font-size: 16px;
         font-weight: 500;
-        color: #333;
+        color: $text-dark;
+        transition: background $transition-fast, color $transition-fast;
 
         .icon-left {
             width: 20px;
             margin-right: 10px;
+            opacity: 0.8;
         }
 
         &:hover {
-            background-color: #e0e0e0; // Hover nhẹ hơn màu đen để phân biệt với Active
+            background: #e0e0e0;
             cursor: pointer;
         }
 
-        // Trạng thái đang chọn
         &.active {
-            background-color: #000;
+            background: $bg-dark;
             color: #fff;
+
+            .icon-left {
+                opacity: 1;
+            }
         }
     }
 }
 
 .support-content {
+    background: $bg-light;
     padding: 30px 40px;
-    background-color: #f5f5f7;
-    border-radius: 8px;
+    border-radius: $radius-md;
     font-size: 16px;
-    min-height: 400px; // Đảm bảo khung nội dung luôn có chiều cao tối thiểu
+    min-height: 420px;
 
     h2 {
         font-size: 1.75rem;
         font-weight: 700;
         margin-bottom: 25px;
-        border-bottom: 1px solid #d9d9d9;
         padding-bottom: 15px;
+        border-bottom: 1px solid #d9d9d9;
     }
 
     .info-block {
-        margin-bottom: 20px;
+        margin-bottom: 22px;
 
         h4 {
             font-size: 1.1rem;
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
         }
 
         p {
+            line-height: 1.6;
             color: #555;
-            line-height: 1.5;
         }
     }
 
     .info-row {
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        justify-content: space-between;
+        padding-bottom: 10px;
         margin-bottom: 15px;
         border-bottom: 1px dashed #d0d0d0;
-        padding-bottom: 10px;
 
         &:last-child {
             border-bottom: none;
@@ -96,32 +114,45 @@
 
         .highlight {
             font-weight: 700;
-            color: #2f5acf;
             font-size: 1.1rem;
+            color: #2f5acf;
         }
     }
+}
 
-    .btn-contact {
-        background-color: #000;
-        color: #fff;
-        padding: 12px 25px;
-        border-radius: 5px;
-        border: 1px solid black;
-        margin-top: 20px;
-        font-weight: 600;
-        transition: 0.2s;
+.btn-contact {
+    background: $bg-dark;
+    color: #fff;
+    padding: 12px 25px;
+    border-radius: $radius-sm;
+    border: 1px solid $bg-dark;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all $transition-fast;
+    margin-top: 12px;
+
+    &:hover {
+        background: #fff;
+        color: $bg-dark;
+    }
+
+    &.disabled {
+        background: #ccc;
+        border-color: #ccc;
+        color: #666;
+        cursor: not-allowed;
 
         &:hover {
-            background-color: #fff;
-            color: #000;
+            background: #ccc;
+            color: #666;
         }
     }
 }
 
 .contact-form {
     margin-top: 30px;
-    padding-top: 20px;
-    border-top: 2px solid #e0e0e0; // Đường gạch ngang phân cách với thông tin phía trên
+    padding-top: 25px;
+    border-top: 2px solid #e0e0e0;
 
     h4 {
         font-size: 1.25rem;
@@ -130,143 +161,204 @@
     }
 
     .form-group {
-        margin-bottom: 15px;
+        margin-bottom: 16px;
 
-        input, textarea {
+        input,
+        textarea {
             width: 100%;
             padding: 12px 15px;
-            border: 1px solid #ddd;
             border-radius: 6px;
+            border: 1px solid #ddd;
             font-size: 1rem;
+            transition: all $transition-fast;
             outline: none;
-            transition: all 0.2s;
-            font-family: inherit;
 
             &:focus {
-                border-color: #000; // Khi click vào thì viền đen
-                box-shadow: 0 0 0 1px #000;
+                border-color: $bg-dark;
+                box-shadow: 0 0 0 1px $bg-dark;
             }
         }
 
         textarea {
-            resize: vertical; // Cho phép kéo giãn chiều cao
-            min-height: 100px;
+            resize: vertical;
+            min-height: 110px;
         }
     }
 }
-
-.btn-contact {
-    // ... code cũ của bạn
-    background-color: #000;
-    color: #fff;
-    padding: 12px 25px;
-    border-radius: 5px;
-    border: 1px solid black;
-    margin-top: 10px; // Chỉnh margin top một chút
-    font-weight: 600;
-    transition: 0.2s;
-    cursor: pointer;
-
-    &:hover {
-        background-color: #fff;
-        color: #000;
-    }
-
-    // Style cho trạng thái Loading (disabled)
-    &.disabled {
-        background-color: #ccc;
-        border-color: #ccc;
-        color: #666;
-        cursor: not-allowed; // Con trỏ chuột hình cấm
-
-        &:hover {
-            background-color: #ccc;
-            color: #666;
-        }
-    }
-}
-
 
 .modal-overlay {
-    position: fixed; // Cố định vị trí, không chạy theo thanh cuộn
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5); // Màu nền tối mờ
-    display: flex;        
-    justify-content: center; // Căn giữa ngang
-    align-items: center;     // Căn giữa dọc
-    z-index: 99999;       // Lớp cao nhất để đè lên Header
-    animation: fadeIn 0.3s ease-in-out;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    animation: fadeIn 0.3s ease;
 }
 
 .modal-box {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
+    background: #fff;
     width: 400px;
-    max-width: 90%; 
+    max-width: 90%;
+    padding: 30px;
+    border-radius: $radius-lg;
     text-align: center;
     position: relative;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    animation: slideUp 0.3s ease-out;
+    box-shadow: $shadow-modal;
+    animation: slideUp 0.3s ease;
 
-    // Màu sắc icon theo trạng thái
-    &.success .modal-icon { color: #28a745; }
-    &.error .modal-icon { color: #dc3545; }
-    &.warning .modal-icon { color: #ffc107; }
+    &.success { .modal-icon { color: #28a745; } }
+    &.error { .modal-icon { color: #dc3545; } }
+    &.warning { .modal-icon { color: #ffc107; } }
 
     .modal-close {
         position: absolute;
         top: 10px;
         right: 15px;
-        background: none;
-        border: none;
         font-size: 20px;
-        color: #999;
+        border: none;
+        background: none;
         cursor: pointer;
-        transition: 0.2s;
-        &:hover { color: #333; }
+        color: #999;
+        transition: color $transition-fast;
+
+        &:hover {
+            color: $text-dark;
+        }
     }
 
     .modal-icon {
-        font-size: 50px;
+        font-size: 48px;
         margin-bottom: 15px;
     }
 
     .modal-title {
         font-size: 22px;
-        margin-bottom: 10px;
         font-weight: 700;
-        color: #333;
+        margin-bottom: 10px;
+        color: $text-dark;
     }
 
     .modal-msg {
         font-size: 16px;
-        color: #666;
+        color: $text-muted;
         margin-bottom: 25px;
         line-height: 1.5;
     }
 
     .btn-modal-ok {
-        background-color: #000;
-        color: white;
-        font-size: 14px;
-        border-radius: 20px;
-        padding: 8px 20px;
-        border: none;
+        background: $bg-dark;
+        color: #fff;
+        padding: 8px 22px;
         border-radius: 25px;
+        border: none;
         font-weight: 600;
         cursor: pointer;
-        transition: 0.2s;
-        
-        &:hover { 
-            background-color: #333;
-            transform: scale(1.03); 
+        transition: all $transition-fast;
+
+        &:hover {
+            background: #333;
+            transform: scale(1.04);
         }
+    }
+}
+
+.ai-chat-container {
+    margin-top: 20px;
+
+    .chat-window {
+        height: 420px;
+        background: #f8f9fa;
+        border-radius: $radius-md;
+        padding: 20px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .chat-bubble {
+            max-width: 72%;
+            padding: 10px 15px;
+            border-radius: 16px;
+            font-size: 1.4rem;
+
+            &.ai {
+                align-self: flex-start;
+                background: #eee;
+                color: $text-dark;
+            }
+
+            &.user {
+                align-self: flex-end;
+                background: $bg-dark;
+                color: #fff;
+            }
+        }
+    }
+
+    .chat-input-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+
+        input {
+            flex: 1;
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .btn-send-ai {
+            width: 40px;
+            height: 40px;
+            background: $bg-dark;
+            color: #fff;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+        }
+    }
+}
+
+.product-list-container {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+
+    &::-webkit-scrollbar {
+        height: 4px;
+    }
+}
+
+.product-item-mini {
+    min-width: 140px;
+    background: #fff;
+    border-radius: $radius-md;
+    border: 1px solid #eee;
+    padding: 8px;
+    text-align: center;
+
+    .product-img {
+        width: 100%;
+        height: 100px;
+        object-fit: contain;
+        margin-bottom: 8px;
+    }
+
+    .product-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: $text-dark;
+        margin-bottom: 4px;
+    }
+
+    .product-price {
+        font-size: 12px;
+        font-weight: 700;
+        color: #e74c3c;
     }
 }
 
@@ -279,96 +371,3 @@
     from { transform: translateY(20px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
 }
-
-.ai-chat-container {
-    .chat-window {
-        height: 400px;
-        overflow-y: auto;
-        background: #f8f9fa;
-        padding: 20px;
-        border-radius: 8px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-
-        .chat-bubble {
-            max-width: 70%;
-            padding: 10px 15px;
-            border-radius: 15px;
-            font-size: 1.4rem;
-
-            &.ai {
-                align-self: flex-start;
-                background: #eee;
-                color: #333;
-            }
-
-            &.user {
-                align-self: flex-end;
-                background: #000;
-                color: #fff;
-            }
-        }
-    }
-
-    .chat-input-group {
-        display: flex;
-        margin-top: 15px;
-        gap: 10px;
-        input {
-            flex: 1;
-            padding: 10px 15px;
-            border-radius: 20px;
-            border: 1px solid #ddd;
-        }
-        .btn-send-ai {
-            width: 40px;
-            background: #000;
-            color: #fff;
-            border-radius: 50%;
-            border: none;
-        }
-    }
-}
-
-.product-list-container {
-    display: flex;
-    gap: 12px;
-    overflow-x: auto; // Cho phép vuốt ngang nếu nhiều xe
-    padding: 10px 0;
-    margin-top: 8px;
-
-    &::-webkit-scrollbar {
-        height: 4px;
-    }
-}
-
-.product-item-mini {
-    min-width: 140px;
-    background: #fff;
-    border-radius: 8px;
-    border: 1px solid #eee;
-    padding: 8px;
-    text-align: center;
-
-    .product-img {
-        width: 100%;
-        height: 100px;
-        object-fit: contain; // Giữ tỉ lệ ảnh xe không bị méo
-        margin-bottom: 8px;
-    }
-
-    .product-name {
-        font-size: 13px;
-        font-weight: 600;
-        margin-bottom: 4px;
-        color: #333;
-    }
-
-    .product-price {
-        font-size: 12px;
-        color: #e74c3c;
-        font-weight: bold;
-    }
-}
-
