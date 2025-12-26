@@ -12,10 +12,15 @@ const INTENTS = {
 };
 
 const normalizeText = (text = '') =>
-  text.toLowerCase().trim();
+  text.toLowerCase().replace(/\s+/g, ' ').trim();
 
 const hasKeyword = (input, keywords = []) =>
-  keywords.some(keyword => input.includes(keyword));
+  keywords.some(k => input.includes(k));
+
+const findMentionedColor = (input) =>
+  productColors.find(c =>
+    input.includes(c.colorName.toLowerCase())
+  );
 
 const FAQ_RESPONSES = [
   {
@@ -49,18 +54,16 @@ const FAQ_RESPONSES = [
       'Shop cam kết 100% sản phẩm chính hãng. Nếu phát hiện hàng fake, shop đền x10 giá trị đơn hàng.'
   },
   {
-    keywords: ['hi', 'chào', 'hello'],
+    keywords: ['hi', 'hello', 'chào'],
     message:
       'Chào bạn 👋 Mình là trợ lý ảo của Shop Giày. Mình có thể hỗ trợ bạn tìm sản phẩm hoặc giải đáp thắc mắc nè!'
   }
 ];
 
 const detectIntent = (input) => {
-  const hasColorMention = productColors.some(c =>
-    input.includes(c.colorName.toLowerCase())
-  );
+  const hasColor = !!findMentionedColor(input);
 
-  if (hasColorMention && hasKeyword(input, ['xe', 'mẫu', 'tìm'])) {
+  if (hasColor && hasKeyword(input, ['xe', 'mẫu', 'tìm', 'có'])) {
     return INTENTS.PRODUCT_BY_COLOR;
   }
 
@@ -75,35 +78,35 @@ const detectIntent = (input) => {
   return INTENTS.UNKNOWN;
 };
 
+const buildProductItem = (colorItem) => {
+  const productBase = products.find(
+    p => p.id === colorItem.productId
+  );
+
+  if (!productBase) return null;
+
+  const imageObj = productImages.find(
+    img => img.colorId === colorItem.id
+  );
+
+  return {
+    ...productBase,
+    colorName: colorItem.colorName,
+    image:
+      imageObj?.imageUrl || 'https://via.placeholder.com/150',
+    link: `category?color=${encodeURIComponent(
+      colorItem.colorHex
+    )}&page=1`
+  };
+};
+
 const buildProductResponseByColor = (colorName) => {
   const matchedColors = productColors.filter(
     c => c.colorName.toLowerCase() === colorName.toLowerCase()
   );
 
-  if (!matchedColors.length) return null;
-
   const items = matchedColors
-    .map(colorItem => {
-      const productBase = products.find(
-        p => p.id === colorItem.productId
-      );
-
-      if (!productBase) return null;
-
-      const imageObj = productImages.find(
-        img => img.colorId === colorItem.id
-      );
-
-      return {
-        ...productBase,
-        colorName: colorItem.colorName,
-        image:
-          imageObj?.imageUrl || 'https://via.placeholder.com/150',
-        link: `category?color=${encodeURIComponent(
-          colorItem.colorHex
-        )}&page=1`
-      };
-    })
+    .map(buildProductItem)
     .filter(Boolean);
 
   if (!items.length) return null;
@@ -113,23 +116,36 @@ const buildProductResponseByColor = (colorName) => {
     type: 'product_list',
     message: `Dạ, đây là các mẫu xe màu ${colorName} bạn đang tìm nè 👇`,
     data: items,
+    meta: {
+      total: items.length,
+      color: colorName
+    },
     createdAt: new Date().toISOString()
   };
 };
+
 const buildFaqResponse = (input) => {
-  const matchedFaq = FAQ_RESPONSES.find(f =>
+  const matched = FAQ_RESPONSES.find(f =>
     hasKeyword(input, f.keywords)
   );
 
-  if (!matchedFaq) return null;
+  if (!matched) return null;
 
   return {
     status: 200,
     type: 'text',
-    message: matchedFaq.message,
+    message: matched.message,
     createdAt: new Date().toISOString()
   };
 };
+
+const buildGreetingResponse = () => ({
+  status: 200,
+  type: 'text',
+  message:
+    'Chào bạn 👋 Mình là trợ lý AI của Shop Giày. Bạn có thể hỏi mình về sản phẩm, size, giá hoặc chính sách nha!',
+  createdAt: new Date().toISOString()
+});
 
 const buildFallbackResponse = () => ({
   status: 200,
@@ -146,20 +162,21 @@ export const getAiResponse = (userMessage) => {
       const intent = detectIntent(input);
 
       if (intent === INTENTS.PRODUCT_BY_COLOR) {
-        const foundColor = productColors.find(c =>
-          input.includes(c.colorName.toLowerCase())
-        );
-
-        if (foundColor) {
+        const color = findMentionedColor(input);
+        if (color) {
           const productResponse =
-            buildProductResponseByColor(foundColor.colorName);
+            buildProductResponseByColor(color.colorName);
           if (productResponse) return resolve(productResponse);
         }
       }
 
-      if (intent === INTENTS.FAQ || intent === INTENTS.GREETING) {
+      if (intent === INTENTS.FAQ) {
         const faqResponse = buildFaqResponse(input);
         if (faqResponse) return resolve(faqResponse);
+      }
+
+      if (intent === INTENTS.GREETING) {
+        return resolve(buildGreetingResponse());
       }
 
       resolve(buildFallbackResponse());
