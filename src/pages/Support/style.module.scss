@@ -9,7 +9,7 @@ $transition-fast: 0.2s ease;
 $shadow-modal: 0 10px 25px rgba(0, 0, 0, 0.3);
 
 .support-header {
-    background: $bg-light;
+    background: linear-gradient(135deg, #f5f5f7, #ececf0);
     padding: 30px 40px;
     border-radius: $radius-lg;
 
@@ -18,6 +18,7 @@ $shadow-modal: 0 10px 25px rgba(0, 0, 0, 0.3);
         font-weight: 700;
         margin-bottom: 6px;
         color: $text-dark;
+        letter-spacing: -0.5px;
     }
 
     p {
@@ -30,7 +31,7 @@ $shadow-modal: 0 10px 25px rgba(0, 0, 0, 0.3);
 .support-menu {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 
     .menu-item {
         display: flex;
@@ -42,17 +43,23 @@ $shadow-modal: 0 10px 25px rgba(0, 0, 0, 0.3);
         font-size: 16px;
         font-weight: 500;
         color: $text-dark;
-        transition: background $transition-fast, color $transition-fast;
+        transition: all $transition-fast;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+
+        span {
+            display: flex;
+            align-items: center;
+        }
 
         .icon-left {
             width: 20px;
             margin-right: 10px;
-            opacity: 0.8;
+            opacity: 0.7;
         }
 
         &:hover {
-            background: #e0e0e0;
-            cursor: pointer;
+            background: #e3e3e8;
+            transform: translateX(4px);
         }
 
         &.active {
@@ -83,6 +90,8 @@ $shadow-modal: 0 10px 25px rgba(0, 0, 0, 0.3);
 
     .info-block {
         margin-bottom: 22px;
+        padding-left: 12px;
+        border-left: 4px solid #000;
 
         h4 {
             font-size: 1.1rem;
@@ -104,10 +113,6 @@ $shadow-modal: 0 10px 25px rgba(0, 0, 0, 0.3);
         margin-bottom: 15px;
         border-bottom: 1px dashed #d0d0d0;
 
-        &:last-child {
-            border-bottom: none;
-        }
-
         p {
             margin: 0;
         }
@@ -125,27 +130,22 @@ $shadow-modal: 0 10px 25px rgba(0, 0, 0, 0.3);
     color: #fff;
     padding: 12px 25px;
     border-radius: $radius-sm;
-    border: 1px solid $bg-dark;
+    border: none;
     font-weight: 600;
     cursor: pointer;
     transition: all $transition-fast;
     margin-top: 12px;
 
     &:hover {
-        background: #fff;
-        color: $bg-dark;
+        background: #222;
+        transform: translateY(-1px);
     }
 
     &.disabled {
         background: #ccc;
-        border-color: #ccc;
         color: #666;
         cursor: not-allowed;
-
-        &:hover {
-            background: #ccc;
-            color: #666;
-        }
+        transform: none;
     }
 }
 
@@ -167,16 +167,17 @@ $shadow-modal: 0 10px 25px rgba(0, 0, 0, 0.3);
         textarea {
             width: 100%;
             padding: 12px 15px;
-            border-radius: 6px;
+            border-radius: 8px;
             border: 1px solid #ddd;
             font-size: 1rem;
             transition: all $transition-fast;
             outline: none;
+        }
 
-            &:focus {
-                border-color: $bg-dark;
-                box-shadow: 0 0 0 1px $bg-dark;
-            }
+        input:focus,
+        textarea:focus {
+            border-color: #000;
+            box-shadow: 0 0 0 1px #000;
         }
 
         textarea {
@@ -186,106 +187,29 @@ $shadow-modal: 0 10px 25px rgba(0, 0, 0, 0.3);
     }
 }
 
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 99999;
-    animation: fadeIn 0.3s ease;
-}
-
-.modal-box {
-    background: #fff;
-    width: 400px;
-    max-width: 90%;
-    padding: 30px;
-    border-radius: $radius-lg;
-    text-align: center;
-    position: relative;
-    box-shadow: $shadow-modal;
-    animation: slideUp 0.3s ease;
-
-    &.success { .modal-icon { color: #28a745; } }
-    &.error { .modal-icon { color: #dc3545; } }
-    &.warning { .modal-icon { color: #ffc107; } }
-
-    .modal-close {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        font-size: 20px;
-        border: none;
-        background: none;
-        cursor: pointer;
-        color: #999;
-        transition: color $transition-fast;
-
-        &:hover {
-            color: $text-dark;
-        }
-    }
-
-    .modal-icon {
-        font-size: 48px;
-        margin-bottom: 15px;
-    }
-
-    .modal-title {
-        font-size: 22px;
-        font-weight: 700;
-        margin-bottom: 10px;
-        color: $text-dark;
-    }
-
-    .modal-msg {
-        font-size: 16px;
-        color: $text-muted;
-        margin-bottom: 25px;
-        line-height: 1.5;
-    }
-
-    .btn-modal-ok {
-        background: $bg-dark;
-        color: #fff;
-        padding: 8px 22px;
-        border-radius: 25px;
-        border: none;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all $transition-fast;
-
-        &:hover {
-            background: #333;
-            transform: scale(1.04);
-        }
-    }
-}
-
 .ai-chat-container {
     margin-top: 20px;
 
     .chat-window {
         height: 420px;
-        background: #f8f9fa;
+        background: linear-gradient(180deg, #fafafa, #f0f0f0);
         border-radius: $radius-md;
         padding: 20px;
         overflow-y: auto;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
 
         .chat-bubble {
-            max-width: 72%;
-            padding: 10px 15px;
-            border-radius: 16px;
-            font-size: 1.4rem;
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 1.35rem;
+            animation: popIn 0.2s ease;
 
             &.ai {
                 align-self: flex-start;
-                background: #eee;
+                background: #eaeaea;
                 color: $text-dark;
             }
 
@@ -304,19 +228,25 @@ $shadow-modal: 0 10px 25px rgba(0, 0, 0, 0.3);
 
         input {
             flex: 1;
-            padding: 10px 15px;
-            border-radius: 20px;
+            padding: 12px 18px;
+            border-radius: 25px;
             border: 1px solid #ddd;
+            font-size: 1rem;
         }
 
         .btn-send-ai {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             background: $bg-dark;
             color: #fff;
             border-radius: 50%;
             border: none;
             cursor: pointer;
+            transition: all $transition-fast;
+
+            &:hover {
+                transform: rotate(10deg) scale(1.05);
+            }
         }
     }
 }
@@ -327,19 +257,21 @@ $shadow-modal: 0 10px 25px rgba(0, 0, 0, 0.3);
     margin-top: 10px;
     overflow-x: auto;
     padding-bottom: 5px;
-
-    &::-webkit-scrollbar {
-        height: 4px;
-    }
 }
 
 .product-item-mini {
-    min-width: 140px;
+    min-width: 150px;
     background: #fff;
     border-radius: $radius-md;
     border: 1px solid #eee;
-    padding: 8px;
+    padding: 10px;
     text-align: center;
+    transition: all $transition-fast;
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
 
     .product-img {
         width: 100%;
@@ -370,4 +302,9 @@ $shadow-modal: 0 10px 25px rgba(0, 0, 0, 0.3);
 @keyframes slideUp {
     from { transform: translateY(20px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes popIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
 }
