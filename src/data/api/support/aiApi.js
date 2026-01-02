@@ -13,14 +13,16 @@ export const getAiResponse = (userMessage) => {
 
             const matchProducts = matchingColors.map(colorItem => {
                     // Tìm thông tin chung của sản phẩm (tên, giá...)
-                    const productBase = products.find(p => p.id === colorItem.productId);
+                    const productBase = products.find(p => p.id === colorItem.productId);                   
                     const imageObj = productImages.find(img => img.colorId === colorItem.id);
-
                     if (productBase) {
+                        const encodedColor = encodeURIComponent(colorItem.colorHex); 
+                        const productLink = `category?color=${encodedColor}&page=1`; 
                         return {
                             ...productBase,
-                            image: imageObj ? imageObj.imageUrl : 'https://via.placeholder.com/150', 
-                            colorName: colorItem.colorName
+                            image: imageObj ? imageObj.imageUrl : 'https://via.placeholder.com/150',
+                            colorName: colorItem.colorName,
+                            link: productLink 
                         };
                     }
                     return null;
