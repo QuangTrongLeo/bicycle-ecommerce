@@ -14,6 +14,7 @@ const routes = {
     vnpayTransactionConfirm: '/vnpay-transaction-confirm',
     paymentResult: '/payment-result',
     support: '/support',
+    promotion: '/promotion',
 };
 
 export default routes;
