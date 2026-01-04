@@ -4,56 +4,38 @@ const REQUEST_DELAY = 1500;
 const nowISO = () => new Date().toISOString();
 
 const safeJSON = {
-  parse(value, fallback) {
+  parse: (v, f) => {
     try {
-      return JSON.parse(value) ?? fallback;
+      return JSON.parse(v) ?? f;
     } catch {
-      return fallback;
+      return f;
     }
   },
-  stringify(value) {
-    return JSON.stringify(value);
-  }
+  stringify: JSON.stringify
 };
 
-const generateId = () => {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-    return crypto.randomUUID();
-  }
-  return `req_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-};
+const generateId = () =>
+  typeof crypto !== 'undefined' && crypto.randomUUID
+    ? crypto.randomUUID()
+    : `req_${Date.now()}_${Math.random().toString(36).slice(2)}`;
 
-const normalizeText = (value) =>
-  typeof value === 'string' ? value.trim() : '';
+const normalizeText = (v) =>
+  typeof v === 'string' ? v.trim() : '';
 
-const validatePayload = (payload) => {
-  if (!payload || typeof payload !== 'object') {
-    return { valid: false, message: 'Dữ liệu không hợp lệ!' };
-  }
-
-  if (!normalizeText(payload.name)) {
-    return { valid: false, message: 'Thiếu họ tên!' };
-  }
-
-  if (!normalizeText(payload.email)) {
-    return { valid: false, message: 'Thiếu email!' };
-  }
-
-  if (!normalizeText(payload.content)) {
-    return { valid: false, message: 'Thiếu nội dung liên hệ!' };
-  }
-
-  return { valid: true };
+const validatePayload = ({ name, email, content } = {}) => {
+  if (!normalizeText(name)) return [false, 'Thiếu họ tên!'];
+  if (!normalizeText(email)) return [false, 'Thiếu email!'];
+  if (!normalizeText(content)) return [false, 'Thiếu nội dung liên hệ!'];
+  return [true];
 };
 
 const readRequests = () =>
   safeJSON.parse(localStorage.getItem(STORAGE_KEY), []);
 
-const writeRequests = (requests) => {
-  localStorage.setItem(STORAGE_KEY, safeJSON.stringify(requests));
-};
+const writeRequests = (data) =>
+  localStorage.setItem(STORAGE_KEY, safeJSON.stringify(data));
 
-const createRequestModel = (data) => ({
+const createRequest = (data) => ({
   id: generateId(),
   name: normalizeText(data.name),
   email: normalizeText(data.email),
@@ -68,75 +50,54 @@ const createRequestModel = (data) => ({
   }
 });
 
-const response = {
-  success() {
-    return {
-      status: 200,
-      message:
-        'Yêu cầu đã được gửi thành công. Bộ phận hỗ trợ sẽ phản hồi trong thời gian sớm nhất.'
-    };
-  },
-  error(status, message) {
-    return { status, message };
-  }
-};
+const ok = (message) => ({ status: 200, message });
+const fail = (status, message) => ({ status, message });
 
 export const sendContactRequest = (payload) =>
   new Promise((resolve, reject) => {
     setTimeout(() => {
-      const validation = validatePayload(payload);
-      if (!validation.valid) {
-        reject(response.error(400, validation.message));
-        return;
-      }
+      const [valid, error] = validatePayload(payload);
+      if (!valid) return reject(fail(400, error));
 
       try {
         const requests = readRequests();
-        const newRequest = createRequestModel(payload);
-        writeRequests([...requests, newRequest]);
-        resolve(response.success());
+        writeRequests([...requests, createRequest(payload)]);
+        resolve(
+          ok(
+            'Yêu cầu đã được gửi thành công. Bộ phận hỗ trợ sẽ phản hồi trong thời gian sớm nhất.'
+          )
+        );
       } catch {
         reject(
-          response.error(
-            500,
-            'Hệ thống gặp sự cố. Vui lòng thử lại sau.'
-          )
+          fail(500, 'Hệ thống gặp sự cố. Vui lòng thử lại sau.')
         );
       }
     }, REQUEST_DELAY);
   });
 
-export const getAllContactRequests = () => {
-  return readRequests().sort(
+export const getAllContactRequests = () =>
+  readRequests().sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   );
-};
 
-export const getContactRequestById = (id) => {
-  return readRequests().find((req) => req.id === id) ?? null;
-};
+export const getContactRequestById = (id) =>
+  readRequests().find(r => r.id === id) ?? null;
 
-export const updateContactRequestStatus = (id, nextStatus) => {
-  const requests = readRequests();
+export const updateContactRequestStatus = (id, status) => {
+  const updated = readRequests().map(r =>
+    r.id === id
+      ? { ...r, status, updatedAt: nowISO() }
+      : r
+  );
 
-  const updatedRequests = requests.map((req) => {
-    if (req.id !== id) return req;
-    return {
-      ...req,
-      status: nextStatus,
-      updatedAt: nowISO()
-    };
-  });
-
-  writeRequests(updatedRequests);
-  return updatedRequests;
+  writeRequests(updated);
+  return updated;
 };
 
 export const removeContactRequest = (id) => {
-  const requests = readRequests();
-  const filtered = requests.filter((req) => req.id !== id);
-  writeRequests(filtered);
-  return filtered;
+  const updated = readRequests().filter(r => r.id !== id);
+  writeRequests(updated);
+  return updated;
 };
 
 export const clearAllContactRequests = () => {

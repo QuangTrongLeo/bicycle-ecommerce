@@ -27,92 +27,70 @@ const DEFAULT_AI_MESSAGE = {
 
 function Support() {
   const [activeTab, setActiveTab] = useState('policy');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isAiLoading, setIsAiLoading] = useState(false);
-
+  const [loading, setLoading] = useState({ contact: false, ai: false });
   const [messages, setMessages] = useState([DEFAULT_AI_MESSAGE]);
-  const [userInput, setUserInput] = useState('');
-
+  const [input, setInput] = useState('');
   const [history, setHistory] = useState([]);
   const [historyIdx, setHistoryIdx] = useState(-1);
-
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    content: ''
-  });
-
-  const [popup, setPopup] = useState({
-    show: false,
-    type: 'success',
-    message: ''
-  });
+  const [form, setForm] = useState({ name: '', email: '', content: '' });
+  const [popup, setPopup] = useState({ show: false, type: 'success', message: '' });
 
   const chatEndRef = useRef(null);
 
-  const scrollToBottom = useCallback(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, []);
+  const scrollBottom = useCallback(
+    () => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }),
+    []
+  );
 
   useEffect(() => {
-    if (activeTab === 'ai-chat') {
-      scrollToBottom();
-    }
-  }, [messages, activeTab, scrollToBottom]);
-
-  const closePopup = () =>
-    setPopup(prev => ({ ...prev, show: false }));
-
-  const updateFormData = e => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const resetContactForm = () =>
-    setFormData({ name: '', email: '', content: '' });
+    activeTab === 'ai-chat' && scrollBottom();
+  }, [messages, activeTab, scrollBottom]);
 
   const showPopup = (type, message) =>
     setPopup({ show: true, type, message });
 
-  const handleSendContact = async () => {
-    if (!formData.name || !formData.email || !formData.content) {
+  const closePopup = () =>
+    setPopup(p => ({ ...p, show: false }));
+
+  const updateForm = e =>
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+
+  const resetForm = () =>
+    setForm({ name: '', email: '', content: '' });
+
+  const pushMessage = useCallback(
+    msg => setMessages(m => [...m, msg]),
+    []
+  );
+
+  const sendContact = async () => {
+    if (!form.name || !form.email || !form.content) {
       showPopup('warning', 'Vui lòng nhập đầy đủ thông tin trước khi gửi!');
       return;
     }
 
-    setIsLoading(true);
-
+    setLoading(l => ({ ...l, contact: true }));
     try {
-      const res = await sendContactRequest(formData);
-      showPopup(
-        'success',
-        res.message || 'Gửi yêu cầu thành công!'
-      );
-      resetContactForm();
-    } catch (err) {
-      showPopup(
-        'error',
-        err.message || 'Có lỗi xảy ra!'
-      );
+      const res = await sendContactRequest(form);
+      showPopup('success', res.message || 'Gửi yêu cầu thành công!');
+      resetForm();
+    } catch (e) {
+      showPopup('error', e.message || 'Có lỗi xảy ra!');
     } finally {
-      setIsLoading(false);
+      setLoading(l => ({ ...l, contact: false }));
     }
   };
 
-  const pushMessage = msg =>
-    setMessages(prev => [...prev, msg]);
+  const sendAi = async () => {
+    if (!input.trim() || loading.ai) return;
 
-  const handleSendAi = async () => {
-    if (!userInput.trim() || isAiLoading) return;
+    const content = input.trim();
 
-    const content = userInput.trim();
-
-    setHistory(prev => [content, ...prev]);
+    setHistory(h => [content, ...h]);
     setHistoryIdx(-1);
-
     pushMessage({ role: 'user', content });
-    setUserInput('');
-    setIsAiLoading(true);
+    setInput('');
+    setLoading(l => ({ ...l, ai: true }));
 
     try {
       const res = await getAiResponse(content);
@@ -128,22 +106,19 @@ function Support() {
         content: 'Xin lỗi 😥 mình gặp chút trục trặc.'
       });
     } finally {
-      setIsAiLoading(false);
+      setLoading(l => ({ ...l, ai: false }));
     }
   };
 
-  const handleKeyDown = e => {
-    if (e.key === 'Enter') {
-      handleSendAi();
-      return;
-    }
+  const handleKey = e => {
+    if (e.key === 'Enter') return sendAi();
 
     if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (historyIdx < history.length - 1) {
         const idx = historyIdx + 1;
         setHistoryIdx(idx);
-        setUserInput(history[idx]);
+        setInput(history[idx]);
       }
     }
 
@@ -152,10 +127,10 @@ function Support() {
       if (historyIdx > 0) {
         const idx = historyIdx - 1;
         setHistoryIdx(idx);
-        setUserInput(history[idx]);
+        setInput(history[idx]);
       } else {
         setHistoryIdx(-1);
-        setUserInput('');
+        setInput('');
       }
     }
   };
@@ -166,38 +141,18 @@ function Support() {
 
       <div className={st('ai-chat-container')}>
         <div className={st('chat-window')}>
-          {messages.map((msg, idx) => (
-            <div
-              key={idx}
-              className={st('chat-bubble', msg.role)}
-            >
-              <div>{msg.content}</div>
+          {messages.map((m, i) => (
+            <div key={i} className={st('chat-bubble', m.role)}>
+              <div>{m.content}</div>
 
-              {msg.type === 'product_list' && msg.data && (
+              {m.type === 'product_list' && m.data && (
                 <div className={st('product-list-container')}>
-                  {msg.data.map(p => (
-                    <div
-                      key={p.id}
-                      className={st('product-item-mini')}
-                    >
-                      <img
-                        src={p.image}
-                        alt={p.name}
-                        className={st('product-img')}
-                      />
-                      <p className={st('product-name')}>
-                        {p.name}
-                      </p>
-                      <p className={st('product-price')}>
-                        {p.price?.toLocaleString()}đ
-                      </p>
-                      <button
-                        className={st('btn-view-product')}
-                        onClick={() =>
-                          p.link &&
-                          (window.location.href = p.link)
-                        }
-                      >
+                  {m.data.map(p => (
+                    <div key={p.id} className={st('product-item-mini')}>
+                      <img src={p.image} alt={p.name} />
+                      <p>{p.name}</p>
+                      <p>{p.price?.toLocaleString()}đ</p>
+                      <button onClick={() => p.link && (location.href = p.link)}>
                         Xem ngay
                       </button>
                     </div>
@@ -207,7 +162,7 @@ function Support() {
             </div>
           ))}
 
-          {isAiLoading && (
+          {loading.ai && (
             <div className={st('chat-bubble', 'ai')}>
               <FontAwesomeIcon icon={faSpinner} spin /> Đang suy nghĩ...
             </div>
@@ -219,18 +174,14 @@ function Support() {
         <div className={st('chat-input-group')}>
           <input
             placeholder="Hỏi tôi bất cứ điều gì..."
-            value={userInput}
-            onChange={e => setUserInput(e.target.value)}
-            onKeyDown={handleKeyDown}
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={handleKey}
           />
-          <button
-            className={st('btn-send-ai')}
-            onClick={handleSendAi}
-            disabled={isAiLoading}
-          >
+          <button onClick={sendAi} disabled={loading.ai}>
             <FontAwesomeIcon
-              icon={isAiLoading ? faSpinner : faPaperPlane}
-              spin={isAiLoading}
+              icon={loading.ai ? faSpinner : faPaperPlane}
+              spin={loading.ai}
             />
           </button>
         </div>
@@ -253,20 +204,14 @@ function Support() {
               ['policy', faShieldHalved, 'Chính sách'],
               ['faq', faCircleQuestion, 'Câu hỏi thường gặp'],
               ['contact', faHeadset, 'Liên hệ']
-            ].map(([key, icon, label]) => (
+            ].map(([k, i, l]) => (
               <div
-                key={key}
-                className={st('menu-item', {
-                  active: activeTab === key
-                })}
-                onClick={() => setActiveTab(key)}
+                key={k}
+                className={st('menu-item', { active: activeTab === k })}
+                onClick={() => setActiveTab(k)}
               >
                 <span>
-                  <FontAwesomeIcon
-                    icon={icon}
-                    className={st('icon-left')}
-                  />
-                  {label}
+                  <FontAwesomeIcon icon={i} /> {l}
                 </span>
                 <FontAwesomeIcon icon={faChevronRight} />
               </div>
@@ -277,37 +222,28 @@ function Support() {
         <div className="col-md-9">
           <div className={st('support-content')}>
             {activeTab === 'ai-chat' && renderAiChat()}
-            {activeTab !== 'ai-chat' && null}
           </div>
         </div>
       </div>
 
       {popup.show && (
         <div className={st('modal-overlay')} onClick={closePopup}>
-          <div
-            className={st('modal-box', popup.type)}
-            onClick={e => e.stopPropagation()}
-          >
-            <button
-              className={st('modal-close')}
-              onClick={closePopup}
-            >
+          <div className={st('modal-box', popup.type)} onClick={e => e.stopPropagation()}>
+            <button onClick={closePopup}>
               <FontAwesomeIcon icon={faTimesCircle} />
             </button>
 
-            <div className={st('modal-icon')}>
-              {popup.type === 'success' && (
-                <FontAwesomeIcon icon={faCheckCircle} />
-              )}
-              {popup.type === 'error' && (
-                <FontAwesomeIcon icon={faTimesCircle} />
-              )}
-              {popup.type === 'warning' && (
-                <FontAwesomeIcon icon={faExclamationTriangle} />
-              )}
-            </div>
+            <FontAwesomeIcon
+              icon={
+                popup.type === 'success'
+                  ? faCheckCircle
+                  : popup.type === 'error'
+                  ? faTimesCircle
+                  : faExclamationTriangle
+              }
+            />
 
-            <h4 className={st('modal-title')}>
+            <h4>
               {popup.type === 'success'
                 ? 'Thành công'
                 : popup.type === 'error'
@@ -315,16 +251,9 @@ function Support() {
                 : 'Lưu ý'}
             </h4>
 
-            <p className={st('modal-msg')}>
-              {popup.message}
-            </p>
+            <p>{popup.message}</p>
 
-            <button
-              className={st('btn-modal-ok')}
-              onClick={closePopup}
-            >
-              Đã hiểu
-            </button>
+            <button onClick={closePopup}>Đã hiểu</button>
           </div>
         </div>
       )}
