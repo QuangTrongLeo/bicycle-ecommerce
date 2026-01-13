@@ -1,16 +1,35 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import styles from './style.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faShieldHalved, faCircleQuestion, faHeadset, faSpinner, 
-    faCheckCircle, faTimesCircle,faExclamationTriangle} from '@fortawesome/free-solid-svg-icons';
+    faCheckCircle, faTimesCircle,faExclamationTriangle,faRobot, faPaperPlane} from '@fortawesome/free-solid-svg-icons';
 import { sendContactRequest } from '~/data/api/support/chatApi';
+import { getAiResponse } from '~/data/api/support/aiApi'; 
 const st = classNames.bind(styles);
 
 function Support() {
 
 const [activeTab, setActiveTab] = useState('policy'); 
     const [isLoading, setIsLoading] = useState(false);
+    const [messages, setMessages] = useState([
+        { role: 'ai', content: 'Xin chào! Tôi là trợ lý ảo. Bạn có thể hỏi tôi về size giày, phí ship hoặc chính sách bảo hành.' }
+    ]);
+    const [userInput, setUserInput] = useState('');
+    const [isAiLoading, setIsAiLoading] = useState(false);
+
+    const chatEndRef = useRef(null);
+
+    const scrollToBottom = () => {
+        chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        if (activeTab === 'ai-chat') {
+            scrollToBottom();
+        }
+    }, [messages, activeTab]);
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -39,7 +58,7 @@ const [activeTab, setActiveTab] = useState('policy');
             return;
         }
 
-        setIsLoading(true); // Bật loading
+        setIsLoading(true); 
 
         try {
             const res = await sendContactRequest(formData);
@@ -50,12 +69,32 @@ const [activeTab, setActiveTab] = useState('policy');
             });            
             setFormData({ name: '', email: '', content: '' }); 
         } catch (err) {
-            alert(err.message); // Thông báo lỗi
+            alert(err.message); 
         } finally {
-            setIsLoading(false); // Tắt loading
+            setIsLoading(false); 
         }
     };
-    // Dữ liệu nội dung (Giả lập)
+
+    const handleSendAi = async () => {
+        if (!userInput.trim()) return;
+
+        const userMsg = { role: 'user', content: userInput };
+        setMessages(prev => [...prev, userMsg]);
+        setUserInput('');
+        setIsAiLoading(true);
+
+        try {
+            const res = await getAiResponse(userInput);
+            
+            setMessages(prev => [...prev, { role: 'ai', content: res.message }]);
+        } catch (err) {
+            console.error("Lỗi AI:", err);
+        } finally {
+            setIsAiLoading(false);
+        }
+    };
+
+
     const renderContent = () => {
         switch (activeTab) {
             case 'policy':
@@ -162,9 +201,44 @@ const [activeTab, setActiveTab] = useState('policy');
                         {/* ------------------------- */}
                     </div>                    
                 );
+                case 'ai-chat':
+    return (
+        <div className={st('tab-content')}>
+            <h2>Hỏi đáp với trợ lý AI</h2>
+            <div className={st('ai-chat-container')}>
+                <div className={st('chat-window')}>
+                    {messages.map((msg, index) => (
+                        <div key={index} className={st('chat-bubble', msg.role)}>
+                            <div className={st('bubble-content')}>{msg.content}</div>
+                        </div>
+                    ))}
+                    {/* Điểm neo để tự động cuộn */}
+                    <div ref={chatEndRef} />
+                </div>
+
+                <div className={st('chat-input-group')}>
+                    <input 
+                        type="text" 
+                        placeholder="Hỏi về size, ship, bảo hành..." 
+                        value={userInput}
+                        onChange={(e) => setUserInput(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && handleSendAi()}
+                    />
+                    <button 
+                        className={st('btn-send-ai')} 
+                        onClick={handleSendAi}
+                        disabled={isAiLoading}
+                    >
+                        {isAiLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : <FontAwesomeIcon icon={faPaperPlane} />}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
             default:
                 return null;
         }
+        
     };
 
 return (
@@ -183,6 +257,16 @@ return (
             <div className="row" style={{ marginTop: 20 }}>
                 <div className="col-md-3">
                     <div className={st('support-menu')}>
+                        <div 
+                            className={st('menu-item', { active: activeTab === 'ai-chat' })}
+                            onClick={() => setActiveTab('ai-chat')}
+                        >
+                            <span>
+                                <FontAwesomeIcon icon={faRobot} className={st('icon-left')} />
+                                Hỏi đáp AI
+                            </span>
+                            <FontAwesomeIcon icon={faChevronRight} />
+                        </div>
                         <div 
                             className={st('menu-item', { active: activeTab === 'policy' })}
                             onClick={() => setActiveTab('policy')}
