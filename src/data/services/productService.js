@@ -103,3 +103,6 @@ export const getProductBySizeId = (sizeId) => {
         finalPrice: Math.floor(finalPrice),
     };
 };
+export const getAllProducts = () => {
+    return products.map((p) => getProductById(p.id));
+};
