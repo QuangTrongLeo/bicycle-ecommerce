@@ -92,8 +92,12 @@ const [activeTab, setActiveTab] = useState('policy');
         try {
             const res = await getAiResponse(userInput);
             
-            setMessages(prev => [...prev, { role: 'ai', content: res.message }]);
-        } catch (err) {
+        setMessages(prev => [...prev, { 
+            role: 'ai', 
+            content: res.message,
+            type: res.type, 
+            data: res.data  
+        }]);        } catch (err) {
             console.error("Lỗi AI:", err);
         } finally {
             setIsAiLoading(false);
@@ -230,35 +234,61 @@ const handleKeyDown = (e) => {
                         {/* ------------------------- */}
                     </div>                    
                 );
-                case 'ai-chat':
+case 'ai-chat':
     return (
         <div className={st('tab-content')}>
             <h2>Hỏi đáp với trợ lý AI</h2>
             <div className={st('ai-chat-container')}>
+                {/* 1. Cửa sổ chat hiển thị nội dung */}
                 <div className={st('chat-window')}>
                     {messages.map((msg, index) => (
                         <div key={index} className={st('chat-bubble', msg.role)}>
-                            <div className={st('bubble-content')}>{msg.content}</div>
+                            <div className={st('bubble-content')}>
+                                <div>{msg.content}</div>
+
+                                {/* Hiển thị danh sách sản phẩm nếu có */}
+                                {msg.type === 'product_list' && msg.data && (
+                                    <div className={st('product-list-container')}>
+                                        {msg.data.map((product) => (
+                                            <div key={product.id} className={st('product-item-mini')}>
+                                                <img 
+                                                    src={product.image || 'https://via.placeholder.com/150'} 
+                                                    alt={product.name} 
+                                                    className={st('product-img')}
+                                                />
+                                                <div className={st('product-info')}>
+                                                    <p className={st('product-name')}>{product.name}</p>
+                                                    <p className={st('product-price')}>
+                                                        {product.price?.toLocaleString()}đ
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     ))}
-                    {/* Điểm neo để tự động cuộn */}
+                    {/* Hiệu ứng loading khi AI đang trả lời */}
+                    {isAiLoading && (
+                        <div className={st('chat-bubble', 'ai')}>
+                            <FontAwesomeIcon icon={faSpinner} spin /> Đang suy nghĩ...
+                        </div>
+                    )}
                     <div ref={chatEndRef} />
                 </div>
 
+                {/* 2. Thanh nhập liệu (Phần bạn bị thiếu) */}
                 <div className={st('chat-input-group')}>
                     <input 
                         type="text" 
-                        placeholder="Hỏi về size, ship, bảo hành..." 
+                        placeholder="Hỏi tôi bất cứ điều gì..."
                         value={userInput}
                         onChange={(e) => setUserInput(e.target.value)}
                         onKeyDown={handleKeyDown}
                     />
-                    <button 
-                        className={st('btn-send-ai')} 
-                        onClick={handleSendAi}
-                        disabled={isAiLoading}
-                    >
-                        {isAiLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : <FontAwesomeIcon icon={faPaperPlane} />}
+                    <button className={st('btn-send-ai')} onClick={handleSendAi} disabled={isAiLoading}>
+                        <FontAwesomeIcon icon={isAiLoading ? faSpinner : faPaperPlane} spin={isAiLoading} />
                     </button>
                 </div>
             </div>

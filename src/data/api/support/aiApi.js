@@ -1,9 +1,30 @@
+import { products } from '../product/productApi';
+import { productColors } from '../product/productColorApi';
+
 export const getAiResponse = (userMessage) => {
     return new Promise((resolve) => {
         setTimeout(() => {
             const input = userMessage.toLowerCase();
-            let response = "";
+            const foundColor = productColors.find(c => input.includes(c.colorName.toLowerCase()));
+        if (foundColor && (input.includes("xe") || input.includes("mẫu") || input.includes("tìm"))) {
+                const ids = productColors
+                    .filter(c => c.colorName.toLowerCase() === foundColor.colorName.toLowerCase())
+                    .map(c => c.productId);
 
+                const matchProducts = products.filter(p => ids.includes(p.id));
+
+                if (matchProducts.length > 0) {
+                    return resolve({
+                        status: 200,
+                        type: 'product_list', // Gắn nhãn để UI biết đường render hình ảnh
+                        message: `Dạ, đây là danh sách xe màu ${foundColor.colorName} mà bạn cần tìm:`,
+                        data: matchProducts,
+                        createdAt: new Date().toISOString()
+                    });
+                }
+            }
+
+            let response = "";
             if (input.includes("size") || input.includes("kích cỡ")) {
                 response = "Bên mình có bảng size chuẩn từ 36-44. Bạn có thể xem chi tiết ở phần 'Câu hỏi thường gặp' nhé!";
             } else if (input.includes("đổi trả") || input.includes("hoàn tiền")) {
