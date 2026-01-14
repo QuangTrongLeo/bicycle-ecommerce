@@ -1,22 +1,35 @@
 import { products } from '../product/productApi';
 import { productColors } from '../product/productColorApi';
-
+import { productImages } from '../product/productImageApi';
 export const getAiResponse = (userMessage) => {
     return new Promise((resolve) => {
         setTimeout(() => {
             const input = userMessage.toLowerCase();
             const foundColor = productColors.find(c => input.includes(c.colorName.toLowerCase()));
         if (foundColor && (input.includes("xe") || input.includes("mẫu") || input.includes("tìm"))) {
-                const ids = productColors
-                    .filter(c => c.colorName.toLowerCase() === foundColor.colorName.toLowerCase())
-                    .map(c => c.productId);
+                    const matchingColors = productColors.filter(
+                    c => c.colorName.toLowerCase() === foundColor.colorName.toLowerCase()
+                );
 
-                const matchProducts = products.filter(p => ids.includes(p.id));
+            const matchProducts = matchingColors.map(colorItem => {
+                    // Tìm thông tin chung của sản phẩm (tên, giá...)
+                    const productBase = products.find(p => p.id === colorItem.productId);
+                    const imageObj = productImages.find(img => img.colorId === colorItem.id);
+
+                    if (productBase) {
+                        return {
+                            ...productBase,
+                            image: imageObj ? imageObj.imageUrl : 'https://via.placeholder.com/150', 
+                            colorName: colorItem.colorName
+                        };
+                    }
+                    return null;
+                }).filter(p => p !== null); 
 
                 if (matchProducts.length > 0) {
                     return resolve({
                         status: 200,
-                        type: 'product_list', // Gắn nhãn để UI biết đường render hình ảnh
+                        type: 'product_list', 
                         message: `Dạ, đây là danh sách xe màu ${foundColor.colorName} mà bạn cần tìm:`,
                         data: matchProducts,
                         createdAt: new Date().toISOString()
