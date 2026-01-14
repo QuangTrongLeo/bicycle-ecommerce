@@ -18,6 +18,9 @@ const [activeTab, setActiveTab] = useState('policy');
     const [userInput, setUserInput] = useState('');
     const [isAiLoading, setIsAiLoading] = useState(false);
 
+    const [history, setHistory] = useState([]); 
+    const [historyIdx, setHistoryIdx] = useState(-1); 
+
     const chatEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -78,6 +81,9 @@ const [activeTab, setActiveTab] = useState('policy');
     const handleSendAi = async () => {
         if (!userInput.trim()) return;
 
+        setHistory(prev => [userInput, ...prev]);
+        setHistoryIdx(-1); 
+
         const userMsg = { role: 'user', content: userInput };
         setMessages(prev => [...prev, userMsg]);
         setUserInput('');
@@ -94,7 +100,30 @@ const [activeTab, setActiveTab] = useState('policy');
         }
     };
 
-
+const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleSendAi();
+        } else if (e.key === 'ArrowUp') {
+            // Nhấn mũi tên lên: Lấy câu lệnh cũ hơn
+            e.preventDefault(); // Ngăn con trỏ nhảy về đầu dòng
+            if (historyIdx < history.length - 1) {
+                const nextIdx = historyIdx + 1;
+                setHistoryIdx(nextIdx);
+                setUserInput(history[nextIdx]);
+            }
+        } else if (e.key === 'ArrowDown') {
+            // Nhấn mũi tên xuống: Lấy câu lệnh mới hơn
+            e.preventDefault();
+            if (historyIdx > 0) {
+                const nextIdx = historyIdx - 1;
+                setHistoryIdx(nextIdx);
+                setUserInput(history[nextIdx]);
+            } else if (historyIdx === 0) {
+                setHistoryIdx(-1);
+                setUserInput('');
+            }
+        }
+    };
     const renderContent = () => {
         switch (activeTab) {
             case 'policy':
@@ -222,7 +251,7 @@ const [activeTab, setActiveTab] = useState('policy');
                         placeholder="Hỏi về size, ship, bảo hành..." 
                         value={userInput}
                         onChange={(e) => setUserInput(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && handleSendAi()}
+                        onKeyDown={handleKeyDown}
                     />
                     <button 
                         className={st('btn-send-ai')} 
