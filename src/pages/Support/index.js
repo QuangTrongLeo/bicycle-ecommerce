@@ -261,6 +261,19 @@ case 'ai-chat':
                                                     <p className={st('product-price')}>
                                                         {product.price?.toLocaleString()}đ
                                                     </p>
+                                                    <button 
+                                                    className={st('btn-view-product')}
+                                                    onClick={() => {
+                                                        // Nếu có link thì chuyển hướng
+                                                        if (product.link) {
+                                                            window.location.href = product.link;
+                                                        } else {
+                                                            alert("Sản phẩm này hiện chưa có link chi tiết!");
+                                                        }
+                                                    }}
+                                                >
+                                                    Xem ngay
+                                                </button>
                                                 </div>
                                             </div>
                                         ))}
