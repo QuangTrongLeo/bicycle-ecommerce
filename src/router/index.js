@@ -15,6 +15,7 @@ import {
     VnpayTransactionConfirm,
     PaymentResult,
     Support,
+    Promotion,
 } from '../pages';
 
 const excludeForUser = [configs.routes.login, configs.routes.register];
@@ -26,6 +27,8 @@ const publishRoutes = [
     { path: `${configs.routes.detail}/:id`, page: Detail },
     { path: configs.routes.searched, page: Searched },
     { path: `${configs.routes.category}`, page: Category },
+    { path: configs.routes.promotion, page: Promotion },
+
 ];
 
 const userRoutes = [

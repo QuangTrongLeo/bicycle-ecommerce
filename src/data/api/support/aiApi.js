@@ -13,6 +13,7 @@ export const getAiResponse = (userMessage) => {
 
             const matchProducts = matchingColors.map(colorItem => {
                     // Tìm thông tin chung của sản phẩm (tên, giá...)
+<<<<<<< HEAD
                     const productBase = products.find(p => p.id === colorItem.productId);
                     const imageObj = productImages.find(img => img.colorId === colorItem.id);
 
@@ -21,6 +22,18 @@ export const getAiResponse = (userMessage) => {
                             ...productBase,
                             image: imageObj ? imageObj.imageUrl : 'https://via.placeholder.com/150', 
                             colorName: colorItem.colorName
+=======
+                    const productBase = products.find(p => p.id === colorItem.productId);                   
+                    const imageObj = productImages.find(img => img.colorId === colorItem.id);
+                    if (productBase) {
+                        const encodedColor = encodeURIComponent(colorItem.colorHex); 
+                        const productLink = `category?color=${encodedColor}&page=1`; 
+                        return {
+                            ...productBase,
+                            image: imageObj ? imageObj.imageUrl : 'https://via.placeholder.com/150',
+                            colorName: colorItem.colorName,
+                            link: productLink 
+>>>>>>> a053ea5caf3cdabb38832e18f159c227ee8b88e6
                         };
                     }
                     return null;

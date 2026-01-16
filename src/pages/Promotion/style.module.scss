@@ -1,0 +1,48 @@
+.container {
+    padding-top: 20px;
+    padding-bottom: 50px;
+    max-width: 1200px; 
+    margin: 0 auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sub-title {
+    font-size: 1.6rem;
+    color: #666;
+    margin-top: 10px;
+    font-weight: 400;
+}
+
+.product-list {
+    margin-top: 20px;
+}
+
+:global(.mb-20) {
+    margin-bottom: 20px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 50px 0;
+    font-size: 1.8rem;
+    color: #888;
+}
+
+@media (max-width: 739px) {
+    .header {
+        margin-bottom: 20px;
+    }
+    
+    .sub-title {
+        font-size: 1.4rem;
+        padding: 0 10px;
+    }
+}
